@@ -1,5 +1,5 @@
 {
-  "taxonomy_version": "0.1.0",
+  "taxonomy_version": "0.2.0",
   "skills": [
     {
       "skill_id": "SKILL_SQL",
@@ -170,6 +170,55 @@
         "digital marketing analyst",
         "marketing analyst",
         "chuyên viên phân tích marketing"
+      ]
+    },
+    {
+      "career_id": "CAREER_3D_CHARACTER_ARTIST",
+      "canonical_name": "3D Character Artist",
+      "aliases": [
+        "3d character artist",
+        "3d character modeler",
+        "character modeler"
+      ]
+    },
+    {
+      "career_id": "CAREER_3D_ENVIRONMENT_ARTIST",
+      "canonical_name": "3D Environment Artist",
+      "aliases": [
+        "3d environment artist",
+        "3d environment modeler",
+        "environment modeler"
+      ]
+    },
+    {
+      "career_id": "CAREER_COMPOSITOR_EDITOR",
+      "canonical_name": "Compositor/Editor",
+      "aliases": [
+        "compositor/editor",
+        "compositor editor",
+        "compositor"
+      ]
+    },
+    {
+      "career_id": "CAREER_LEVEL_ARTIST",
+      "canonical_name": "Level Artist",
+      "aliases": [
+        "level artist"
+      ]
+    },
+    {
+      "career_id": "CAREER_PRODUCTION_LEAD",
+      "canonical_name": "Production Lead",
+      "aliases": [
+        "production lead",
+        "visual supervisor"
+      ]
+    },
+    {
+      "career_id": "CAREER_TECHNICAL_ARTIST",
+      "canonical_name": "Technical Artist",
+      "aliases": [
+        "technical artist"
       ]
     }
   ],

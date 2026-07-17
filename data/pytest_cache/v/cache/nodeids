@@ -1,0 +1,15 @@
+[
+  "tests/test_extraction.py::test_company_boilerplate_removed",
+  "tests/test_extraction.py::test_extract_3d_character_skills",
+  "tests/test_extraction.py::test_extract_experience",
+  "tests/test_extraction.py::test_normalize_location",
+  "tests/test_lifecycle.py::test_content_change_is_detected",
+  "tests/test_lifecycle.py::test_inactive_job_can_be_reactivated",
+  "tests/test_lifecycle.py::test_job_becomes_inactive_after_three_missing_runs",
+  "tests/test_lifecycle.py::test_new_job_is_active",
+  "tests/test_pipeline.py::test_career_normalization",
+  "tests/test_pipeline.py::test_location_alias",
+  "tests/test_pipeline.py::test_salary_negotiable",
+  "tests/test_pipeline.py::test_salary_range",
+  "tests/test_pipeline.py::test_skill_negation_and_preference"
+]
