@@ -1,0 +1,20 @@
+sources:
+  - source_id: greenhouse_navervietnam
+    source_name: NAVER Vietnam
+    platform: greenhouse
+    board_token: navervietnam
+    company_name: NAVER Vietnam
+    enabled: true
+    collection_method: public_api
+    country_filter: Vietnam
+    content_enabled: true
+    timeout_seconds: 30
+
+  - source_id: topcv
+    source_name: TopCV
+    platform: topcv
+    enabled: false
+    status: blocked_by_access_challenge
+    collection_method: unavailable
+    last_checked_at: "2026-07-17"
+    note: "HTTP 403 and Cloudflare challenge"

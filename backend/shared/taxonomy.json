@@ -1,0 +1,216 @@
+{
+  "taxonomy_version": "0.1.0",
+  "skills": [
+    {
+      "skill_id": "SKILL_SQL",
+      "canonical_name": "SQL",
+      "aliases": [
+        "sql",
+        "mysql",
+        "postgresql",
+        "t-sql"
+      ]
+    },
+    {
+      "skill_id": "SKILL_EXCEL",
+      "canonical_name": "Excel",
+      "aliases": [
+        "excel",
+        "microsoft excel",
+        "pivot table"
+      ]
+    },
+    {
+      "skill_id": "SKILL_POWER_BI",
+      "canonical_name": "Power BI",
+      "aliases": [
+        "power bi",
+        "powerbi"
+      ]
+    },
+    {
+      "skill_id": "SKILL_PYTHON",
+      "canonical_name": "Python",
+      "aliases": [
+        "python"
+      ]
+    },
+    {
+      "skill_id": "SKILL_REACT",
+      "canonical_name": "React",
+      "aliases": [
+        "react",
+        "reactjs",
+        "react.js"
+      ]
+    },
+    {
+      "skill_id": "SKILL_PLC",
+      "canonical_name": "PLC",
+      "aliases": [
+        "plc",
+        "lập trình plc"
+      ]
+    },
+    {
+      "skill_id": "SKILL_DIGITAL_MARKETING",
+      "canonical_name": "Digital Marketing",
+      "aliases": [
+        "digital marketing",
+        "marketing số"
+      ]
+    },
+    {
+      "skill_id": "SKILL_GOOGLE_ANALYTICS",
+      "canonical_name": "Google Analytics",
+      "aliases": [
+        "google analytics",
+        "ga4"
+      ]
+    },
+    {
+      "skill_id": "SKILL_TESTING",
+      "canonical_name": "Software Testing",
+      "aliases": [
+        "software testing",
+        "kiểm thử phần mềm",
+        "test case"
+      ]
+    },
+    {
+      "skill_id": "SKILL_JIRA",
+      "canonical_name": "Jira",
+      "aliases": [
+        "jira"
+      ]
+    },
+    {
+      "skill_id": "SKILL_UNREAL_ENGINE",
+      "canonical_name": "Unreal Engine",
+      "aliases": ["unreal engine", "unreal"]
+    },
+    {
+      "skill_id": "SKILL_UNITY",
+      "canonical_name": "Unity",
+      "aliases": ["unity", "unity 3d"]
+    },
+    {
+      "skill_id": "SKILL_MAYA",
+      "canonical_name": "Maya",
+      "aliases": ["maya", "autodesk maya"]
+    },
+    {
+      "skill_id": "SKILL_BLENDER",
+      "canonical_name": "Blender",
+      "aliases": ["blender"]
+    },
+    {
+      "skill_id": "SKILL_ZBRUSH",
+      "canonical_name": "ZBrush",
+      "aliases": ["zbrush"]
+    },
+    {
+      "skill_id": "SKILL_SUBSTANCE_PAINTER",
+      "canonical_name": "Substance Painter",
+      "aliases": ["substance painter"]
+    }
+  ],
+  "careers": [
+    {
+      "career_id": "CAREER_DATA_ANALYST",
+      "canonical_name": "Data Analyst",
+      "aliases": [
+        "data analyst",
+        "nhân viên phân tích dữ liệu",
+        "chuyên viên phân tích dữ liệu",
+        "reporting analyst"
+      ]
+    },
+    {
+      "career_id": "CAREER_BI_ANALYST",
+      "canonical_name": "Business Intelligence Analyst",
+      "aliases": [
+        "business intelligence analyst",
+        "bi analyst",
+        "chuyên viên bi"
+      ]
+    },
+    {
+      "career_id": "CAREER_QA_ENGINEER",
+      "canonical_name": "QA Engineer",
+      "aliases": [
+        "qa engineer",
+        "software tester",
+        "tester",
+        "nhân viên kiểm thử"
+      ]
+    },
+    {
+      "career_id": "CAREER_FRONTEND_DEVELOPER",
+      "canonical_name": "Frontend Developer",
+      "aliases": [
+        "frontend developer",
+        "front-end developer",
+        "lập trình viên frontend"
+      ]
+    },
+    {
+      "career_id": "CAREER_AUTOMATION_TECHNICIAN",
+      "canonical_name": "Automation Technician",
+      "aliases": [
+        "automation technician",
+        "kỹ thuật viên tự động hóa",
+        "kỹ thuật viên automation"
+      ]
+    },
+    {
+      "career_id": "CAREER_DIGITAL_MARKETING_ANALYST",
+      "canonical_name": "Digital Marketing Analyst",
+      "aliases": [
+        "digital marketing analyst",
+        "marketing analyst",
+        "chuyên viên phân tích marketing"
+      ]
+    }
+  ],
+  "locations": [
+    {
+      "province": "Hà Nội",
+      "aliases": [
+        "hà nội",
+        "ha noi",
+        "hanoi",
+        "hn"
+      ]
+    },
+    {
+      "province": "TP.HCM",
+      "aliases": [
+        "tp.hcm",
+        "tp hcm",
+        "hồ chí minh",
+        "ho chi minh",
+        "hcm",
+        "sài gòn",
+        "saigon"
+      ]
+    },
+    {
+      "province": "Bắc Ninh",
+      "aliases": [
+        "bắc ninh",
+        "bac ninh",
+        "quế võ",
+        "que vo",
+        "kcn quế võ"
+      ]
+    },
+    {
+      "province": "Đà Nẵng",
+      "aliases": [
+        "đà nẵng",
+        "da nang"
+      ]
+    }
+  ]
+}
