@@ -1,0 +1,128 @@
+[
+  {
+    "career": "Data Analyst",
+    "skills": [
+      "sql",
+      "excel",
+      "power bi",
+      "data visualization",
+      "analytics"
+    ],
+    "activities": [
+      "phân tích số liệu",
+      "tìm quy luật",
+      "làm dashboard"
+    ],
+    "route": [
+      "Excel nâng cao và tư duy dữ liệu",
+      "SQL cơ bản đến trung cấp",
+      "Power BI hoặc công cụ trực quan hóa",
+      "Hoàn thành 2–3 dự án portfolio",
+      "Ứng tuyển thực tập hoặc vị trí junior"
+    ]
+  },
+  {
+    "career": "Business Intelligence Analyst",
+    "skills": [
+      "sql",
+      "power bi",
+      "data visualization",
+      "analytics"
+    ],
+    "activities": [
+      "xây dựng dashboard",
+      "theo dõi KPI",
+      "làm việc với dữ liệu doanh nghiệp"
+    ],
+    "route": [
+      "SQL và mô hình dữ liệu",
+      "Power BI",
+      "KPI và phân tích nghiệp vụ",
+      "Xây dashboard cho một bài toán thực tế",
+      "Ứng tuyển BI Intern hoặc Junior BI"
+    ]
+  },
+  {
+    "career": "QA Engineer",
+    "skills": [
+      "testing",
+      "jira",
+      "communication"
+    ],
+    "activities": [
+      "tìm lỗi",
+      "kiểm tra quy trình",
+      "viết trường hợp kiểm thử"
+    ],
+    "route": [
+      "Kiến thức kiểm thử phần mềm",
+      "Viết test case",
+      "Jira và quản lý lỗi",
+      "API testing cơ bản",
+      "Thực hiện dự án kiểm thử mẫu"
+    ]
+  },
+  {
+    "career": "Digital Marketing Analyst",
+    "skills": [
+      "excel",
+      "digital marketing",
+      "customer research",
+      "analytics"
+    ],
+    "activities": [
+      "phân tích chiến dịch",
+      "nghiên cứu khách hàng",
+      "đo hiệu quả marketing"
+    ],
+    "route": [
+      "Nền tảng marketing số",
+      "Excel và Google Analytics",
+      "Đo lường chiến dịch",
+      "Làm case study marketing",
+      "Ứng tuyển thực tập phân tích marketing"
+    ]
+  },
+  {
+    "career": "Supply Chain Analyst",
+    "skills": [
+      "excel",
+      "sql",
+      "forecasting",
+      "supply chain",
+      "analytics"
+    ],
+    "activities": [
+      "tối ưu tồn kho",
+      "dự báo",
+      "phân tích vận hành"
+    ],
+    "route": [
+      "Kiến thức chuỗi cung ứng",
+      "Excel nâng cao",
+      "SQL cơ bản",
+      "Dự báo nhu cầu",
+      "Làm dự án phân tích tồn kho"
+    ]
+  },
+  {
+    "career": "Automation Technician",
+    "skills": [
+      "plc",
+      "industrial electricity",
+      "technical drawing"
+    ],
+    "activities": [
+      "làm việc với máy móc",
+      "bảo trì",
+      "xử lý sự cố thiết bị"
+    ],
+    "route": [
+      "Điện công nghiệp cơ bản",
+      "Đọc bản vẽ kỹ thuật",
+      "PLC",
+      "Thực hành tại phòng lab/xưởng",
+      "Ứng tuyển kỹ thuật viên hoặc học nghề chuyên sâu"
+    ]
+  }
+]

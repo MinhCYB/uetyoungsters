@@ -1,0 +1,11 @@
+job_id,title,description,location,salary_min,salary_max,posted_date
+1,Data Analyst,"Phân tích dữ liệu kinh doanh, sử dụng SQL, Excel, Power BI, xây dựng dashboard và báo cáo.",Hà Nội,12000000,18000000,2026-06-01
+2,Junior Data Analyst,"Yêu cầu SQL, Excel, trực quan hóa dữ liệu và tư duy phân tích. Biết Python là lợi thế.",Hà Nội,10000000,16000000,2026-06-15
+3,Business Intelligence Analyst,"Phát triển dashboard Power BI, làm việc với SQL, mô hình dữ liệu và KPI.",TP.HCM,15000000,23000000,2026-06-18
+4,QA Engineer,"Kiểm thử phần mềm, viết test case, phát hiện lỗi, sử dụng Jira và API testing.",Hà Nội,10000000,17000000,2026-06-10
+5,Digital Marketing Analyst,"Theo dõi chiến dịch, Google Analytics, Excel, phân tích hành vi khách hàng.",TP.HCM,11000000,18000000,2026-06-20
+6,Automation Technician,"Bảo trì thiết bị, PLC, điện công nghiệp, đọc bản vẽ kỹ thuật.",Bắc Ninh,12000000,20000000,2026-06-22
+7,Supply Chain Analyst,"Phân tích tồn kho, Excel, SQL, dự báo nhu cầu và tối ưu chuỗi cung ứng.",Hà Nội,13000000,20000000,2026-06-25
+8,Frontend Developer,"JavaScript, React, HTML, CSS, xây dựng giao diện web và làm việc với API.",Đà Nẵng,12000000,22000000,2026-06-28
+9,Market Research Analyst,"Nghiên cứu thị trường, khảo sát, Excel, phân tích dữ liệu khách hàng và trình bày báo cáo.",Hà Nội,10000000,17000000,2026-07-01
+10,IT Support Technician,"Hỗ trợ người dùng, xử lý lỗi máy tính, mạng cơ bản, Windows và giao tiếp khách hàng.",Bắc Ninh,8000000,14000000,2026-07-05
