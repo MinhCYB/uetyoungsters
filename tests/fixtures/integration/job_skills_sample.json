@@ -1,0 +1,62 @@
+[
+  {
+    "job_id": "sample_job_001",
+    "career_id": "CAREER_DATA_ANALYST",
+    "skill_id": "SKILL_SQL",
+    "skill_name": "SQL",
+    "raw_mention": "SQL",
+    "requirement_level": "required",
+    "confidence": 0.9,
+    "extraction_method": "taxonomy"
+  },
+  {
+    "job_id": "sample_job_001",
+    "career_id": "CAREER_DATA_ANALYST",
+    "skill_id": "SKILL_EXCEL",
+    "skill_name": "Excel",
+    "raw_mention": "Excel",
+    "requirement_level": "preferred",
+    "confidence": 0.9,
+    "extraction_method": "taxonomy"
+  },
+  {
+    "job_id": "sample_job_002",
+    "career_id": "CAREER_SALES_EXECUTIVE",
+    "skill_id": "SKILL_SALES",
+    "skill_name": "Sales",
+    "raw_mention": "Kỹ Năng Bán Hàng",
+    "requirement_level": "mentioned",
+    "confidence": 0.85,
+    "extraction_method": "taxonomy"
+  },
+  {
+    "job_id": "sample_job_003",
+    "career_id": "CAREER_MARKETING_SPECIALIST",
+    "skill_id": "SKILL_GOOGLE_ADS",
+    "skill_name": "Google Ads",
+    "raw_mention": "Google Ads",
+    "requirement_level": "mentioned",
+    "confidence": 0.85,
+    "extraction_method": "taxonomy"
+  },
+  {
+    "job_id": "sample_job_004",
+    "career_id": "CAREER_HELPDESK_TECHNICIAN",
+    "skill_id": "SKILL_HELPDESK",
+    "skill_name": "Helpdesk Support",
+    "raw_mention": "Help Desk",
+    "requirement_level": "required",
+    "confidence": 0.9,
+    "extraction_method": "taxonomy"
+  },
+  {
+    "job_id": "sample_job_005",
+    "career_id": "CAREER_ACCOUNTANT",
+    "skill_id": "SKILL_ACCOUNTING",
+    "skill_name": "Accounting",
+    "raw_mention": "Kế Toán Viên",
+    "requirement_level": "mentioned",
+    "confidence": 0.85,
+    "extraction_method": "taxonomy"
+  }
+]

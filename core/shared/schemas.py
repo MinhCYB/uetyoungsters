@@ -12,37 +12,18 @@ code theo, dac biet la field don vi/thang do (level, score, weight).
 """
 from __future__ import annotations
 
-from datetime import date, datetime
+from datetime import datetime
 from enum import Enum
 from typing import Any, Optional
 
 from pydantic import BaseModel, Field, model_validator
 
+from .contracts.market import ExtractedSkill, JobPostingRecord
+
 
 # ==========================================================================
 # Enums dung chung
 # ==========================================================================
-
-class RequirementLevel(str, Enum):
-    REQUIRED = "required"
-    PREFERRED = "preferred"
-    NICE_TO_HAVE = "nice_to_have"
-
-
-class ExtractionMethod(str, Enum):
-    TAXONOMY = "taxonomy"
-    RULE = "rule"
-    LLM_FALLBACK = "llm_fallback"
-
-
-class Seniority(str, Enum):
-    INTERN = "intern"
-    FRESHER = "fresher"
-    JUNIOR = "junior"
-    MIDDLE = "middle"
-    SENIOR = "senior"
-    LEAD = "lead"
-
 
 class EducationLevel(str, Enum):
     """** DRAFT ** - can Nguoi 2 xac nhan day du cac muc, vi du co "vocational" hay khong."""
@@ -73,70 +54,9 @@ class FeedbackType(str, Enum):
     COMMENT = "comment"
 
 
-# ==========================================================================
-# 1. crawl-service - job posting extraction pipeline
-#    core/data CHI DOC bang JobPostingRecord (khong ghi, khong sua)
-# ==========================================================================
-
-class JobPostingRawIn(BaseModel):
-    """Input tho crawl-service nhan tu scraper, TRUOC extraction.
-    Khong luu trong core - chi de tai lieu tham chieu contract dau vao."""
-
-    source: str
-    source_job_id: str
-    source_url: str
-    title_raw: str
-    company_name_raw: str
-    description_raw: str
-    industry_raw: Optional[str] = None
-    location_raw: Optional[str] = None
-    salary_raw: Optional[str] = None
-    experience_raw: Optional[str] = None
-    education_raw: Optional[str] = None
-    posted_at_raw: Optional[str] = None
-    collected_at: datetime
-    raw_payload: dict[str, Any] = Field(default_factory=dict)
-
-
-class ExtractedSkill(BaseModel):
-    skill_id: str
-    skill_name: str
-    raw_mention: str
-    requirement_level: RequirementLevel
-    confidence: float = Field(ge=0.0, le=1.0)
-    extraction_method: ExtractionMethod
-
-
-class JobPostingRecord(BaseModel):
-    """Output crawl-service ghi thang Postgres sau extraction.
-    core/data chi DOC bang nay de lam demand data cho matching."""
-
-    job_id: str
-    content_hash: str
-    source: str
-    source_url: str
-
-    title_raw: str
-    career_id: str
-    career_name: str
-
-    company_name: str
-    province: Optional[str] = None
-
-    salary_min_vnd: Optional[int] = None
-    salary_max_vnd: Optional[int] = None
-    salary_disclosed: bool = False
-
-    seniority: Optional[Seniority] = None
-    education_level: Optional[EducationLevel] = None
-    posted_at: Optional[date] = None
-
-    skills: list[ExtractedSkill] = Field(default_factory=list)
-
-    extraction_model: str
-    extraction_version: str
-    snapshot_version: str
-    overall_confidence: float = Field(ge=0.0, le=1.0)
+# Market contracts are imported from ``core.shared.contracts.market``.
+# Student profile and recommendation models remain in this module because
+# they belong to separate bounded contexts.
 
 
 # ==========================================================================

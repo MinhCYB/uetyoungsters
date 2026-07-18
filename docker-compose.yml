@@ -11,13 +11,17 @@ services:
       - pgdata:/var/lib/postgresql/data
 
   crawl-service:
-    build: ./crawl-service
+    build:
+      context: .
+      dockerfile: crawl-service/Dockerfile
     depends_on:
       - db
     environment:
       DATABASE_URL: postgresql://cc_user:cc_pass@db:5432/career_compass
+      DATA_ACTION: status
     volumes:
-      - ./crawl-service:/app
+      - ./data:/app/data
+      - ./reports:/app/reports
     # Khong expose port - khong phai API runtime, chi chay job (cron/tay). Xem main.py.
 
   profile-service:
@@ -32,7 +36,9 @@ services:
       - ./profile-service:/app
 
   core:
-    build: ./core
+    build:
+      context: .
+      dockerfile: core/Dockerfile
     depends_on:
       - db
       - profile-service
@@ -42,7 +48,9 @@ services:
       DATABASE_URL: postgresql://cc_user:cc_pass@db:5432/career_compass
       PROFILE_SERVICE_URL: http://profile-service:8000
     volumes:
-      - ./core:/app
+      - ./core:/app/core
+      - ./data/processed:/app/data/processed:ro
+      - ./backend/shared/taxonomy.json:/app/backend/shared/taxonomy.json:ro
 
 volumes:
   pgdata:

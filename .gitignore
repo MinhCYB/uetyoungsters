@@ -1,36 +1,42 @@
-# Python
+__pycache__/
+.pytest_cache/
+.venv/
+.env
+data/raw/*
+data/interim/*
+data/processed/*
+data/debug/
+data/quality/*
+
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+!data/quality/.gitkeep
+
+*.parquet
+*.csv
+reports/*.json
+data/pytest_tmp/
+data/pytest_cache/
+.pytest_cache/
+
+.pytest_cache/
+data/pytest_tmp/
+data/pytest_cache/
 __pycache__/
 *.py[cod]
-*.egg-info/
-.venv/
-venv/
-env/
-*.egg
 
-# Environment
-.env
-.env.local
-
-# Node / frontend
+data/raw/
+data/interim/
+data/processed/
+data/debug/
+.pytest_cache/
+data/pytest_cache/
+data/pytest_tmp/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.pytest_tmp/
+data/pytest_cache/
+data/pytest_tmp/
 node_modules/
-dist/
-.vite/
-
-# Docker
-*.pid
-
-# Database
-*.sqlite3
-pgdata/
-
-# Crawl output (du lieu that, khong commit)
-crawl-service/output/
-
-# Logs
-*.log
-
-# OS / editor
-.DS_Store
-.vscode/
-.idea/
-*.swp

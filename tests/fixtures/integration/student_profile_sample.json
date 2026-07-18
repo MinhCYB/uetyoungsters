@@ -1,0 +1,32 @@
+{
+  "id": "sample_profile_001",
+  "education": {
+    "level": "high_school",
+    "field_of_study": null,
+    "school_type": null
+  },
+  "location_constraints": {
+    "preferred_provinces": ["Hà Nội"],
+    "open_to_remote": true,
+    "open_to_relocate": false
+  },
+  "training_constraints": {
+    "hours_per_week": 8,
+    "preferred_pathway": "self_study",
+    "budget_level": "low"
+  },
+  "interests": [],
+  "strengths": [],
+  "skills": [],
+  "abilities": [],
+  "career_values": [],
+  "work_preferences": [],
+  "exploration_interests": [],
+  "profile_version": 1,
+  "consent_settings": {
+    "data_usage_ack": true,
+    "share_enabled": false,
+    "share_expires_at": null
+  },
+  "updated_at": "2026-07-18T00:00:00Z"
+}

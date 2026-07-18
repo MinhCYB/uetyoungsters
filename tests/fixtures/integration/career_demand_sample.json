@@ -1,0 +1,22 @@
+[
+  {
+    "career_id": "CAREER_DATA_ANALYST",
+    "province": "Hà Nội",
+    "work_mode": "UNSPECIFIED",
+    "snapshot_version": "fixture-v1",
+    "posting_count": 1,
+    "unique_company_count": 1,
+    "salary_median_vnd": 15000000,
+    "salary_sample_size": 1
+  },
+  {
+    "career_id": "CAREER_SALES_EXECUTIVE",
+    "province": null,
+    "work_mode": "REMOTE",
+    "snapshot_version": "fixture-v1",
+    "posting_count": 1,
+    "unique_company_count": 1,
+    "salary_median_vnd": null,
+    "salary_sample_size": 0
+  }
+]
