@@ -15,6 +15,7 @@ export function adaptAnalysisResponse(response) {
     kind,
     requestId: required(response.request_id, 'request_id'),
     studentId: required(response.student_id, 'student_id'),
+    displayName: response.display_name || 'Minh Anh',
     generatedAt: required(response.generated_at, 'generated_at'),
     title: required(response.title, 'title'),
     summary: response.summary || null,
@@ -36,6 +37,9 @@ export function adaptAnalysisResponse(response) {
 
   if (kind === 'initial_analysis') return {
     ...common,
+    analysisId: response.analysis_id || null,
+    profileVersion: response.profile_version || null,
+    marketMessage: response.market_message || null,
     abilities: required(response.ability_profile, 'ability_profile').map((ability, index) => ({
       ...displayEntity({ id: ability.ability_id, display_name: ability.display_name }, `ability_profile[${index}]`),
       level: required(ability.level, `ability_profile[${index}].level`),
@@ -47,9 +51,11 @@ export function adaptAnalysisResponse(response) {
     gaps: required(response.gaps, 'gaps').map((gap, index) => ({
       id: required(gap.gap_id, `gaps[${index}].gap_id`),
       type: required(gap.gap_type, `gaps[${index}].gap_type`),
+      dimension: gap.gap_dimension ?? null,
       subject: displayEntity({ id: gap.subject_id, display_name: gap.display_name }, `gaps[${index}]`),
       priority: required(gap.priority, `gaps[${index}].priority`),
       description: required(gap.description, `gaps[${index}].description`),
+      status: gap.status || 'open',
     })),
   };
 
@@ -63,8 +69,10 @@ export function adaptAnalysisResponse(response) {
       title: required(week.title, `weekly_plan[${index}].title`),
       objective: required(week.objective, `weekly_plan[${index}].objective`),
       estimatedMinutes: required(week.estimated_minutes, `weekly_plan[${index}].estimated_minutes`),
-      activities: (week.activities || []).map(activity => ({ id: activity.activity_id, title: activity.title, status: activity.status })),
+      activities: (week.activities || []).map(activity => ({ id: activity.activity_id, title: activity.title, status: activity.status, taskType: activity.task_type || null, skillId: activity.skill_id || null, careerGroupId: activity.career_group_id || null, estimatedMinutes: activity.estimated_minutes || null })),
     })),
+    estimatedMinutes: response.estimated_minutes ?? null,
+    activities: (response.activities || []).map(activity => ({ id: activity.activity_id, title: activity.title, status: activity.status, taskType: activity.task_type || null, skillId: activity.skill_id || null, careerGroupId: activity.career_group_id || null, estimatedMinutes: activity.estimated_minutes || null })),
   };
 
   if (kind === 'followup_evaluation') return {
@@ -79,6 +87,8 @@ export function adaptAnalysisResponse(response) {
       delta: required(item.delta, `before_after[${index}].delta`),
       interpretation: item.interpretation || null,
     })),
+    outcomes: response.outcomes || [],
+    updatedGaps: response.updated_gaps || [],
   };
   throw new Error(`response_type không được hỗ trợ: ${kind}`);
 }

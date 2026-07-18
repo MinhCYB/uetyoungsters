@@ -13,6 +13,9 @@ export const ABILITY_LEVEL_LABELS = {
 };
 
 export const GAP_TYPE_LABELS = {
+  academic: 'Học tập',
+  exploration: 'Khám phá',
+  decision: 'Ra quyết định',
   knowledge: 'Kiến thức',
   skill: 'Kỹ năng thực hành',
   experience: 'Trải nghiệm',

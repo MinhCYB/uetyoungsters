@@ -229,8 +229,8 @@ def test_market_adapter_satisfies_protocol() -> None:
     assert isinstance(ReadOnlyMarketContextProvider(), MarketContextProvider)
 
 
-def test_export_script_creates_all_six_files() -> None:
-    paths = export_contract_examples(EXAMPLE_ROOT)
+def test_export_script_creates_all_six_files(tmp_path) -> None:
+    paths = export_contract_examples(tmp_path)
     assert len(paths) == 6
     assert all(path.is_file() for path in paths)
     assert {path.name for path in paths} == {
@@ -243,12 +243,14 @@ def test_export_script_creates_all_six_files() -> None:
     }
 
 
-def test_export_is_byte_deterministic() -> None:
-    export_contract_examples(EXAMPLE_ROOT)
-    first = {path.name: path.read_bytes() for path in EXAMPLE_ROOT.glob("*.json")}
-    export_contract_examples(EXAMPLE_ROOT)
-    second = {path.name: path.read_bytes() for path in EXAMPLE_ROOT.glob("*.json")}
+def test_export_is_byte_deterministic(tmp_path) -> None:
+    canonical = {path.name: path.read_bytes() for path in EXAMPLE_ROOT.glob("*.json")}
+    export_contract_examples(tmp_path)
+    first = {path.name: path.read_bytes() for path in tmp_path.glob("*.json")}
+    export_contract_examples(tmp_path)
+    second = {path.name: path.read_bytes() for path in tmp_path.glob("*.json")}
     assert first == second
+    assert {path.name: path.read_bytes() for path in EXAMPLE_ROOT.glob("*.json")} == canonical
 
 
 def test_small_market_sample_produces_warning() -> None:
