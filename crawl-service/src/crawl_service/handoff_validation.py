@@ -660,13 +660,17 @@ def validate_generated_file_guard(root: Path) -> None:
         "data/processed/.gitkeep",
         "data/quality/.gitkeep",
     }
+    allowed_source_files = {
+        "frontend/index.html",
+        "phase1_demo/static/index.html",
+    }
     violations: list[str] = []
     for raw_path in result.stdout.splitlines():
         path = raw_path.replace("\\", "/")
         lowered = path.casefold()
         if path.startswith("tests/fixtures/"):
             continue
-        if path in allowed_data:
+        if path in allowed_data or path in allowed_source_files:
             continue
         if (
             lowered.endswith(".parquet")
