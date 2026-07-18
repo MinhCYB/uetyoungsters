@@ -1,2 +1,5 @@
-"""Application layer placeholder for future Student Companion use cases."""
+"""Application orchestration for the Phase 1 demo."""
 
+from .service import DemoService, DemoStage, InvalidTransition
+
+__all__ = ["DemoService", "DemoStage", "InvalidTransition"]

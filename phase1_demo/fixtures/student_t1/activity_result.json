@@ -1,0 +1,16 @@
+{
+  "activity_result_id": "ACTIVITY_RESULT_DATA_001",
+  "activity_id": "ACTIVITY_DATA_INSIGHTS",
+  "student_id": "STUDENT_MINH_ANH_001",
+  "career_group_id": "CAREER_GROUP_DATA_AI",
+  "completed": true,
+  "rubric_score": 8.0,
+  "max_score": 10.0,
+  "interest_before": 3.0,
+  "interest_after": 4.0,
+  "interest_max_score": 5.0,
+  "preferred_part": "Tìm các điểm bất thường và giải thích ba insight.",
+  "completed_at": "2026-07-15T09:00:00+07:00",
+  "activity_version": "1.0.0",
+  "schema_version": "1.0.0"
+}

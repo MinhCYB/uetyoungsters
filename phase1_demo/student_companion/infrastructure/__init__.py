@@ -1,2 +1,18 @@
-"""Infrastructure layer placeholder for future offline adapters."""
+"""Offline fixture and read-only market adapters."""
 
+from .fixtures import (
+    FollowupFixtures,
+    InitialFixtures,
+    load_followup_fixtures,
+    load_initial_fixtures,
+)
+from .market import build_market_snapshot, load_fallback_market
+
+__all__ = [
+    "FollowupFixtures",
+    "InitialFixtures",
+    "build_market_snapshot",
+    "load_fallback_market",
+    "load_followup_fixtures",
+    "load_initial_fixtures",
+]

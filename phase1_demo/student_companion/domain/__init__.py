@@ -31,6 +31,20 @@ from .models import (
     TeacherObservation,
     WeeklyPlan,
 )
+from .rules import (
+    build_ability_profile,
+    build_gaps,
+    evaluate_assessment_outcomes,
+    generate_weekly_plan,
+    merge_evidence,
+    normalize_academic_records,
+    normalize_activity_result,
+    normalize_assessment,
+    normalize_self_report,
+    normalize_teacher_observations,
+    outcome_status,
+    select_next_step,
+)
 
 __all__ = [
     "AbilityEstimate",
@@ -60,4 +74,16 @@ __all__ = [
     "TaskType",
     "TeacherObservation",
     "WeeklyPlan",
+    "build_ability_profile",
+    "build_gaps",
+    "evaluate_assessment_outcomes",
+    "generate_weekly_plan",
+    "merge_evidence",
+    "normalize_academic_records",
+    "normalize_activity_result",
+    "normalize_assessment",
+    "normalize_self_report",
+    "normalize_teacher_observations",
+    "outcome_status",
+    "select_next_step",
 ]
