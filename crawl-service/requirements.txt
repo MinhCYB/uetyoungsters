@@ -1,0 +1,6 @@
+sqlalchemy
+psycopg2-binary
+beautifulsoup4
+requests
+playwright
+google-generativeai

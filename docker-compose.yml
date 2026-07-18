@@ -1,0 +1,48 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: cc_user
+      POSTGRES_PASSWORD: cc_pass
+      POSTGRES_DB: career_compass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  crawl-service:
+    build: ./crawl-service
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://cc_user:cc_pass@db:5432/career_compass
+    volumes:
+      - ./crawl-service:/app
+    # Khong expose port - khong phai API runtime, chi chay job (cron/tay). Xem main.py.
+
+  profile-service:
+    build: ./profile-service
+    depends_on:
+      - db
+    ports:
+      - "8001:8000"
+    environment:
+      DATABASE_URL: postgresql://cc_user:cc_pass@db:5432/career_compass
+    volumes:
+      - ./profile-service:/app
+
+  core:
+    build: ./core
+    depends_on:
+      - db
+      - profile-service
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://cc_user:cc_pass@db:5432/career_compass
+      PROFILE_SERVICE_URL: http://profile-service:8000
+    volumes:
+      - ./core:/app
+
+volumes:
+  pgdata:
