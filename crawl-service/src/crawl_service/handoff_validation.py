@@ -18,12 +18,12 @@ import pandas as pd
 
 from .paths import PROJECT_ROOT
 
-from core.shared.contracts.market import (
+from .shared_contracts.market import (
     JobPostingRecord,
     ExtractedSkill,
 )
-from core.shared.schemas import StudentProfile
-from core.shared.taxonomy import load_taxonomy
+from .shared_contracts.schemas import StudentProfile
+from .shared_contracts.taxonomy import load_taxonomy
 
 
 PROCESSED_FILENAMES = {
@@ -703,13 +703,16 @@ def run_validation(
     else:
         production = not missing
 
-    taxonomy_path = root / "backend" / "shared" / "taxonomy.json"
+    taxonomy_path = root / "crawl-service" / "data" / "taxonomy.json"
     taxonomy = load_taxonomy(taxonomy_path)
     taxonomy_ids = validate_taxonomy(taxonomy)
-    require(
-        not (root / "core" / "shared" / "taxonomy.json").exists(),
-        "Competing core taxonomy JSON exists",
-    )
+    # After self-containment refactor, the old core/ and backend/shared/
+    # locations must not contain a competing taxonomy file.
+    for stale in [
+        root / "core" / "shared" / "taxonomy.json",
+        root / "backend" / "shared" / "taxonomy.json",
+    ]:
+        require(not stale.exists(), f"Competing taxonomy JSON exists: {stale}")
     fixture_root = root / "tests" / "fixtures" / "integration"
     profile = read_json(fixture_root / "student_profile_sample.json")
     validate_profile(profile, taxonomy, taxonomy_ids)

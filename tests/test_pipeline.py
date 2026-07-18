@@ -7,7 +7,7 @@ from crawl_service.normalization import (
 
 
 def taxonomy():
-    return load_taxonomy("backend/shared/taxonomy.json")
+    return load_taxonomy("crawl-service/data/taxonomy.json")
 
 
 def test_career_normalization():

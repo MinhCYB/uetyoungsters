@@ -24,7 +24,7 @@ def main(action: str, arguments: Sequence[str] | None = None) -> int:
     args = list(arguments or [])
 
     if action == "status":
-        from core.shared.taxonomy import load_taxonomy
+        from .shared_contracts.taxonomy import load_taxonomy
 
         taxonomy = load_taxonomy(TAXONOMY_PATH)
         if not SOURCES_CONFIG_PATH.is_file():

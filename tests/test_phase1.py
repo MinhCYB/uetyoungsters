@@ -19,7 +19,7 @@ from crawl_service.pipeline import (
 from crawl_service.quality import create_coverage_reports
 
 
-TAXONOMY_PATH = Path("backend/shared/taxonomy.json")
+TAXONOMY_PATH = Path("crawl-service/data/taxonomy.json")
 
 
 def _raw_job(

@@ -1,0 +1,7 @@
+# Queue/worker framework (uncomment one when ready):
+# redis>=5.0
+# rq>=1.16
+# celery>=5.4
+
+# AI SDK (uncomment when ready):
+# anthropic>=0.25

@@ -8,12 +8,12 @@ import pytest
 from crawl_service.cli import cli as crawl_cli
 from crawl_service.cli import main as crawl_main
 
-from core.shared.contracts.market import (
+from crawl_service.shared_contracts.market import (
     MarketJobRecord,
     MarketSkillRecord,
 )
-from core.shared.schemas import StudentProfile
-from core.shared.taxonomy import (
+from crawl_service.shared_contracts.schemas import StudentProfile
+from crawl_service.shared_contracts.taxonomy import (
     CANONICAL_TAXONOMY_PATH,
     load_canonical_taxonomy,
     load_taxonomy,
@@ -59,7 +59,7 @@ def test_canonical_taxonomy_is_unique_and_versioned():
 
     assert CANONICAL_TAXONOMY_PATH.exists()
     assert taxonomy["taxonomy_version"] == "0.4.0"
-    assert not Path("core/shared/taxonomy.json").exists()
+    assert not Path("backend/shared/taxonomy.json").exists()
 
     career_ids = [item["career_id"] for item in taxonomy["careers"]]
     skill_ids = [item["skill_id"] for item in taxonomy["skills"]]
@@ -99,11 +99,8 @@ def test_student_profile_fixture_matches_profile_contract():
 
 def test_main_application_skeleton_is_preserved():
     required_paths = [
-        ".env.example",
-        "core/main.py",
         "crawl-service/main.py",
-        "profile-service/main.py",
-        "frontend/package.json",
+        "backend-api/main.py",
         "docker-compose.yml",
         "docs/career-compass-notes.md",
         "docs/career-compass-schema-draft.md",

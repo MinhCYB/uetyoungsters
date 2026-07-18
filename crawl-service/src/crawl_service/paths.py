@@ -4,12 +4,11 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
-import sys
 
 
 def _is_project_root(path: Path) -> bool:
     return (
-        (path / "backend" / "shared" / "taxonomy.json").is_file()
+        (path / "crawl-service" / "data" / "taxonomy.json").is_file()
         and (path / "config" / "sources.yaml").is_file()
     )
 
@@ -43,17 +42,13 @@ def _discover_project_root() -> Path:
 
 PROJECT_ROOT = _discover_project_root()
 
-# Shared core contracts are intentionally kept outside this service package.
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
-
 DATA_DIR = PROJECT_ROOT / "data"
 RAW_DIR = DATA_DIR / "raw"
 INTERIM_DIR = DATA_DIR / "interim"
 PROCESSED_DIR = DATA_DIR / "processed"
 REPORTS_DIR = PROJECT_ROOT / "reports"
 SOURCES_CONFIG_PATH = PROJECT_ROOT / "config" / "sources.yaml"
-TAXONOMY_PATH = PROJECT_ROOT / "backend" / "shared" / "taxonomy.json"
+TAXONOMY_PATH = PROJECT_ROOT / "crawl-service" / "data" / "taxonomy.json"
 
 
 __all__ = [

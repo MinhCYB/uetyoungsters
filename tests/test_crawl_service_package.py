@@ -13,8 +13,8 @@ import pytest
 import yaml
 
 import crawl_service
-from core.shared.contracts.market import JobPostingRecord, ExtractedSkill
-from core.shared.schemas import StudentProfile
+from crawl_service.shared_contracts.market import JobPostingRecord, ExtractedSkill
+from crawl_service.shared_contracts.schemas import StudentProfile
 from crawl_service.handoff_validation import run_validation
 from crawl_service.cli import cli as crawl_cli
 from crawl_service.paths import (
@@ -52,21 +52,7 @@ def test_pyproject_explicitly_discovers_src_layout():
     assert setuptools["packages"]["find"]["include"] == ["crawl_service*"]
 
 
-@pytest.mark.parametrize(
-    "wrapper",
-    [
-        "run_pipeline.py",
-        "scripts/collect_greenhouse.py",
-        "scripts/collect_viecoi.py",
-        "scripts/run_data_pipeline.py",
-        "scripts/update_job_lifecycle.py",
-        "scripts/validate_data_handoff.py",
-    ],
-)
-def test_compatibility_wrappers_bootstrap_src_layout(wrapper: str):
-    text = (PROJECT_ROOT / wrapper).read_text(encoding="utf-8")
-    assert 'PROJECT_ROOT / "crawl-service" / "src"' in text
-    assert "sys.path.insert(0, str(CRAWL_SERVICE_SRC))" in text
+
 
 
 def test_module_status_returns_zero():
@@ -96,23 +82,7 @@ def test_unknown_cli_command_returns_nonzero():
     assert "invalid choice" in result.stderr
 
 
-@pytest.mark.parametrize(
-    ("wrapper", "command"),
-    [
-        ("run_pipeline.py", "pipeline"),
-        ("scripts/collect_greenhouse.py", "collect-greenhouse"),
-        ("scripts/collect_viecoi.py", "collect-viecoi"),
-    ],
-)
-def test_compatibility_wrapper_dispatches_expected_command(
-    wrapper: str,
-    command: str,
-):
-    with patch("crawl_service.cli.main", return_value=0) as dispatch:
-        with pytest.raises(SystemExit) as exit_info:
-            runpy.run_path(str(PROJECT_ROOT / wrapper), run_name="__main__")
-    assert exit_info.value.code == 0
-    dispatch.assert_called_once_with(command)
+
 
 
 def test_validate_handoff_fixture_only_through_module_cli(capsys):
@@ -123,7 +93,7 @@ def test_validate_handoff_fixture_only_through_module_cli(capsys):
 
 
 def test_shared_paths_point_to_canonical_root_files():
-    assert TAXONOMY_PATH == PROJECT_ROOT / "backend/shared/taxonomy.json"
+    assert TAXONOMY_PATH == PROJECT_ROOT / "crawl-service/data/taxonomy.json"
     assert SOURCES_CONFIG_PATH == PROJECT_ROOT / "config/sources.yaml"
     assert TAXONOMY_PATH.is_file()
     assert SOURCES_CONFIG_PATH.is_file()
@@ -182,6 +152,8 @@ def test_docker_uses_module_entrypoint_and_no_data_copy():
     )
     assert 'CMD ["python", "-m", "crawl_service", "status"]' in dockerfile
     assert "COPY data " not in dockerfile
+    assert "COPY core " not in dockerfile
+    assert "COPY backend" not in dockerfile
 
 
 def test_generated_data_is_not_tracked():

@@ -1,3 +1,0 @@
-"""
-Hang so dung chung trong core: trong so scoring, TTL mac dinh...
-"""

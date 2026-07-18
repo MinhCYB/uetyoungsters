@@ -7,7 +7,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from core.shared.taxonomy import load_taxonomy
+from crawl_service.shared_contracts.taxonomy import load_taxonomy
 from crawl_service.handoff_validation import (
     HandoffValidationError,
     PROJECT_ROOT,

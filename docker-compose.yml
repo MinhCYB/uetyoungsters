@@ -10,6 +10,11 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
   crawl-service:
     build:
       context: .
@@ -18,38 +23,35 @@ services:
       - db
     environment:
       DATABASE_URL: postgresql://cc_user:cc_pass@db:5432/career_compass
+      CAREER_COMPASS_ROOT: /app
     volumes:
       - ./data:/app/data
       - ./reports:/app/reports
-    # Khong expose port - override command de chay collector/pipeline thu cong.
 
-  profile-service:
-    build: ./profile-service
+  backend-api:
+    build: ./backend-api
     depends_on:
       - db
-    ports:
-      - "8001:8000"
-    environment:
-      DATABASE_URL: postgresql://cc_user:cc_pass@db:5432/career_compass
-    volumes:
-      - ./profile-service:/app
-
-  core:
-    build:
-      context: .
-      dockerfile: core/Dockerfile
-    depends_on:
-      - db
-      - profile-service
     ports:
       - "8000:8000"
     environment:
       DATABASE_URL: postgresql://cc_user:cc_pass@db:5432/career_compass
-      PROFILE_SERVICE_URL: http://profile-service:8000
-    volumes:
-      - ./core:/app/core
-      - ./data/processed:/app/data/processed:ro
-      - ./backend/shared/taxonomy.json:/app/backend/shared/taxonomy.json:ro
+
+  ai-worker-service:
+    build: ./ai-worker-service
+    depends_on:
+      - db
+      - redis
+    environment:
+      DATABASE_URL: postgresql://cc_user:cc_pass@db:5432/career_compass
+      REDIS_URL: redis://redis:6379/0
+
+  nginx:
+    build: ./nginx
+    depends_on:
+      - backend-api
+    ports:
+      - "80:80"
 
 volumes:
   pgdata:
