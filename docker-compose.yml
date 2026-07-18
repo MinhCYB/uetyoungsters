@@ -9,11 +9,17 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cc_user -d career_compass"]
+      interval: 3s
+      timeout: 3s
+      retries: 15
 
   crawl-service:
     build: ./crawl-service
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       DATABASE_URL: postgresql://cc_user:cc_pass@db:5432/career_compass
     volumes:
@@ -23,7 +29,8 @@ services:
   profile-service:
     build: ./profile-service
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     ports:
       - "8001:8000"
     environment:
@@ -34,8 +41,10 @@ services:
   core:
     build: ./core
     depends_on:
-      - db
-      - profile-service
+      db:
+        condition: service_healthy
+      profile-service:
+        condition: service_started
     ports:
       - "8000:8000"
     environment:
@@ -43,6 +52,23 @@ services:
       PROFILE_SERVICE_URL: http://profile-service:8000
     volumes:
       - ./core:/app
+
+  question-bank-importer:
+    build: ./core
+    profiles: ["tools"]
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://cc_user:cc_pass@db:5432/career_compass
+      QUESTION_BANK_VERSION: ${QUESTION_BANK_VERSION:-1.0.0}
+      CORE_DIR: /app
+      PYTHONPATH: /app
+    volumes:
+      - ./core:/app
+      - ./scripts:/scripts:ro
+      - ./source:/question-sources:ro
+    command: ["python", "/scripts/build_question_bank.py", "--source-dir", "/question-sources"]
 
 volumes:
   pgdata:

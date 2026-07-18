@@ -18,3 +18,14 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+def init_db():
+    from models import (Assessment, AssessmentAnswer, BlueprintRule, Question, QuestionBankVersion,
+                        QuestionBlueprint, QuestionCondition, QuestionOption, QuestionScale)
+    Base.metadata.create_all(bind=engine, tables=[
+        QuestionBankVersion.__table__, Question.__table__, QuestionOption.__table__,
+        QuestionCondition.__table__, QuestionScale.__table__, QuestionBlueprint.__table__,
+        BlueprintRule.__table__,
+        Assessment.__table__, AssessmentAnswer.__table__,
+    ])

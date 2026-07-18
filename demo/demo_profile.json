@@ -1,0 +1,248 @@
+{
+  "fixture": {
+    "id": "demo-profile-01",
+    "label": "Hồ sơ demo độc lập",
+    "is_demo": true,
+    "schema_version": "1.0.0",
+    "notes": "Chỉ dùng để phát triển và trình diễn. Không tự động nạp vào UI hoặc database production."
+  },
+  "session": {
+    "display_name": "Nguyễn An",
+    "assessment_completed": true,
+    "profile_status": "confirmed",
+    "selected_career_id": "data_analyst"
+  },
+  "basic_information": {
+    "age": 20,
+    "current_stage": "university",
+    "university_year": "nam_2",
+    "major": "Hệ thống thông tin",
+    "expected_completion": "2028",
+    "career_goal": "Tìm hướng nghề nghiệp phù hợp giữa dữ liệu và sản phẩm công nghệ",
+    "career_clarity": "some_ideas",
+    "preferred_region": "Hà Nội",
+    "willing_to_relocate": false,
+    "remote_work": true,
+    "weekly_learning_hours": 8,
+    "learning_budget": "duoi_500_nghin",
+    "accepted_training_routes": ["Đại học", "Chứng chỉ", "Tự học"],
+    "constraints": ["thoi_gian_han_che", "uu_tien_tai_nguyen_mien_phi"]
+  },
+  "assessment": {
+    "assessment_id": "demo-assessment-01",
+    "question_set_id": "demo-question-set-01",
+    "question_bank_version": "1.0.0",
+    "raw_answers_note": "Đáp án đầy đủ được lưu trong assessment_answers. Fixture này chỉ giữ một số mẫu đại diện.",
+    "sample_answers": {
+      "H02": 5,
+      "H05": 3,
+      "H09": 4,
+      "H17": 5,
+      "DH_CAU_HOI_KIEM_TRA_BOI_CANH_01": "Trong 30 ngày gần đây tôi chủ yếu làm bài nhóm và một dự án cá nhân.",
+      "AS04": "Tôi chia dữ kiện thành nhóm, xác định phần còn thiếu rồi kiểm tra từng giả thuyết trước khi kết luận.",
+      "CT02": "Tôi sẽ kiểm tra nguồn, thời điểm thu thập và tìm thêm bằng chứng độc lập trước khi tin vào nhận định."
+    }
+  },
+  "interest_profile": {
+    "current_activities": ["Phân tích dữ liệu", "Giải bài toán logic", "Làm dashboard"],
+    "exploration_activities": ["Nghiên cứu người dùng", "Thiết kế sản phẩm dữ liệu"],
+    "riasec_scores": {
+      "R": 48,
+      "I": 82,
+      "A": 61,
+      "S": 58,
+      "E": 49,
+      "C": 75
+    },
+    "top_groups": ["I", "C", "A"],
+    "career_values": [
+      "Phát triển và thành tựu",
+      "Tự chủ và sáng tạo",
+      "Thu nhập và ổn định"
+    ]
+  },
+  "work_tendencies": [
+    {"id": "collaboration", "name": "Làm việc cùng nhóm", "value": 3},
+    {"id": "structure", "name": "Môi trường có cấu trúc", "value": 4},
+    {"id": "change", "name": "Thích nghi với thay đổi", "value": 3},
+    {"id": "data_focus", "name": "Tập trung vào dữ liệu", "value": 4},
+    {"id": "communication", "name": "Giao tiếp thường xuyên", "value": 2},
+    {"id": "method", "name": "Tự tìm phương pháp", "value": 3}
+  ],
+  "experiences": [
+    {
+      "id": "sales-dashboard",
+      "title": "Dự án phân tích dữ liệu bán hàng",
+      "role": "Thành viên phụ trách dữ liệu",
+      "description": "Làm sạch dữ liệu, tìm nguyên nhân doanh thu thay đổi và trình bày kết quả bằng dashboard.",
+      "liked_aspects": ["Tìm quy luật", "Trực quan hóa kết quả"],
+      "disliked_aspects": ["Nhập dữ liệu lặp lại"],
+      "reflection": "Tôi hứng thú hơn khi được tìm nguyên nhân và giải thích kết quả cho người khác."
+    }
+  ],
+  "habit_patterns": [
+    {
+      "pattern_id": "task_planning",
+      "label": "Lập kế hoạch theo bước nhỏ",
+      "observation": "Thường chia nhiệm vụ lớn thành các phần nhỏ nhưng chỉ kiểm tra tiến độ rõ ràng khi deadline đến gần.",
+      "contexts": ["bài tập nhóm", "dự án cá nhân"],
+      "exceptions": ["nhiệm vụ không có thời hạn cụ thể"],
+      "evidence_question_ids": ["H02", "H05", "DH_CAU_HOI_KIEM_TRA_BOI_CANH_02"],
+      "confidence": 0.76,
+      "confirmed_by_user": true
+    },
+    {
+      "pattern_id": "learning_strategy",
+      "label": "Học qua thử nghiệm và đối chiếu",
+      "observation": "Khi chưa hiểu, thường đổi nguồn học và thử áp dụng ngay vào ví dụ nhỏ.",
+      "contexts": ["tự học kỹ thuật", "làm bài thực hành"],
+      "exceptions": [],
+      "evidence_question_ids": ["H09", "H12", "LA05"],
+      "confidence": 0.81,
+      "confirmed_by_user": false
+    }
+  ],
+  "self_reported_skills": [
+    {
+      "skill_id": "spreadsheet",
+      "name": "Bảng tính",
+      "level": 2,
+      "context": "Dùng hàm, pivot table và biểu đồ trong bài tập môn học."
+    },
+    {
+      "skill_id": "sql",
+      "name": "SQL",
+      "level": 1,
+      "context": "Đã viết truy vấn SELECT, JOIN và GROUP BY trên dữ liệu mẫu."
+    }
+  ],
+  "ability_analysis": [
+    {
+      "ability_id": "analysis_reasoning",
+      "ability_name": "Phân tích và suy luận",
+      "score": 2.4,
+      "level": "khá",
+      "confidence": 0.79,
+      "evidence_question_ids": ["AS04", "H24", "H25"],
+      "reasoning": "Có trình tự tách dữ kiện, nhận diện phần thiếu và kiểm tra giả thuyết.",
+      "confirmed_by_user": false
+    },
+    {
+      "ability_id": "attention_to_detail",
+      "ability_name": "Chú ý chi tiết",
+      "score": 2.2,
+      "level": "khá",
+      "confidence": 0.73,
+      "evidence_question_ids": ["DT07", "H17", "H21"],
+      "reasoning": "Có thói quen đọc lại yêu cầu và kiểm tra tính đầy đủ trước khi hoàn thành.",
+      "confirmed_by_user": false
+    },
+    {
+      "ability_id": "critical_thinking",
+      "ability_name": "Tư duy phản biện",
+      "score": 2.3,
+      "level": "khá",
+      "confidence": 0.77,
+      "evidence_question_ids": ["CT02", "H23", "H28"],
+      "reasoning": "Biết kiểm tra nguồn và sẵn sàng thay đổi kết luận khi xuất hiện bằng chứng tốt hơn.",
+      "confirmed_by_user": false
+    },
+    {
+      "ability_id": "creativity_ideation",
+      "ability_name": "Sáng tạo và tạo ý tưởng",
+      "score": 1.9,
+      "level": "đang phát triển",
+      "confidence": 0.66,
+      "evidence_question_ids": ["CR07", "H30", "H31"],
+      "reasoning": "Có thử nhiều cách giải quyết nhưng bằng chứng về khả năng phát triển ý tưởng mới còn giới hạn.",
+      "confirmed_by_user": false
+    },
+    {
+      "ability_id": "learning_adaptability",
+      "ability_name": "Học hỏi và thích ứng",
+      "score": 2.6,
+      "level": "tốt",
+      "confidence": 0.84,
+      "evidence_question_ids": ["LA05", "H09", "H15"],
+      "reasoning": "Chủ động đổi nguồn học, thử lại và điều chỉnh cách làm khi phương án cũ không hiệu quả.",
+      "confirmed_by_user": false
+    },
+    {
+      "ability_id": "language_communication",
+      "ability_name": "Ngôn ngữ và diễn đạt",
+      "score": 2.0,
+      "level": "khá",
+      "confidence": 0.69,
+      "evidence_question_ids": ["LG05", "H36", "H37"],
+      "reasoning": "Diễn đạt có trình tự và biết tóm tắt, nhưng chưa có nhiều bằng chứng từ tình huống thuyết trình thực tế.",
+      "confirmed_by_user": false
+    },
+    {
+      "ability_id": "planning_execution",
+      "ability_name": "Lập kế hoạch và thực thi",
+      "score": 2.1,
+      "level": "khá",
+      "confidence": 0.75,
+      "evidence_question_ids": ["PL06", "H02", "H05"],
+      "reasoning": "Có khả năng chia nhỏ nhiệm vụ; việc theo dõi tiến độ cần được duy trì sớm hơn trước deadline.",
+      "confirmed_by_user": false
+    },
+    {
+      "ability_id": "interaction_collaboration",
+      "ability_name": "Tương tác và hợp tác",
+      "score": 1.8,
+      "level": "đang phát triển",
+      "confidence": 0.63,
+      "evidence_question_ids": ["CO08", "H41", "H43"],
+      "reasoning": "Có tín hiệu lắng nghe và báo sớm khó khăn, nhưng số tình huống làm việc nhóm được mô tả còn ít.",
+      "confirmed_by_user": false
+    }
+  ],
+  "career_recommendations": [
+    {
+      "id": "data_analyst",
+      "title": "Chuyên viên phân tích dữ liệu",
+      "match_score": 84,
+      "reason": "Phù hợp với xu hướng nghiên cứu, làm việc có cấu trúc và bằng chứng phân tích từ minitask.",
+      "skill_gaps": ["SQL trung cấp", "Thống kê ứng dụng", "Trình bày dữ liệu"]
+    },
+    {
+      "id": "business_analyst",
+      "title": "Business Analyst",
+      "match_score": 76,
+      "reason": "Kết hợp tư duy phân tích, khả năng diễn đạt và sở thích cải thiện quy trình.",
+      "skill_gaps": ["Phân tích yêu cầu", "Mô hình hóa quy trình", "Giao tiếp stakeholder"]
+    }
+  ],
+  "roadmap": {
+    "target_career_id": "data_analyst",
+    "title": "Lộ trình nền tảng Data Analyst trong 12 tuần",
+    "weekly_hours": 8,
+    "milestones": [
+      {
+        "order": 1,
+        "title": "Củng cố bảng tính và làm sạch dữ liệu",
+        "duration": "2 tuần",
+        "outcome": "Hoàn thành một bộ dữ liệu sạch và báo cáo kiểm tra chất lượng."
+      },
+      {
+        "order": 2,
+        "title": "SQL cho phân tích",
+        "duration": "4 tuần",
+        "outcome": "Viết truy vấn tổng hợp nhiều bảng cho một bài toán thực tế."
+      },
+      {
+        "order": 3,
+        "title": "Thống kê và trực quan hóa",
+        "duration": "3 tuần",
+        "outcome": "Tạo dashboard kèm diễn giải các chỉ số chính."
+      },
+      {
+        "order": 4,
+        "title": "Dự án portfolio",
+        "duration": "3 tuần",
+        "outcome": "Xuất bản một case study từ dữ liệu thô đến kết luận."
+      }
+    ]
+  }
+}

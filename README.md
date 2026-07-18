@@ -18,6 +18,20 @@ career-compass/
 
 **`docs/`** — tai lieu ke hoach da chot (`career-compass-notes.md`) va schema database (`career-compass-schema-draft.md`). Doc 2 file nay truoc khi dong code vao bat ky service nao.
 
+## Import ngân hàng câu hỏi
+
+Ngân hàng câu hỏi runtime nằm hoàn toàn trong PostgreSQL. Các file Markdown là nguồn biên soạn; repository không còn chứa `question_bank.json`.
+
+Các file nguồn được lưu trong thư mục `source/` của repository. Để khởi tạo hoặc cập nhật ngân hàng đề:
+
+```powershell
+docker compose run --rm question-bank-importer
+```
+
+Importer kiểm tra đủ file nguồn, ghi phiên bản, câu hỏi, lựa chọn, điều kiện và blueprint trong một transaction, sau đó đặt phiên bản thành `published`. Có thể truyền `--status draft` để kiểm tra trước hoặc `--status archived` để lưu trữ một phiên bản không còn được runtime chọn.
+
+Khi nội dung đã phát hành thay đổi, dùng phiên bản mới thay vì ghi đè lịch sử: đặt `$env:QUESTION_BANK_VERSION='1.1.0'` trước khi chạy importer. Có thể thay command của service để nhập ở trạng thái `draft` trước khi xuất bản.
+
 **`crawl-service/`** — thu thap job posting that tu ITviec/TopCV/Vieclam24h, lam sach, trich xuat skill/nganh/luong/vung (hybrid rule + LLM fallback), tong hop thanh demand summary. Chay job doc lap (tay/cron), ghi thang vao Postgres, khong expose API cho ai goi.
 
 **`profile-service/`** — hoi hoc sinh theo kieu adaptive: cau hoi co dinh ban dau, tong hop the manh so bo, roi chon tiep cau hoi sau hon tu kho de (`question_bank/`). Co API rieng (`router.py`) de frontend goi thang luc lam form.

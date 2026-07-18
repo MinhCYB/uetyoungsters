@@ -71,7 +71,13 @@ class StudentProfile(BaseModel):
 
 Không có `conversation_log` dạng hội thoại tự do (xem quyết định 6.1 trong notes) — nhưng khác với bản form tĩnh trước đó, `raw_answers` giờ là list vì adaptive questioning có nhiều vòng hỏi.
 
-### `question_bank` — kho câu hỏi, chỉ profile-service dùng
+### Ngân hàng câu hỏi khảo sát
+
+Ngân hàng câu hỏi đã chuyển sang `core` vì chính `core` phát hành, xác thực và lưu bộ đề. Dữ liệu được chuẩn hóa trong `question_bank_versions`, `questions`, `question_options`, `question_conditions`, `question_scales`, `question_blueprints` và `blueprint_rules`. Bộ đề đã phát và câu trả lời nằm trong `assessments` và `assessment_answers`.
+
+<!-- Mô hình cũ được giữ dưới đây làm lịch sử thiết kế, không còn là bảng runtime. -->
+
+### `question_bank` — mô hình cũ, không còn dùng runtime
 
 ```python
 class Question(BaseModel):
