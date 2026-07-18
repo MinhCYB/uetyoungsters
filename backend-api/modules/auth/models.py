@@ -92,6 +92,16 @@ class StudentProfile(Base):
     basic_information: Mapped[dict] = mapped_column(JSON, default=dict)
 
 
+class ProfessionalProfile(Base):
+    __tablename__ = "professional_profiles"
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uuid4)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), unique=True)
+    current_career_id: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    parsed_data: Mapped[dict] = mapped_column(JSON, default=dict)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now, onupdate=now)
+
+
 class Invitation(Base):
     __tablename__ = "invitations"
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uuid4)

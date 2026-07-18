@@ -12,6 +12,8 @@ from sqlalchemy.orm import Session
 from .store import load_question_bank, save_answers, save_assessment
 from database import get_db
 from .models import Assessment
+from modules.auth.dependencies import current_user
+from modules.auth.models import User
 from .question_bank import generate_question_set, get_question
 
 router = APIRouter()
@@ -124,6 +126,7 @@ def create_assessment_question_set(
     mode: str = Query(default="standard_25_35_min"),
     seed: int | None = Query(default=None),
     db: Session = Depends(get_db),
+    user: User = Depends(current_user),
 ):
     """Create a balanced question set from the versioned question bank."""
     actual_seed = seed if isinstance(seed, int) else randbits(63)
@@ -138,7 +141,7 @@ def create_assessment_question_set(
     ids = generated["question_ids"]
     assessment_id = str(uuid4())
     question_set_id = _question_set_id(mode, actual_seed, ids, assessment_id)
-    save_assessment(db, assessment_id=assessment_id, question_set_id=question_set_id, mode=mode, seed=actual_seed, schema_version=bank["schema_version"], question_ids=ids)
+    save_assessment(db, assessment_id=assessment_id, question_set_id=question_set_id, mode=mode, seed=actual_seed, schema_version=bank["schema_version"], question_ids=ids, user_id=user.id, tenant_id=user.tenant_id)
     return {
         "assessment_id": assessment_id,
         "question_set_id": question_set_id,
@@ -151,7 +154,7 @@ def create_assessment_question_set(
 
 
 @router.post("/submit")
-def submit_assessment(submission: AssessmentSubmission, db: Session = Depends(get_db)):
+def submit_assessment(submission: AssessmentSubmission, db: Session = Depends(get_db), user: User = Depends(current_user)):
     """Rebuild and validate a submitted assessment without trusting client flow."""
     try:
         bank = load_question_bank(db)

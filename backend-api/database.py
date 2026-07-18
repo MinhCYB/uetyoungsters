@@ -34,5 +34,8 @@ def init_db():
     class model đã được định nghĩa trước khi gọi create_all.
     """
     from modules.assessment import models as assessment_models  # noqa: F401
+    from modules.auth import models as auth_models  # noqa: F401
+    from modules.candidate import models as candidate_models  # noqa: F401
+    from modules.recommendation import models as recommendation_models  # noqa: F401
 
     Base.metadata.create_all(bind=engine)

@@ -7,6 +7,7 @@ export default defineConfig({
     host: "localhost",
     port: 5173,
     strictPort: true,
+    allowedHosts: ["uetyoungsters.catplus.site"],
     proxy: {
       "/api": {
         target: "http://localhost:8000",
