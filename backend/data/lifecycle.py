@@ -14,6 +14,47 @@ KEY_COLUMNS = [
 DEFAULT_HASH_COLUMN = "content_hash_sha256"
 
 
+def invalid_category_mask(dataframe: pd.DataFrame) -> pd.Series:
+    """Identify proven non-job ViecOi category pages."""
+    if dataframe.empty:
+        return pd.Series(False, index=dataframe.index, dtype=bool)
+
+    source = dataframe.get(
+        "source",
+        pd.Series("", index=dataframe.index),
+    ).astype("string")
+    source_url = dataframe.get(
+        "source_url",
+        pd.Series("", index=dataframe.index),
+    ).astype("string")
+
+    return (
+        source.str.casefold().eq("viecoi")
+        & source_url.str.contains(
+            "/danh-muc-",
+            case=False,
+            na=False,
+        )
+    )
+
+
+def mark_invalid_lifecycle_records(
+    dataframe: pd.DataFrame,
+) -> tuple[pd.DataFrame, int]:
+    """Mark only category-page false positives as invalid history."""
+    result = dataframe.copy()
+    mask = invalid_category_mask(result)
+    count = int(mask.sum())
+
+    if count:
+        result.loc[mask, "is_active"] = False
+        result.loc[mask, "lifecycle_status"] = "invalid"
+        result.loc[mask, "content_changed"] = False
+        result.loc[mask, "reactivated"] = False
+
+    return result, count
+
+
 def to_utc_timestamp(value: Any) -> pd.Timestamp | pd.NaT:
     if value is None or pd.isna(value):
         return pd.NaT
@@ -128,6 +169,10 @@ def update_job_lifecycle(
     )
 
     current = prepare_keys(current_jobs)
+    current, _ = mark_invalid_lifecycle_records(current)
+    current = current.loc[
+        ~invalid_category_mask(current)
+    ].copy()
 
     current = (
         current
@@ -152,6 +197,9 @@ def update_job_lifecycle(
         previous_state = prepare_keys(
             previous_state
         )
+        previous_state, _ = mark_invalid_lifecycle_records(
+            previous_state
+        )
     else:
         previous_state = pd.DataFrame()
 
@@ -160,8 +208,15 @@ def update_job_lifecycle(
         dict[str, Any],
     ] = {}
 
-    if not previous_state.empty:
-        for record in previous_state.to_dict(
+    invalid_previous = previous_state.loc[
+        invalid_category_mask(previous_state)
+    ].copy() if not previous_state.empty else pd.DataFrame()
+    valid_previous = previous_state.loc[
+        ~invalid_category_mask(previous_state)
+    ].copy() if not previous_state.empty else previous_state
+
+    if not valid_previous.empty:
+        for record in valid_previous.to_dict(
             orient="records"
         ):
             previous_lookup[
@@ -307,8 +362,12 @@ def update_job_lifecycle(
         current_records
     )
 
+    invalid_records = invalid_previous.to_dict(
+        orient="records"
+    )
+
     lifecycle_state = pd.DataFrame(
-        current_records + missing_records
+        current_records + missing_records + invalid_records
     )
 
     lifecycle_state = (

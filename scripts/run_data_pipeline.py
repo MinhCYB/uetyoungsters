@@ -14,19 +14,32 @@ if str(PROJECT_ROOT) not in sys.path:
 
 
 from backend.data.aggregation import build_demand_summary
+from backend.data.extraction import load_taxonomy
 from backend.data.lifecycle import update_job_lifecycle
 from backend.data.pipeline import (
     process_greenhouse_jobs,
+    process_viecoi_jobs,
     save_outputs,
 )
-from backend.data.quality import create_quality_report
+from backend.data.quality import (
+    create_coverage_reports,
+    create_quality_report,
+    create_viecoi_taxonomy_reports,
+)
 
 
-INTERIM_PATH = (
+GREENHOUSE_INTERIM_PATH = (
     PROJECT_ROOT
     / "data"
     / "interim"
     / "greenhouse_jobs_latest.parquet"
+)
+
+VIECOI_INTERIM_PATH = (
+    PROJECT_ROOT
+    / "data"
+    / "interim"
+    / "viecoi_jobs_latest.parquet"
 )
 
 TAXONOMY_PATH = (
@@ -48,6 +61,8 @@ REPORT_PATH = (
     / "data_quality.json"
 )
 
+REPORT_ROOT = PROJECT_ROOT / "reports"
+
 LIFECYCLE_PATH = (
     PROCESSED_ROOT
     / "job_lifecycle.parquet"
@@ -55,25 +70,63 @@ LIFECYCLE_PATH = (
 
 
 def main() -> None:
-    if not INTERIM_PATH.exists():
+    required_inputs = [
+        GREENHOUSE_INTERIM_PATH,
+        VIECOI_INTERIM_PATH,
+    ]
+
+    missing_inputs = [
+        path
+        for path in required_inputs
+        if not path.exists()
+    ]
+
+    if missing_inputs:
+        missing_text = "\n".join(
+            f"- {path}"
+            for path in missing_inputs
+        )
+
         raise FileNotFoundError(
-            f"Không tìm thấy {INTERIM_PATH}. "
-            "Hãy chạy scripts/collect_greenhouse.py trước."
+            "Thiếu dữ liệu interim:\n"
+            f"{missing_text}\n"
+            "Hãy chạy các collector trước."
         )
 
     snapshot_version = datetime.now(
         timezone.utc
-    ).strftime("%Y-%m-%d-greenhouse")
+    ).strftime("%Y-%m-%d-multisource")
 
     # 1. Làm sạch, chuẩn hóa và trích xuất đặc trưng.
-    extracted = process_greenhouse_jobs(
-        interim_path=INTERIM_PATH,
+    greenhouse_rows = process_greenhouse_jobs(
+        interim_path=GREENHOUSE_INTERIM_PATH,
         taxonomy_path=TAXONOMY_PATH,
         snapshot_version=snapshot_version,
         description_debug_path=(
             PROCESSED_ROOT
             / "greenhouse_jobs_description_clean.parquet"
         ),
+    )
+
+    viecoi_rows = process_viecoi_jobs(
+        interim_path=VIECOI_INTERIM_PATH,
+        taxonomy_path=TAXONOMY_PATH,
+        snapshot_version=snapshot_version,
+    )
+
+    extracted = greenhouse_rows + viecoi_rows
+    taxonomy = load_taxonomy(TAXONOMY_PATH)
+
+    print("\nSOURCE INPUT")
+    print(f"Greenhouse: {len(greenhouse_rows)}")
+    print(f"ViecOi:     {len(viecoi_rows)}")
+    print(f"Combined:   {len(extracted)}")
+
+    gap_report = create_viecoi_taxonomy_reports(
+        raw=pd.read_parquet(VIECOI_INTERIM_PATH),
+        extracted_rows=viecoi_rows,
+        taxonomy=taxonomy,
+        output_dir=REPORT_ROOT,
     )
 
     jobs_path = (
@@ -129,6 +182,32 @@ def main() -> None:
         output_path=REPORT_PATH,
     )
 
+    collector_versions = {}
+    for source_name, interim_path in {
+        "greenhouse": GREENHOUSE_INTERIM_PATH,
+        "viecoi": VIECOI_INTERIM_PATH,
+    }.items():
+        interim = pd.read_parquet(interim_path)
+        collector_versions[source_name] = sorted(
+            interim.get(
+                "collector_version",
+                pd.Series(dtype="string"),
+            )
+            .dropna()
+            .astype(str)
+            .unique()
+            .tolist()
+        )
+
+    coverage_report, _ = create_coverage_reports(
+        jobs_path=jobs_path,
+        skills_path=skills_path,
+        lifecycle_path=LIFECYCLE_PATH,
+        taxonomy=taxonomy,
+        output_dir=REPORT_ROOT,
+        collector_versions=collector_versions,
+    )
+
     print("\nLIFECYCLE")
     print(
         lifecycle_state[
@@ -153,6 +232,12 @@ def main() -> None:
 
     print("\nDATA QUALITY")
     print(report)
+
+    print("\nTAXONOMY GAP REPORTS")
+    print(gap_report)
+
+    print("\nSOURCE COVERAGE")
+    print(coverage_report)
 
 
 if __name__ == "__main__":

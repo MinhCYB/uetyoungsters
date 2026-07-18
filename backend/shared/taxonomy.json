@@ -1,5 +1,5 @@
 {
-  "taxonomy_version": "0.2.0",
+  "taxonomy_version": "0.4.0",
   "skills": [
     {
       "skill_id": "SKILL_SQL",
@@ -113,6 +113,282 @@
       "skill_id": "SKILL_SUBSTANCE_PAINTER",
       "canonical_name": "Substance Painter",
       "aliases": ["substance painter"]
+    },
+    {
+      "skill_id": "SKILL_COMMUNICATION",
+      "canonical_name": "Communication",
+      "category": "soft_skill",
+      "aliases": ["kỹ năng giao tiếp", "communication skills"]
+    },
+    {
+      "skill_id": "SKILL_SALES",
+      "canonical_name": "Sales",
+      "category": "domain_skill",
+      "aliases": ["kỹ năng bán hàng", "sales skills"]
+    },
+    {
+      "skill_id": "SKILL_CUSTOMER_CONSULTING",
+      "canonical_name": "Customer Consulting",
+      "category": "domain_skill",
+      "aliases": ["tư vấn khách hàng", "customer consulting"]
+    },
+    {
+      "skill_id": "SKILL_CUSTOMER_SERVICE",
+      "canonical_name": "Customer Service",
+      "category": "domain_skill",
+      "aliases": ["chăm sóc khách hàng", "customer service"]
+    },
+    {
+      "skill_id": "SKILL_OFFICE_SOFTWARE",
+      "canonical_name": "Office Software",
+      "category": "tool",
+      "aliases": ["tin học văn phòng", "ms office", "microsoft office", "ms word"]
+    },
+    {
+      "skill_id": "SKILL_NEGOTIATION",
+      "canonical_name": "Negotiation",
+      "category": "soft_skill",
+      "aliases": ["đàm phán", "negotiation"]
+    },
+    {
+      "skill_id": "SKILL_MARKETING",
+      "canonical_name": "Marketing",
+      "category": "domain_skill",
+      "aliases": ["marketing", "tiếp thị"]
+    },
+    {
+      "skill_id": "SKILL_PROBLEM_SOLVING",
+      "canonical_name": "Problem Solving",
+      "category": "soft_skill",
+      "aliases": ["giải quyết vấn đề", "xử lý tình huống", "problem solving"]
+    },
+    {
+      "skill_id": "SKILL_TEAMWORK",
+      "canonical_name": "Teamwork",
+      "category": "soft_skill",
+      "aliases": ["làm việc nhóm", "teamwork"]
+    },
+    {
+      "skill_id": "SKILL_ENGLISH",
+      "canonical_name": "English",
+      "category": "language",
+      "aliases": ["tiếng anh", "english", "ielts", "toeic"]
+    },
+    {
+      "skill_id": "SKILL_JAPANESE",
+      "canonical_name": "Japanese",
+      "category": "language",
+      "aliases": ["tiếng nhật", "japanese", "n1", "n2"]
+    },
+    {
+      "skill_id": "SKILL_FINANCIAL_REPORTING",
+      "canonical_name": "Financial Reporting",
+      "category": "domain_skill",
+      "aliases": ["báo cáo tài chính", "financial reporting"]
+    },
+    {
+      "skill_id": "SKILL_DOCUMENT_DRAFTING",
+      "canonical_name": "Document Drafting",
+      "category": "domain_skill",
+      "aliases": ["soạn thảo văn bản", "soạn thảo hợp đồng"]
+    },
+    {
+      "skill_id": "SKILL_PLANNING",
+      "canonical_name": "Planning",
+      "category": "domain_skill",
+      "aliases": ["lập kế hoạch", "planning"]
+    },
+    {
+      "skill_id": "SKILL_AUTOCAD",
+      "canonical_name": "AutoCAD",
+      "category": "tool",
+      "aliases": ["auto cad", "autocad", "cad"]
+    },
+    {
+      "skill_id": "SKILL_TECHNICAL_DRAWING",
+      "canonical_name": "Technical Drawing",
+      "category": "technical_skill",
+      "aliases": ["đọc bản vẽ", "kỹ năng thiết kế"]
+    },
+    {
+      "skill_id": "SKILL_MARKET_RESEARCH",
+      "canonical_name": "Market Research",
+      "category": "domain_skill",
+      "aliases": ["nghiên cứu thị trường", "nắm bắt thị trường", "market research"]
+    },
+    {
+      "skill_id": "SKILL_DATA_ANALYSIS",
+      "canonical_name": "Data Analysis",
+      "category": "technical_skill",
+      "aliases": ["phân tích dữ liệu", "phân tích báo cáo", "xử lý số liệu", "data analysis"]
+    },
+    {
+      "skill_id": "SKILL_PROJECT_MANAGEMENT",
+      "canonical_name": "Project Management",
+      "category": "domain_skill",
+      "aliases": ["quản lý dự án", "project management"]
+    },
+    {
+      "skill_id": "SKILL_OPERATIONS_MANAGEMENT",
+      "canonical_name": "Operations Management",
+      "category": "domain_skill",
+      "aliases": ["quản lý vận hành", "operations management"]
+    },
+    {
+      "skill_id": "SKILL_PRODUCTION_MANAGEMENT",
+      "canonical_name": "Production Management",
+      "category": "domain_skill",
+      "aliases": ["quản lý sản xuất", "quy trình sản xuất", "production management"]
+    },
+    {
+      "skill_id": "SKILL_QUALITY_CONTROL",
+      "canonical_name": "Quality Control",
+      "category": "domain_skill",
+      "aliases": ["quản lý chất lượng", "kiểm soát chất lượng", "quality control"]
+    },
+    {
+      "skill_id": "SKILL_HUMAN_RESOURCES",
+      "canonical_name": "Human Resources",
+      "category": "domain_skill",
+      "aliases": ["quản lý nhân sự", "luật lao động", "luật bhxh", "human resources"]
+    },
+    {
+      "skill_id": "SKILL_ACCOUNTING",
+      "canonical_name": "Accounting",
+      "category": "domain_skill",
+      "aliases": ["kế toán viên", "kế toán-kiểm toán", "accounting"]
+    },
+    {
+      "skill_id": "SKILL_MISA",
+      "canonical_name": "MISA",
+      "category": "tool",
+      "aliases": ["nhập misa", "misa"]
+    },
+    {
+      "skill_id": "SKILL_GOOGLE_ADS",
+      "canonical_name": "Google Ads",
+      "category": "tool",
+      "aliases": ["google ads", "google adwords"]
+    },
+    {
+      "skill_id": "SKILL_FACEBOOK_ADS",
+      "canonical_name": "Facebook Ads",
+      "category": "tool",
+      "aliases": ["facebook ads", "meta ads"]
+    },
+    {
+      "skill_id": "SKILL_CONTENT_MARKETING",
+      "canonical_name": "Content Marketing",
+      "category": "domain_skill",
+      "aliases": ["content marketing"]
+    },
+    {
+      "skill_id": "SKILL_SEO",
+      "canonical_name": "SEO",
+      "category": "domain_skill",
+      "aliases": ["seo", "seo website"]
+    },
+    {
+      "skill_id": "SKILL_COPYWRITING",
+      "canonical_name": "Copywriting",
+      "category": "domain_skill",
+      "aliases": ["copywriting", "viết lách"]
+    },
+    {
+      "skill_id": "SKILL_TELESALES",
+      "canonical_name": "Telesales",
+      "category": "domain_skill",
+      "aliases": ["telesales", "tele sale"]
+    },
+    {
+      "skill_id": "SKILL_CRM",
+      "canonical_name": "CRM",
+      "category": "tool",
+      "aliases": ["crm"]
+    },
+    {
+      "skill_id": "SKILL_WAREHOUSE_OPERATIONS",
+      "canonical_name": "Warehouse Operations",
+      "category": "domain_skill",
+      "aliases": ["warehouse", "warehouse operations"]
+    },
+    {
+      "skill_id": "SKILL_NETWORKING",
+      "canonical_name": "Computer Networking",
+      "category": "technical_skill",
+      "aliases": ["network", "computer networking"]
+    },
+    {
+      "skill_id": "SKILL_HELPDESK",
+      "canonical_name": "Helpdesk Support",
+      "category": "technical_skill",
+      "aliases": ["help desk", "helpdesk", "hỗ trợ ứng dụng"]
+    },
+    {
+      "skill_id": "SKILL_PRESALES",
+      "canonical_name": "Technical Presales",
+      "category": "domain_skill",
+      "aliases": ["presales", "pre-sales"]
+    },
+    {
+      "skill_id": "SKILL_CISCO",
+      "canonical_name": "Cisco",
+      "category": "tool",
+      "aliases": ["cisco"]
+    },
+    {
+      "skill_id": "SKILL_CLOUD",
+      "canonical_name": "Cloud Computing",
+      "category": "technical_skill",
+      "aliases": ["cloud", "cloud computing"]
+    },
+    {
+      "skill_id": "SKILL_FIREWALL",
+      "canonical_name": "Firewall",
+      "category": "technical_skill",
+      "aliases": ["firewall"]
+    },
+    {
+      "skill_id": "SKILL_WINDOWS_SERVER",
+      "canonical_name": "Windows Server",
+      "category": "tool",
+      "aliases": ["windows server"]
+    },
+    {
+      "skill_id": "SKILL_3D_MODELING",
+      "canonical_name": "3D Modeling",
+      "category": "technical_skill",
+      "aliases": ["3d modeling", "3d", "maya(3d)", "3ds max"]
+    },
+    {
+      "skill_id": "SKILL_PHOTOSHOP",
+      "canonical_name": "Photoshop",
+      "category": "tool",
+      "aliases": ["photoshop", "adobe photoshop"]
+    },
+    {
+      "skill_id": "SKILL_VIDEO_EDITING",
+      "canonical_name": "Video Editing",
+      "category": "technical_skill",
+      "aliases": ["chỉnh sửa clip", "video editing"]
+    },
+    {
+      "skill_id": "SKILL_ADOBE_PREMIERE",
+      "canonical_name": "Adobe Premiere",
+      "category": "tool",
+      "aliases": ["adobe premiere", "premiere pro"]
+    },
+    {
+      "skill_id": "SKILL_AFTER_EFFECTS",
+      "canonical_name": "Adobe After Effects",
+      "category": "tool",
+      "aliases": ["after effect", "after effects", "adobe after effects"]
+    },
+    {
+      "skill_id": "SKILL_SOCIAL_MEDIA",
+      "canonical_name": "Social Media",
+      "category": "domain_skill",
+      "aliases": ["social media", "tiktok", "youtube"]
     }
   ],
   "careers": [
@@ -151,6 +427,8 @@
       "aliases": [
         "frontend developer",
         "front-end developer",
+        "frontend engineer",
+        "frontend engineer reactjs",
         "lập trình viên frontend"
       ]
     },
@@ -220,6 +498,419 @@
       "aliases": [
         "technical artist"
       ]
+    },
+    {
+      "career_id": "CAREER_ACCOUNTANT",
+      "canonical_name": "Accountant",
+      "aliases": [
+        "kế toán viên",
+        "kế toán tổng hợp",
+        "kê toán tổng hợp",
+        "thực tập sinh kế toán",
+        "kế toán tài chính",
+        "kế toán trưởng",
+        "kế toán tiếng nhật",
+        "accountant"
+      ]
+    },
+    {
+      "career_id": "CAREER_ECOMMERCE_OPERATIONS_SPECIALIST",
+      "canonical_name": "E-commerce Operations Specialist",
+      "aliases": [
+        "nhân viên vận hành sàn tmđt",
+        "vận hành sàn tmđt",
+        "thực tập sinh vận hành shopee",
+        "e-commerce operations",
+        "ecommerce operations"
+      ]
+    },
+    {
+      "career_id": "CAREER_MARKETING_SPECIALIST",
+      "canonical_name": "Marketing Specialist",
+      "aliases": [
+        "nhân viên marketing",
+        "marketing truyền thông",
+        "marketing/ truyền thông/ pr",
+        "nhân viên tiếp thị trực tiếp",
+        "giám đốc marketing",
+        "marketing manager",
+        "vietnamese marketing manager",
+        "trợ lý marketing",
+        "social media specialist",
+        "marketing specialist"
+      ]
+    },
+    {
+      "career_id": "CAREER_DELIVERY_DRIVER",
+      "canonical_name": "Delivery Driver",
+      "aliases": [
+        "nhân viên giao hàng",
+        "giao hàng",
+        "delivery driver",
+        "courier"
+      ]
+    },
+    {
+      "career_id": "CAREER_ADMINISTRATIVE_ASSISTANT",
+      "canonical_name": "Administrative Assistant",
+      "aliases": [
+        "nhân viên hành chính văn phòng",
+        "hành chính văn phòng",
+        "nhân viên văn phòng xưởng",
+        "nhân viên sale admin",
+        "sales administrator",
+        "administrative assistant"
+      ]
+    },
+    {
+      "career_id": "CAREER_MANUFACTURING_TECHNICIAN",
+      "canonical_name": "Manufacturing Technician",
+      "aliases": [
+        "nhân viên gia công jig",
+        "gia công jig",
+        "manufacturing technician"
+      ]
+    },
+    {
+      "career_id": "CAREER_KITCHEN_ASSISTANT",
+      "canonical_name": "Kitchen Assistant",
+      "aliases": [
+        "phụ bếp",
+        "commis",
+        "kitchen assistant"
+      ]
+    },
+    {
+      "career_id": "CAREER_QUANTITY_SURVEYOR",
+      "canonical_name": "Quantity Surveyor",
+      "aliases": [
+        "cán bộ qs",
+        "kỹ sư kinh tế",
+        "kỹ sư hồ sơ thanh quyết toán",
+        "quantity surveyor"
+      ]
+    },
+    {
+      "career_id": "CAREER_SALES_EXECUTIVE",
+      "canonical_name": "Sales Executive",
+      "aliases": [
+        "nhân viên kinh doanh",
+        "sales b2b",
+        "sale bđs",
+        "sales - bán hàng",
+        "nhân viên tư vấn giáo dục",
+        "thực tập sinh kinh doanh",
+        "sales thị trường",
+        "sale-marketing quốc tế",
+        "tư vấn tour du lịch",
+        "b2b sales",
+        "sales executive"
+      ]
+    },
+    {
+      "career_id": "CAREER_BUSINESS_DEVELOPMENT_EXECUTIVE",
+      "canonical_name": "Business Development Executive",
+      "aliases": [
+        "nhân viên phát triển kinh doanh",
+        "phát triển kinh doanh kênh đại lý",
+        "nhân viên phát triển thị trường",
+        "business development executive"
+      ]
+    },
+    {
+      "career_id": "CAREER_ARCHITECT",
+      "canonical_name": "Architect",
+      "aliases": [
+        "kiến trúc sư",
+        "kiến trúc sư kiến trúc",
+        "chủ trì kiến trúc",
+        "quản lý thiết kế kiến trúc",
+        "architect"
+      ]
+    },
+    {
+      "career_id": "CAREER_MECHANICAL_TECHNICIAN",
+      "canonical_name": "Mechanical Technician",
+      "aliases": [
+        "thợ phụ cơ khí",
+        "thợ chính cơ khí",
+        "thợ cơ khí",
+        "mechanical technician"
+      ]
+    },
+    {
+      "career_id": "CAREER_CUSTOMER_SERVICE_REPRESENTATIVE",
+      "canonical_name": "Customer Service Representative",
+      "aliases": [
+        "nhân viên cskh",
+        "nhân viên chăm sóc khách hàng",
+        "chăm sóc khách hàng sau vay",
+        "customer service representative"
+      ]
+    },
+    {
+      "career_id": "CAREER_GRAPHIC_DESIGNER",
+      "canonical_name": "Graphic Designer",
+      "aliases": [
+        "thực tập sinh thiết kế đồ họa",
+        "thiết kế đồ họa",
+        "design intern",
+        "graphic designer"
+      ]
+    },
+    {
+      "career_id": "CAREER_LIVESTREAM_HOST",
+      "canonical_name": "Livestream Host",
+      "aliases": [
+        "host livestream",
+        "livestream host"
+      ]
+    },
+    {
+      "career_id": "CAREER_CONSTRUCTION_SITE_MANAGER",
+      "canonical_name": "Construction Site Manager",
+      "aliases": [
+        "chỉ huy trưởng công trình",
+        "construction site manager"
+      ]
+    },
+    {
+      "career_id": "CAREER_CIVIL_INFRASTRUCTURE_ENGINEER",
+      "canonical_name": "Civil Infrastructure Engineer",
+      "aliases": [
+        "kỹ sư thiết kế hạ tầng kỹ thuật",
+        "kỹ sư hạ tầng kỹ thuật",
+        "civil infrastructure engineer"
+      ]
+    },
+    {
+      "career_id": "CAREER_3D_MODELER",
+      "canonical_name": "3D Modeler",
+      "aliases": [
+        "3d modeler",
+        "3d generalist",
+        "3d modeling artist"
+      ]
+    },
+    {
+      "career_id": "CAREER_RETAIL_SALES_ASSOCIATE",
+      "canonical_name": "Retail Sales Associate",
+      "aliases": [
+        "phụ bán mặt hàng đồ uống",
+        "người bán đồ uống",
+        "nhân viên bán hàng bán lẻ",
+        "retail sales associate"
+      ]
+    },
+    {
+      "career_id": "CAREER_PARTNER_OPERATIONS_SPECIALIST",
+      "canonical_name": "Partner Operations Specialist",
+      "aliases": [
+        "nhân viên vận hành điểm hỗ trợ đối tác",
+        "vận hành hỗ trợ đối tác",
+        "partner operations specialist"
+      ]
+    },
+    {
+      "career_id": "CAREER_HUMAN_RESOURCES_MANAGER",
+      "canonical_name": "Human Resources Manager",
+      "aliases": [
+        "quản lý nhân sự",
+        "human resources manager",
+        "hr manager"
+      ]
+    },
+    {
+      "career_id": "CAREER_QUANTITATIVE_RESEARCHER",
+      "canonical_name": "Quantitative Researcher",
+      "aliases": [
+        "quantitative researcher",
+        "quant researcher"
+      ]
+    },
+    {
+      "career_id": "CAREER_QUALITY_CONTROL_SPECIALIST",
+      "canonical_name": "Quality Control Specialist",
+      "aliases": [
+        "nhân viên quản lý chất lượng",
+        "nhân viên kiểm soát chất lượng",
+        "quality control specialist"
+      ]
+    },
+    {
+      "career_id": "CAREER_PRODUCTION_WORKER",
+      "canonical_name": "Production Worker",
+      "aliases": [
+        "nhân viên sản xuất",
+        "lao động phổ thông",
+        "công nhân sản xuất",
+        "sản xuất ngành nhôm đúc",
+        "production worker",
+        "general laborer"
+      ]
+    },
+    {
+      "career_id": "CAREER_PRESALES_ENGINEER",
+      "canonical_name": "Presales Engineer",
+      "aliases": [
+        "nhân viên kỹ sư presale",
+        "kỹ sư presale",
+        "presales engineer"
+      ]
+    },
+    {
+      "career_id": "CAREER_HELPDESK_TECHNICIAN",
+      "canonical_name": "Helpdesk Technician",
+      "aliases": [
+        "nhân viên helpdesk",
+        "helpdesk technician",
+        "it helpdesk"
+      ]
+    },
+    {
+      "career_id": "CAREER_BOOK_EDITOR",
+      "canonical_name": "Book Editor",
+      "aliases": [
+        "thực tập sinh biên tập sách",
+        "biên tập sách",
+        "book editor"
+      ]
+    },
+    {
+      "career_id": "CAREER_TELESALES_REPRESENTATIVE",
+      "canonical_name": "Telesales Representative",
+      "aliases": [
+        "tuyển dụng telesale",
+        "nhân viên telesales",
+        "telesales representative"
+      ]
+    },
+    {
+      "career_id": "CAREER_WAREHOUSE_STAFF",
+      "canonical_name": "Warehouse Staff",
+      "aliases": [
+        "nhân viên kho",
+        "warehouse staff",
+        "warehouse worker"
+      ]
+    },
+    {
+      "career_id": "CAREER_PRODUCTION_MANAGER",
+      "canonical_name": "Production Manager",
+      "aliases": [
+        "quản lý sản xuất",
+        "quản đốc phân xưởng sản xuất",
+        "production manager",
+        "factory supervisor"
+      ]
+    },
+    {
+      "career_id": "CAREER_CONTENT_CREATOR",
+      "canonical_name": "Content Creator",
+      "aliases": [
+        "content creator specialist",
+        "content creator",
+        "nhân viên sáng tạo nội dung"
+      ]
+    },
+    {
+      "career_id": "CAREER_MEP_ENGINEER",
+      "canonical_name": "MEP Engineer",
+      "aliases": [
+        "kỹ sư thiết kế mep",
+        "kỹ sư mep",
+        "mep engineer"
+      ]
+    },
+    {
+      "career_id": "CAREER_VIDEO_EDITOR",
+      "canonical_name": "Video Editor",
+      "aliases": [
+        "tuyển dụng editor",
+        "editor xe đạp điện trợ lực",
+        "video editor",
+        "video editing specialist"
+      ]
+    },
+    {
+      "career_id": "CAREER_DRAFTING_ENGINEER",
+      "canonical_name": "Drafting Engineer",
+      "aliases": [
+        "kỹ sư triển khai bản vẽ",
+        "drafting engineer",
+        "cad drafting engineer"
+      ]
+    },
+    {
+      "career_id": "CAREER_PRODUCTION_PLANNER",
+      "canonical_name": "Production Planner",
+      "aliases": [
+        "nhân viên kế hoạch sản xuất",
+        "kế hoạch sản xuất",
+        "production planner"
+      ]
+    },
+    {
+      "career_id": "CAREER_BRAND_AMBASSADOR",
+      "canonical_name": "Brand Ambassador",
+      "aliases": [
+        "pg ca tối kênh quán",
+        "promotion girl",
+        "brand ambassador"
+      ]
+    },
+    {
+      "career_id": "CAREER_HUMAN_RESOURCES_SPECIALIST",
+      "canonical_name": "Human Resources Specialist",
+      "aliases": [
+        "chuyên viên hành chính nhân sự",
+        "nhân viên hành chính nhân sự chuyên trách tuyển dụng",
+        "human resources specialist",
+        "hr specialist"
+      ]
+    },
+    {
+      "career_id": "CAREER_BUSINESS_ANALYST",
+      "canonical_name": "Business Analyst",
+      "aliases": [
+        "chuyên viên phân tích nghiệp vụ",
+        "business analyst"
+      ]
+    },
+    {
+      "career_id": "CAREER_CREDIT_RISK_ANALYST",
+      "canonical_name": "Credit Risk Analyst",
+      "aliases": [
+        "credit risk analyst",
+        "chuyên viên phân tích rủi ro tín dụng"
+      ]
+    },
+    {
+      "career_id": "CAREER_BACKEND_ENGINEER",
+      "canonical_name": "Backend Engineer",
+      "aliases": [
+        "backend engineer",
+        "backend engineer kotlin java spring",
+        "lập trình viên backend"
+      ]
+    },
+    {
+      "career_id": "CAREER_IOS_ENGINEER",
+      "canonical_name": "iOS Engineer",
+      "aliases": [
+        "ios engineer",
+        "ios developer",
+        "lập trình viên ios"
+      ]
+    },
+    {
+      "career_id": "CAREER_FULLSTACK_ENGINEER",
+      "canonical_name": "Fullstack Engineer",
+      "aliases": [
+        "fullstack engineer",
+        "fullstack engineer java reactjs",
+        "full-stack developer"
+      ]
     }
   ],
   "locations": [
@@ -259,6 +950,87 @@
       "aliases": [
         "đà nẵng",
         "da nang"
+      ]
+    },
+    {
+      "province": "Đồng Nai",
+      "aliases": [
+        "đồng nai",
+        "dong nai"
+      ]
+    },
+    {
+      "province": "Long An",
+      "aliases": [
+        "long an"
+      ]
+    },
+    {
+      "province": "Bình Định",
+      "aliases": [
+        "bình định",
+        "binh dinh",
+        "quy nhơn",
+        "quy nhon"
+      ]
+    },
+    {
+      "province": "Lạng Sơn",
+      "aliases": [
+        "lạng sơn",
+        "lang son"
+      ]
+    },
+    {
+      "province": "Hưng Yên",
+      "aliases": [
+        "hưng yên",
+        "hung yen"
+      ]
+    },
+    {
+      "province": "Tây Ninh",
+      "aliases": [
+        "tây ninh",
+        "tay ninh"
+      ]
+    },
+    {
+      "province": "Quảng Ninh",
+      "aliases": [
+        "quảng ninh",
+        "quang ninh"
+      ]
+    },
+    {
+      "province": "Khánh Hòa",
+      "aliases": [
+        "khánh hòa",
+        "khanh hoa",
+        "nha trang"
+      ]
+    },
+    {
+      "province": "Lâm Đồng",
+      "aliases": [
+        "lâm đồng",
+        "lam dong",
+        "đà lạt",
+        "da lat"
+      ]
+    },
+    {
+      "province": "Hải Phòng",
+      "aliases": [
+        "hải phòng",
+        "hai phong"
+      ]
+    },
+    {
+      "province": "Phú Thọ",
+      "aliases": [
+        "phú thọ",
+        "phu tho"
       ]
     }
   ]

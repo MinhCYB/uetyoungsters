@@ -12,9 +12,25 @@ def build_demand_summary(
     jobs = pd.read_parquet(jobs_path)
     skills = pd.read_parquet(skills_path)
 
-    # Một tin đại diện cho mỗi content_hash.
-    jobs = jobs.sort_values("collected_at").drop_duplicates("content_hash", keep="first")
-    valid_jobs = jobs.dropna(subset=["career_id", "province"])
+    if "is_active" in jobs.columns:
+        jobs = jobs[jobs["is_active"].fillna(False)]
+    if "lifecycle_status" in jobs.columns:
+        jobs = jobs[jobs["lifecycle_status"] != "invalid"]
+
+    # Same-source identity is authoritative. Cross-source records remain
+    # auditable even when they share a dedup group.
+    jobs = (
+        jobs.sort_values("collected_at")
+        .drop_duplicates(
+            ["source_id", "source_job_id"],
+            keep="last",
+        )
+    )
+    valid_jobs = jobs.dropna(subset=["career_id"])
+    valid_jobs = valid_jobs.copy()
+    valid_jobs["salary_mid_disclosed"] = valid_jobs[
+        "salary_mid_vnd"
+    ].where(valid_jobs["salary_disclosed"].fillna(False))
 
     base = (
     valid_jobs.groupby(
@@ -22,15 +38,17 @@ def build_demand_summary(
             "career_id",
             "career_name",
             "province",
+            "work_mode",
             "snapshot_version",
         ],
         as_index=False,
+        dropna=False,
     )
     .agg(
         posting_count=("job_id", "count"),
         unique_company_count=("company_name", "nunique"),
-        salary_median_vnd=("salary_mid_vnd", "median"),
-        salary_sample_size=("salary_mid_vnd", "count"),
+        salary_median_vnd=("salary_mid_disclosed", "median"),
+        salary_sample_size=("salary_mid_disclosed", "count"),
         average_confidence=("overall_confidence", "mean"),
         data_from=("posted_at", "min"),
         data_to=("posted_at", "max"),
@@ -42,6 +60,7 @@ def build_demand_summary(
             columns=[
                 "career_id",
                 "province",
+                "work_mode",
                 "skill_id",
                 "skill_name",
                 "skill_posting_count",
@@ -51,19 +70,35 @@ def build_demand_summary(
         )
     else:
         skill_counts = (
-            skills[skills["requirement_level"].isin(["required", "preferred"])]
+            skills[skills["requirement_level"].isin(
+                ["required", "preferred", "mentioned"]
+            )]
             .drop_duplicates(["dedup_group_id", "skill_id"])
             .groupby(
-                ["career_id", "province", "skill_id", "skill_name"],
+                [
+                    "career_id",
+                    "province",
+                    "work_mode",
+                    "skill_id",
+                    "skill_name",
+                ],
                 as_index=False,
+                dropna=False,
             )
             .agg(skill_posting_count=("dedup_group_id", "nunique"))
         )
 
     if not skill_counts.empty:
         skill_counts = skill_counts.merge(
-            base[["career_id", "province", "posting_count"]],
-            on=["career_id", "province"],
+            base[
+                [
+                    "career_id",
+                    "province",
+                    "work_mode",
+                    "posting_count",
+                ]
+            ],
+            on=["career_id", "province", "work_mode"],
             how="left",
         )
         skill_counts["share_of_career_jobs"] = (

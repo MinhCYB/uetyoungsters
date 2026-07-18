@@ -10,6 +10,23 @@ sources:
     content_enabled: true
     timeout_seconds: 30
 
+  - source_id: viecoi_listing
+    source_name: ViecOi
+    platform: viecoi
+    enabled: true
+    status: active
+    collection_method: public_listing
+    listing_url: https://viecoi.vn/tim-viec/all.html
+    collection_scope: public_listing_fields_only
+    max_pages: 3
+    max_jobs: 90
+    min_delay_seconds: 6
+    max_delay_seconds: 10
+    timeout_seconds: 30
+    user_agent: "UETCareerResearch/0.1 (academic project)"
+    country_filter: Vietnam
+    detail_pages_enabled: false
+
   - source_id: topcv
     source_name: TopCV
     platform: topcv

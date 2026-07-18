@@ -20,6 +20,7 @@ class RawJobPosting(BaseModel):
     experience_raw: str | None = None
     education_raw: str | None = None
     posted_at_raw: str | None = None
+    work_mode_raw: str | None = None
     source_updated_at: str | None = None
     collected_at: datetime
     content_hash_sha256: str | None = None
@@ -52,6 +53,12 @@ class ExtractedJobPosting(BaseModel):
     description_clean: str
     description_role_specific: str | None = None
     province: str | None = None
+    work_mode: Literal[
+        "ONSITE",
+        "HYBRID",
+        "REMOTE",
+        "UNSPECIFIED",
+    ] = "UNSPECIFIED"
     salary_raw: str | None = None
     salary_min_vnd: int | None = None
     salary_max_vnd: int | None = None

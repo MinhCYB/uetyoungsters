@@ -26,3 +26,23 @@ def build_job_id(source: str, source_job_id: str | None, source_url: str | None,
 
 def build_dedup_group_id(content_hash: str) -> str:
     return "dup_" + content_hash[:16]
+
+
+def build_cross_source_dedup_key(
+    title: str,
+    company: str | None,
+    province: str | None,
+) -> str | None:
+    """Return a conservative candidate key; it never merges records itself."""
+    normalized_company = normalize_company(company)
+    normalized_title = match_text(title)
+    normalized_province = match_text(province)
+
+    if not all(
+        [normalized_company, normalized_title, normalized_province]
+    ):
+        return None
+
+    return "|".join(
+        [normalized_company, normalized_title, normalized_province]
+    )

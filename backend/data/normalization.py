@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import html
+import math
 import re
 import unicodedata
 from datetime import datetime, timedelta
@@ -11,7 +12,11 @@ from bs4 import BeautifulSoup
 def clean_text(value: str | None) -> str:
     if not value:
         return ""
-    text = html.unescape(value)
+
+    if isinstance(value, float) and math.isnan(value):
+        return ""
+
+    text = html.unescape(str(value))
     text = BeautifulSoup(text, "html.parser").get_text(" ")
     text = unicodedata.normalize("NFC", text)
     text = text.replace("\u200b", " ")
@@ -35,6 +40,62 @@ def normalize_location(raw: str | None, taxonomy: dict) -> str | None:
             if match_text(alias) in text:
                 return item["province"]
     return None
+
+
+def normalize_work_mode(
+    work_mode_raw: str | None,
+    location_raw: str | None,
+    description_raw: str | None = None,
+) -> str:
+    """
+    Chuẩn hóa hình thức làm việc.
+
+    Province và work mode là hai khái niệm độc lập:
+    - "Việc làm tại nhà" → REMOTE, province=None
+    - "TP.HCM" → chưa đủ thông tin để kết luận ONSITE
+    """
+    combined = " ".join(
+        clean_text(value)
+        for value in [
+            work_mode_raw,
+            location_raw,
+            description_raw,
+        ]
+        if clean_text(value)
+    ).casefold()
+
+    remote_keywords = [
+        "việc làm tại nhà",
+        "làm việc tại nhà",
+        "work from home",
+        "remote",
+        "wfh",
+        "từ xa",
+    ]
+
+    hybrid_keywords = [
+        "hybrid",
+        "làm việc kết hợp",
+        "kết hợp tại nhà",
+    ]
+
+    onsite_keywords = [
+        "onsite",
+        "on-site",
+        "làm việc tại văn phòng",
+        "làm việc tại công ty",
+    ]
+
+    if any(keyword in combined for keyword in remote_keywords):
+        return "REMOTE"
+
+    if any(keyword in combined for keyword in hybrid_keywords):
+        return "HYBRID"
+
+    if any(keyword in combined for keyword in onsite_keywords):
+        return "ONSITE"
+
+    return "UNSPECIFIED"
 
 
 def parse_salary(raw: str | None) -> tuple[int | None, int | None, float | None, bool]:

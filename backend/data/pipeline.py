@@ -6,10 +6,16 @@ from pathlib import Path
 import pandas as pd
 
 from .models import RawJobPosting, ExtractedJobPosting
-from .cleaning import build_content_hash, build_job_id, build_dedup_group_id
+from .cleaning import (
+    build_content_hash,
+    build_cross_source_dedup_key,
+    build_job_id,
+    build_dedup_group_id,
+)
 from .normalization import (
     clean_text,
     normalize_location,
+    normalize_work_mode,
     parse_salary,
     normalize_seniority,
     normalize_education,
@@ -53,8 +59,40 @@ def process_raw_jobs(
         salary_min, salary_max, salary_mid, salary_disclosed = parse_salary(
             raw.salary_raw
         )
-        skills = extract_skills(role_description, taxonomy)
+        default_skill_level = raw.raw_payload.get(
+            "skill_requirement_level",
+            "required",
+        )
+        raw_skill_tags = raw.raw_payload.get("skills_raw")
+
+        if isinstance(raw_skill_tags, list):
+            # Listing tags are independent mentions. Extracting each tag in
+            # isolation prevents title/card negation text such as "không cần
+            # kinh nghiệm" from changing another tag's requirement level.
+            skills_by_id = {}
+            for raw_tag in raw_skill_tags:
+                for skill in extract_skills(
+                    str(raw_tag),
+                    taxonomy,
+                    default_requirement_level=default_skill_level,
+                ):
+                    skills_by_id[skill.skill_id] = skill
+            skills = sorted(
+                skills_by_id.values(),
+                key=lambda item: item.skill_id,
+            )
+        else:
+            skills = extract_skills(
+                role_description,
+                taxonomy,
+                default_requirement_level=default_skill_level,
+            )
         province = normalize_location(raw.location_raw, taxonomy)
+        work_mode = normalize_work_mode(
+            work_mode_raw=raw.work_mode_raw,
+            location_raw=raw.location_raw,
+            description_raw=role_description,
+        )
         seniority = normalize_seniority(
             raw.experience_raw or role_description
         )
@@ -94,6 +132,7 @@ def process_raw_jobs(
                 description_clean=clean_text(role_description),
                 description_role_specific=raw.description_role_specific,
                 province=province,
+                work_mode=work_mode,
                 salary_raw=raw.salary_raw,
                 salary_min_vnd=salary_min,
                 salary_max_vnd=salary_max,
@@ -175,6 +214,7 @@ def process_greenhouse_jobs(
                 row, "description_role_specific"
             ),
             location_raw=optional(row, "location_raw"),
+            work_mode_raw=None,
             experience_raw=optional(row, "experience_raw"),
             posted_at_raw=None,
             source_updated_at=optional(row, "updated_at_raw"),
@@ -191,11 +231,147 @@ def process_greenhouse_jobs(
 
 
 
+def process_viecoi_jobs(
+    interim_path: str | Path,
+    taxonomy_path: str | Path,
+    snapshot_version: str,
+) -> list[ExtractedJobPosting]:
+    """
+    Chuyển dữ liệu ViecOi listing về schema RawJobPosting chung.
+
+    ViecOi pilot chỉ thu thập job card, không mở trang chi tiết.
+    Vì vậy card_text_raw và skills_raw được dùng làm nội dung
+    đặc thù để chuẩn hóa nghề và trích xuất kỹ năng.
+    """
+    dataframe = pd.read_parquet(interim_path)
+
+    required_columns = {
+        "source_job_id",
+        "job_title_raw",
+        "fetched_at",
+    }
+
+    missing_columns = required_columns - set(dataframe.columns)
+
+    if missing_columns:
+        raise KeyError(
+            "ViecOi interim thiếu các cột bắt buộc: "
+            f"{sorted(missing_columns)}"
+        )
+
+    def optional(
+        row: pd.Series,
+        column: str,
+    ):
+        value = row.get(column)
+
+        if value is None:
+            return None
+
+        try:
+            if pd.isna(value):
+                return None
+        except (TypeError, ValueError):
+            pass
+
+        return value
+
+    def parse_skill_tags(value) -> list[str]:
+        if value is None:
+            return []
+
+        if isinstance(value, list):
+            parsed = value
+        else:
+            try:
+                parsed = json.loads(str(value))
+            except (json.JSONDecodeError, TypeError):
+                parsed = []
+
+        if not isinstance(parsed, list):
+            return []
+
+        result: list[str] = []
+
+        for item in parsed:
+            skill = clean_text(item)
+
+            if skill and skill not in result:
+                result.append(skill)
+
+        return result
+
+    def build_role_description(row: pd.Series) -> str:
+        parts: list[str] = []
+        card_text = optional(row, "card_text_raw")
+
+        if card_text:
+            parts.append(str(card_text))
+
+        skill_tags = parse_skill_tags(optional(row, "skills_raw"))
+
+        if skill_tags:
+            # One listing tag per line prevents a negation/noise tag from
+            # changing the requirement level of neighbouring skill tags.
+            parts.append("Kỹ năng:\n" + "\n".join(skill_tags))
+
+        if not parts:
+            parts.append(str(row["job_title_raw"]))
+
+        return "\n".join(parts)
+
+    raw_jobs: list[RawJobPosting] = []
+
+    for _, row in dataframe.iterrows():
+        role_description = build_role_description(row)
+        collected_at = optional(row, "collected_at") or optional(
+            row, "fetched_at"
+        )
+
+        raw_jobs.append(
+            RawJobPosting(
+                source=optional(row, "source") or "viecoi",
+                source_id=optional(row, "source_id") or "viecoi_listing",
+                source_job_id=str(row["source_job_id"]),
+                source_url=optional(row, "source_url"),
+                title_raw=str(row["job_title_raw"]),
+                company_name_raw=optional(row, "company_name_raw"),
+                description_raw=role_description,
+                description_role_specific=role_description,
+                location_raw=optional(row, "location_raw"),
+                work_mode_raw=optional(row, "work_mode_raw"),
+                salary_raw=optional(row, "salary_raw"),
+                experience_raw=optional(row, "experience_raw"),
+                education_raw=optional(row, "education_raw"),
+                posted_at_raw=None,
+                source_updated_at=None,
+                collected_at=collected_at,
+                content_hash_sha256=optional(row, "content_hash_sha256"),
+                raw_payload={
+                    "skill_requirement_level": "mentioned",
+                    "skills_raw": parse_skill_tags(
+                        optional(row, "skills_raw")
+                    ),
+                    "application_deadline_raw": optional(
+                        row, "application_deadline_raw"
+                    ),
+                    "listing_url": optional(row, "listing_url"),
+                    "listing_page": optional(row, "listing_page"),
+                    "collection_scope": optional(row, "collection_scope"),
+                },
+            )
+        )
+
+    taxonomy = load_taxonomy(taxonomy_path)
+    return process_raw_jobs(raw_jobs, taxonomy, snapshot_version)
+
+
 def save_outputs(
     extracted_rows: list[ExtractedJobPosting],
     jobs_path: str | Path,
     skills_path: str | Path,
 ) -> None:
+    extracted_rows = deduplicate_extracted_rows(extracted_rows)
     jobs_records = []
     skills_records = []
 
@@ -211,6 +387,7 @@ def save_outputs(
                 "career_id": job.career_id,
                 "career_name": job.career_name,
                 "province": job.province,
+                "work_mode": job.work_mode,
                 "posted_at": str(job.posted_at) if job.posted_at else None,
                 **skill,
             })
@@ -225,6 +402,7 @@ def save_outputs(
         "career_id",
         "career_name",
         "province",
+        "work_mode",
         "posted_at",
         "skill_id",
         "skill_name",
@@ -236,3 +414,55 @@ def save_outputs(
     pd.DataFrame(skills_records, columns=skill_columns).to_parquet(
         skills_path, index=False
     )
+
+
+def deduplicate_extracted_rows(
+    extracted_rows: list[ExtractedJobPosting],
+) -> list[ExtractedJobPosting]:
+    """
+    Remove duplicate identities within one source and conservatively group
+    potential cross-source duplicates without merging provenance.
+    """
+    by_identity: dict[tuple[str, str], ExtractedJobPosting] = {}
+
+    for row in extracted_rows:
+        key = (
+            str(row.source_id or row.source),
+            str(row.source_job_id or row.job_id),
+        )
+        by_identity[key] = row
+
+    unique_rows = list(by_identity.values())
+    candidate_groups: dict[str, list[int]] = {}
+
+    for index, row in enumerate(unique_rows):
+        candidate_key = build_cross_source_dedup_key(
+            row.job_title_raw,
+            row.company_name,
+            row.province,
+        )
+        if candidate_key:
+            candidate_groups.setdefault(candidate_key, []).append(index)
+
+    for candidate_key, indices in candidate_groups.items():
+        source_ids = {
+            str(unique_rows[index].source_id)
+            for index in indices
+        }
+        if len(source_ids) < 2:
+            continue
+
+        group_id = build_dedup_group_id(
+            build_content_hash(candidate_key, None, None, "")
+        )
+        group_size = len(indices)
+
+        for index in indices:
+            unique_rows[index] = unique_rows[index].model_copy(
+                update={
+                    "dedup_group_id": group_id,
+                    "duplicate_count": group_size,
+                }
+            )
+
+    return unique_rows
