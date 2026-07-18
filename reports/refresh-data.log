@@ -1,14 +1,13 @@
-Career Compass data refresh started at 2026-07-19T06:18:51.8493861+07:00
-docker.exe :  Container uetyoungster-db-1 Starting 
+Career Compass data refresh started at 2026-07-19T06:31:12.6131051+07:00
+docker.exe :  Container uetyoungster-db-1 Running 
 At D:\Dev\uetyoungster\scripts\dev.ps1:45 char:9
 +         & docker compose @ComposeArguments 2>&1 | Out-File -FilePath  ...
 +         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : NotSpecified: ( Container uetyoungster-db-1 Starting :String) [], RemoteException
+    + CategoryInfo          : NotSpecified: ( Container uetyoungster-db-1 Running :String) [], RemoteException
     + FullyQualifiedErrorId : NativeCommandError
  
- Container uetyoungster-db-1 Started 
- Container uetyoungster-crawl-service-run-583d488a595f Creating 
- Container uetyoungster-crawl-service-run-583d488a595f Created 
+ Container uetyoungster-crawl-service-run-6b0a27472650 Creating 
+ Container uetyoungster-crawl-service-run-6b0a27472650 Created 
 [SOURCE] greenhouse_navervietnam
   Thu ─æ╞░ß╗úc 16 jobs.
 
@@ -28,12 +27,12 @@ At D:\Dev\uetyoungster\scripts\dev.ps1:45 char:9
   New jobs: 30
 [LIST 2] https://viecoi.vn/tim-viec/all.html?page=2
   HTTP status: 200
-  HTML length: 1,377,426
+  HTML length: 1,379,097
   Parsed jobs: 30
   New jobs: 30
 [LIST 3] https://viecoi.vn/tim-viec/all.html?page=3
   HTTP status: 200
-  HTML length: 1,371,292
+  HTML length: 1,373,193
   Parsed jobs: 30
   New jobs: 30
 
@@ -48,8 +47,8 @@ At D:\Dev\uetyoungster\scripts\dev.ps1:45 char:9
     + CategoryInfo          : NotSpecified: ( Container uetyoungster-db-1 Running :String) [], RemoteException
     + FullyQualifiedErrorId : NativeCommandError
  
- Container uetyoungster-crawl-service-run-dd3bfaf2cef2 Creating 
- Container uetyoungster-crawl-service-run-dd3bfaf2cef2 Created 
+ Container uetyoungster-crawl-service-run-15a898f226a4 Creating 
+ Container uetyoungster-crawl-service-run-15a898f226a4 Created 
 
 SOURCE INPUT
 Greenhouse: 16
@@ -134,32 +133,31 @@ CAREER_ECOMMERCE_OPERATIONS_SPECIALIST E-commerce Operations Specialist     TP.H
                 CAREER_WAREHOUSE_STAFF                  Warehouse Staff        NaN UNSPECIFIED 2026-07-18-multisource              1                     1          8500000.0                   1            0.840000       NaN     NaN
 
 DATA QUALITY
-{'total_rows': 106, 'unique_content_hashes': 106, 'duplicate_rows': 0, 'mapped_career_rows': 96, 'mapped_location_rows': 97, 'remote_job_count': 2, 'salary_disclosed_rows': 89, 'average_extraction_confidence': 0.949, 'sources': ['greenhouse', 'viecoi'], 'snapshot_version': '2026-07-18-multisource', 'snapshot_versions': ['2026-07-18-multisource'], 'taxonomy_version': '0.4.0', 'generated_at': '2026-07-18T23:19:20.753435+00:00'}
+{'total_rows': 106, 'unique_content_hashes': 106, 'duplicate_rows': 0, 'mapped_career_rows': 96, 'mapped_location_rows': 97, 'remote_job_count': 2, 'salary_disclosed_rows': 89, 'average_extraction_confidence': 0.949, 'sources': ['greenhouse', 'viecoi'], 'snapshot_version': '2026-07-18-multisource', 'snapshot_versions': ['2026-07-18-multisource'], 'taxonomy_version': '0.4.0', 'generated_at': '2026-07-18T23:31:44.081802+00:00'}
 
 TAXONOMY GAP REPORTS
 {'career_gap_rows': 10, 'skill_gap_rows': 71, 'location_gap_rows': 9, 'unique_skill_tags': 125, 'unmapped_skill_tags': 60}
 
 SOURCE COVERAGE
-{'snapshot_version': '2026-07-18-multisource', 'total_current_jobs': 106, 'total_lifecycle_records': 106, 'valid_lifecycle_records': 106, 'active_jobs': 106, 'missing_unconfirmed_jobs': 0, 'inactive_jobs': 0, 'invalid_records_excluded': 0, 'active_sources': ['greenhouse', 'viecoi'], 'source_distribution': {'viecoi': 90, 'greenhouse': 16}, 'unique_companies': 81, 'unique_careers': 48, 'unique_provinces': 12, 'remote_job_count': 2, 'unknown_location_count': 7, 'salary_available_count': 89, 'salary_available_rate': 0.8396, 'description_available_rate': 1.0, 'career_mapping_rate': 0.9057, 'location_mapping_rate_non_remote': 0.9327, 'jobs_with_mapped_skills': 100, 'skill_mapping_rate': 0.9434, 'duplicate_count': 0, 'average_extraction_confidence': 0.9488, 'average_extraction_confidence_by_source': {'greenhouse': 0.9912, 'viecoi': 0.9413}, 'taxonomy_version': '0.4.0', 'collector_versions': {'greenhouse': ['0.1.0'], 'viecoi': ['0.1.0']}, 'generated_at': '2026-07-18T23:19:20.821932+00:00', 'coverage_note': 'Snapshot from monitored sources; it does not represent the entire Vietnamese labour market. Greenhouse covers one company with full job descriptions. ViecOi covers three public listing pages and listing fields only.'}
+{'snapshot_version': '2026-07-18-multisource', 'total_current_jobs': 106, 'total_lifecycle_records': 106, 'valid_lifecycle_records': 106, 'active_jobs': 106, 'missing_unconfirmed_jobs': 0, 'inactive_jobs': 0, 'invalid_records_excluded': 0, 'active_sources': ['greenhouse', 'viecoi'], 'source_distribution': {'viecoi': 90, 'greenhouse': 16}, 'unique_companies': 81, 'unique_careers': 48, 'unique_provinces': 12, 'remote_job_count': 2, 'unknown_location_count': 7, 'salary_available_count': 89, 'salary_available_rate': 0.8396, 'description_available_rate': 1.0, 'career_mapping_rate': 0.9057, 'location_mapping_rate_non_remote': 0.9327, 'jobs_with_mapped_skills': 100, 'skill_mapping_rate': 0.9434, 'duplicate_count': 0, 'average_extraction_confidence': 0.9488, 'average_extraction_confidence_by_source': {'greenhouse': 0.9912, 'viecoi': 0.9413}, 'taxonomy_version': '0.4.0', 'collector_versions': {'greenhouse': ['0.1.0'], 'viecoi': ['0.1.0']}, 'generated_at': '2026-07-18T23:31:44.155199+00:00', 'coverage_note': 'Snapshot from monitored sources; it does not represent the entire Vietnamese labour market. Greenhouse covers one company with full job descriptions. ViecOi covers three public listing pages and listing fields only.'}
 
 DATABASE WAREHOUSE
          dataset_name  row_count                   snapshot_versions                     published_at
-           jobs_clean        106            [2026-07-18-multisource] 2026-07-18 23:19:22.779854+00:00
-           job_skills        369                                  [] 2026-07-18 23:19:22.779854+00:00
-        job_lifecycle        106            [2026-07-18-multisource] 2026-07-18 23:19:22.779854+00:00
-career_demand_summary         66            [2026-07-18-multisource] 2026-07-18 23:19:22.779854+00:00
-  career_skill_matrix        290                                  [] 2026-07-18 23:19:22.779854+00:00
-      career_evidence        152 [2026-07-18-multisource, onet-30.3] 2026-07-18 23:19:22.779854+00:00
-career_evidence_facts        593                         [onet-30.3] 2026-07-18 23:19:22.779854+00:00
-      career_profiles         54                                  [] 2026-07-18 23:19:22.779854+00:00
-docker.exe :  Container uetyoungster-ai-worker-service-1 Starting 
+           jobs_clean        106            [2026-07-18-multisource] 2026-07-18 23:31:46.146637+00:00
+           job_skills        369                                  [] 2026-07-18 23:31:46.146637+00:00
+        job_lifecycle        106            [2026-07-18-multisource] 2026-07-18 23:31:46.146637+00:00
+career_demand_summary         66            [2026-07-18-multisource] 2026-07-18 23:31:46.146637+00:00
+  career_skill_matrix        290                                  [] 2026-07-18 23:31:46.146637+00:00
+      career_evidence        152 [2026-07-18-multisource, onet-30.3] 2026-07-18 23:31:46.146637+00:00
+career_evidence_facts        593                         [onet-30.3] 2026-07-18 23:31:46.146637+00:00
+      career_profiles         54                                  [] 2026-07-18 23:31:46.146637+00:00
+docker.exe :  Container uetyoungster-ai-worker-service-1 Running 
 At D:\Dev\uetyoungster\scripts\dev.ps1:45 char:9
 +         & docker compose @ComposeArguments 2>&1 | Out-File -FilePath  ...
 +         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : NotSpecified: ( Container uety...ice-1 Starting :String) [], RemoteException
+    + CategoryInfo          : NotSpecified: ( Container uety...vice-1 Running :String) [], RemoteException
     + FullyQualifiedErrorId : NativeCommandError
  
- Container uetyoungster-ai-worker-service-1 Started 
 docker.exe :  Container uetyoungster-db-1 Running 
 At D:\Dev\uetyoungster\scripts\dev.ps1:45 char:9
 +         & docker compose @ComposeArguments 2>&1 | Out-File -FilePath  ...
@@ -167,8 +165,8 @@ At D:\Dev\uetyoungster\scripts\dev.ps1:45 char:9
     + CategoryInfo          : NotSpecified: ( Container uetyoungster-db-1 Running :String) [], RemoteException
     + FullyQualifiedErrorId : NativeCommandError
  
- Container uetyoungster-crawl-service-run-769458fecc3d Creating 
- Container uetyoungster-crawl-service-run-769458fecc3d Created 
+ Container uetyoungster-crawl-service-run-1d979d70a79b Creating 
+ Container uetyoungster-crawl-service-run-1d979d70a79b Created 
 Vietnamese career enrichment is current: /app/data/interim/career_profile_vi.json
 docker.exe :  Container uetyoungster-db-1 Running 
 At D:\Dev\uetyoungster\scripts\dev.ps1:45 char:9
@@ -177,8 +175,8 @@ At D:\Dev\uetyoungster\scripts\dev.ps1:45 char:9
     + CategoryInfo          : NotSpecified: ( Container uetyoungster-db-1 Running :String) [], RemoteException
     + FullyQualifiedErrorId : NativeCommandError
  
- Container uetyoungster-crawl-service-run-1b12b2bae3bf Creating 
- Container uetyoungster-crawl-service-run-1b12b2bae3bf Created 
+ Container uetyoungster-crawl-service-run-01cca6c08450 Creating 
+ Container uetyoungster-crawl-service-run-01cca6c08450 Created 
 
 SOURCE INPUT
 Greenhouse: 16
@@ -263,21 +261,21 @@ CAREER_ECOMMERCE_OPERATIONS_SPECIALIST E-commerce Operations Specialist     TP.H
                 CAREER_WAREHOUSE_STAFF                  Warehouse Staff        NaN UNSPECIFIED 2026-07-18-multisource              1                     1          8500000.0                   1            0.840000       NaN     NaN
 
 DATA QUALITY
-{'total_rows': 106, 'unique_content_hashes': 106, 'duplicate_rows': 0, 'mapped_career_rows': 96, 'mapped_location_rows': 97, 'remote_job_count': 2, 'salary_disclosed_rows': 89, 'average_extraction_confidence': 0.949, 'sources': ['greenhouse', 'viecoi'], 'snapshot_version': '2026-07-18-multisource', 'snapshot_versions': ['2026-07-18-multisource'], 'taxonomy_version': '0.4.0', 'generated_at': '2026-07-18T23:19:35.824006+00:00'}
+{'total_rows': 106, 'unique_content_hashes': 106, 'duplicate_rows': 0, 'mapped_career_rows': 96, 'mapped_location_rows': 97, 'remote_job_count': 2, 'salary_disclosed_rows': 89, 'average_extraction_confidence': 0.949, 'sources': ['greenhouse', 'viecoi'], 'snapshot_version': '2026-07-18-multisource', 'snapshot_versions': ['2026-07-18-multisource'], 'taxonomy_version': '0.4.0', 'generated_at': '2026-07-18T23:31:58.903945+00:00'}
 
 TAXONOMY GAP REPORTS
 {'career_gap_rows': 10, 'skill_gap_rows': 71, 'location_gap_rows': 9, 'unique_skill_tags': 125, 'unmapped_skill_tags': 60}
 
 SOURCE COVERAGE
-{'snapshot_version': '2026-07-18-multisource', 'total_current_jobs': 106, 'total_lifecycle_records': 106, 'valid_lifecycle_records': 106, 'active_jobs': 106, 'missing_unconfirmed_jobs': 0, 'inactive_jobs': 0, 'invalid_records_excluded': 0, 'active_sources': ['greenhouse', 'viecoi'], 'source_distribution': {'viecoi': 90, 'greenhouse': 16}, 'unique_companies': 81, 'unique_careers': 48, 'unique_provinces': 12, 'remote_job_count': 2, 'unknown_location_count': 7, 'salary_available_count': 89, 'salary_available_rate': 0.8396, 'description_available_rate': 1.0, 'career_mapping_rate': 0.9057, 'location_mapping_rate_non_remote': 0.9327, 'jobs_with_mapped_skills': 100, 'skill_mapping_rate': 0.9434, 'duplicate_count': 0, 'average_extraction_confidence': 0.9488, 'average_extraction_confidence_by_source': {'greenhouse': 0.9912, 'viecoi': 0.9413}, 'taxonomy_version': '0.4.0', 'collector_versions': {'greenhouse': ['0.1.0'], 'viecoi': ['0.1.0']}, 'generated_at': '2026-07-18T23:19:35.885354+00:00', 'coverage_note': 'Snapshot from monitored sources; it does not represent the entire Vietnamese labour market. Greenhouse covers one company with full job descriptions. ViecOi covers three public listing pages and listing fields only.'}
+{'snapshot_version': '2026-07-18-multisource', 'total_current_jobs': 106, 'total_lifecycle_records': 106, 'valid_lifecycle_records': 106, 'active_jobs': 106, 'missing_unconfirmed_jobs': 0, 'inactive_jobs': 0, 'invalid_records_excluded': 0, 'active_sources': ['greenhouse', 'viecoi'], 'source_distribution': {'viecoi': 90, 'greenhouse': 16}, 'unique_companies': 81, 'unique_careers': 48, 'unique_provinces': 12, 'remote_job_count': 2, 'unknown_location_count': 7, 'salary_available_count': 89, 'salary_available_rate': 0.8396, 'description_available_rate': 1.0, 'career_mapping_rate': 0.9057, 'location_mapping_rate_non_remote': 0.9327, 'jobs_with_mapped_skills': 100, 'skill_mapping_rate': 0.9434, 'duplicate_count': 0, 'average_extraction_confidence': 0.9488, 'average_extraction_confidence_by_source': {'greenhouse': 0.9912, 'viecoi': 0.9413}, 'taxonomy_version': '0.4.0', 'collector_versions': {'greenhouse': ['0.1.0'], 'viecoi': ['0.1.0']}, 'generated_at': '2026-07-18T23:31:58.976343+00:00', 'coverage_note': 'Snapshot from monitored sources; it does not represent the entire Vietnamese labour market. Greenhouse covers one company with full job descriptions. ViecOi covers three public listing pages and listing fields only.'}
 
 DATABASE WAREHOUSE
          dataset_name  row_count                   snapshot_versions                     published_at
-           jobs_clean        106            [2026-07-18-multisource] 2026-07-18 23:19:37.823654+00:00
-           job_skills        369                                  [] 2026-07-18 23:19:37.823654+00:00
-        job_lifecycle        106            [2026-07-18-multisource] 2026-07-18 23:19:37.823654+00:00
-career_demand_summary         66            [2026-07-18-multisource] 2026-07-18 23:19:37.823654+00:00
-  career_skill_matrix        290                                  [] 2026-07-18 23:19:37.823654+00:00
-      career_evidence        152 [2026-07-18-multisource, onet-30.3] 2026-07-18 23:19:37.823654+00:00
-career_evidence_facts        593                         [onet-30.3] 2026-07-18 23:19:37.823654+00:00
-      career_profiles         54                                  [] 2026-07-18 23:19:37.823654+00:00
+           jobs_clean        106            [2026-07-18-multisource] 2026-07-18 23:32:00.947044+00:00
+           job_skills        369                                  [] 2026-07-18 23:32:00.947044+00:00
+        job_lifecycle        106            [2026-07-18-multisource] 2026-07-18 23:32:00.947044+00:00
+career_demand_summary         66            [2026-07-18-multisource] 2026-07-18 23:32:00.947044+00:00
+  career_skill_matrix        290                                  [] 2026-07-18 23:32:00.947044+00:00
+      career_evidence        152 [2026-07-18-multisource, onet-30.3] 2026-07-18 23:32:00.947044+00:00
+career_evidence_facts        593                         [onet-30.3] 2026-07-18 23:32:00.947044+00:00
+      career_profiles         54                                  [] 2026-07-18 23:32:00.947044+00:00
