@@ -44,14 +44,13 @@ export default function App() {
   }
 
   const session = readSession();
-  const unlocked = session.assessmentCompleted && session.profileStatus === 'confirmed';
   if (path.startsWith('/assessment')) return <AssessmentPersistent />;
   if (path === '/profile') return <CandidateProfile />;
-  if (path === '/abilities') return session.assessmentCompleted ? <AbilitiesSchema /> : <Locked type="abilities" />;
-  if (path === '/careers') return unlocked ? <CareersAISchema /> : <Locked />;
+  if (path === '/abilities') return <AbilitiesSchema />;
+  if (path === '/careers') return <CareersAISchema />;
   if (path.startsWith('/roadmap')) {
     const id = path.split('/')[2];
-    return unlocked && session.selectedCareerId ? <RoadmapAI id={id} /> : <Locked type="roadmap" />;
+    return session.selectedCareerId ? <RoadmapAI id={id} /> : <Locked type="roadmap" />;
   }
   return <Home />;
 }

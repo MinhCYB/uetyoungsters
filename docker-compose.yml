@@ -29,7 +29,9 @@ services:
       - ./reports:/app/reports
 
   backend-api:
-    build: ./backend-api
+    build:
+      context: .
+      dockerfile: backend-api/Dockerfile
     depends_on:
       - db
     ports:
