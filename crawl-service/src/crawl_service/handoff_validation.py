@@ -662,6 +662,7 @@ def validate_generated_file_guard(root: Path) -> None:
     }
     allowed_source_files = {
         "frontend/index.html",
+        "phase1_demo/static/index.html",
     }
     violations: list[str] = []
     for raw_path in result.stdout.splitlines():
