@@ -29,13 +29,17 @@ services:
       - ./reports:/app/reports
 
   backend-api:
-    build: ./backend-api
+    build:
+      context: .
+      dockerfile: backend-api/Dockerfile
     depends_on:
       - db
     ports:
       - "8000:8000"
     environment:
       DATABASE_URL: postgresql://cc_user:cc_pass@db:5432/career_compass
+      AUTH_SECRET: ${AUTH_SECRET:-replace-this-secret-before-production}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
 
   ai-worker-service:
     build: ./ai-worker-service

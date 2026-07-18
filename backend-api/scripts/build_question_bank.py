@@ -10,8 +10,6 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]  # backend-api/
 SOURCE_DIR = PROJECT_ROOT / "modules" / "assessment" / "data" / "question_bank_source"
-# Trước đây (nhánh Long) là core/, giờ module assessment nằm trong package
-# modules.assessment ở gốc backend-api/, nên chỉ cần backend-api/ trên sys.path.
 BACKEND_API_DIR = Path(os.getenv("BACKEND_API_DIR", PROJECT_ROOT))
 
 FILES = {
@@ -89,8 +87,10 @@ def parse_numbered(section: str, text: str):
             qid = explicit or f"{prefix}_{category.upper()}_{counters[category]:02d}"
             options = []
             j = i + 1
-            while j < len(lines) and (lines[j].startswith("   - ") or lines[j].startswith("    - ")):
-                options.append(lines[j].strip()[2:].strip())
+            while j < len(lines) and not lines[j].strip():
+                j += 1
+            while j < len(lines) and re.match(r"^\s{3,}[-*]\s+", lines[j]):
+                options.append(re.sub(r"^[-*]\s+", "", lines[j].strip()).strip())
                 j += 1
             qtype = "single_choice" if options else "open_text"
             if section == "interests_and_values" and explicit and explicit[0] in "RIAS ECV".replace(" ", ""):
@@ -176,7 +176,7 @@ def add_structured_value_activities(questions: dict):
 
 
 def configure_basic_information_flow(questions: dict):
-    """Add identity fields and deterministic branching metadata to basic questions."""
+    """Configure survey-only basic questions; education stage comes from the user profile."""
     questions.update({
         "PROFILE_NAME": {
             "id": "PROFILE_NAME", "section": "basic_information", "category": "identity",
@@ -193,16 +193,10 @@ def configure_basic_information_flow(questions: dict):
         },
     })
     conditions = {
-        "BI_A_GIAI_DOAN_HOC_TAP_02": {"question_id": "BI_A_GIAI_DOAN_HOC_TAP_01", "operator": "equals", "value": "thpt"},
-        "BI_A_GIAI_DOAN_HOC_TAP_03": {"question_id": "BI_A_GIAI_DOAN_HOC_TAP_01", "operator": "equals", "value": "university"},
-        "BI_A_GIAI_DOAN_HOC_TAP_04": {"question_id": "BI_A_GIAI_DOAN_HOC_TAP_01", "operator": "equals", "value": "university"},
-        "BI_A_GIAI_DOAN_HOC_TAP_05": {"question_id": "BI_A_GIAI_DOAN_HOC_TAP_01", "operator": "in", "value": ["thpt", "university"]},
         "BI_B_MUC_TIEU_HUONG_NGHIEP_04": {"question_id": "BI_B_MUC_TIEU_HUONG_NGHIEP_03", "operator": "not_equals", "value": "none"},
     }
     ordered_ids = [
         "PROFILE_NAME", "PROFILE_AGE",
-        "BI_A_GIAI_DOAN_HOC_TAP_01", "BI_A_GIAI_DOAN_HOC_TAP_02", "BI_A_GIAI_DOAN_HOC_TAP_03",
-        "BI_A_GIAI_DOAN_HOC_TAP_04", "BI_A_GIAI_DOAN_HOC_TAP_05",
         "BI_B_MUC_TIEU_HUONG_NGHIEP_01", "BI_B_MUC_TIEU_HUONG_NGHIEP_02",
         "BI_B_MUC_TIEU_HUONG_NGHIEP_03", "BI_B_MUC_TIEU_HUONG_NGHIEP_04",
         "BI_C_KHU_VUC_VA_KHA_NANG_DI_CHUYEN_01", "BI_C_KHU_VUC_VA_KHA_NANG_DI_CHUYEN_02",
@@ -219,7 +213,6 @@ def configure_basic_information_flow(questions: dict):
     for question_id in ("BI_D_THOI_GIAN_VA_NGUON_LUC_03", "BI_D_THOI_GIAN_VA_NGUON_LUC_04", "BI_E_RANG_BUOC_TU_NGUYEN_01"):
         questions[question_id]["type"] = "multi_choice"
     explicit_values = {
-        "BI_A_GIAI_DOAN_HOC_TAP_01": ["thpt", "university", "graduated", "working", "other"],
         "BI_B_MUC_TIEU_HUONG_NGHIEP_03": ["none", "some_ideas", "clear_choice"],
     }
     for question_id in ordered_ids:
@@ -277,14 +270,14 @@ def build_bank():
         "schema_version": "1.0.0",
         "language": "vi",
         "title": "Career Compass Question Bank",
-        "disclaimer": "Nguyên mẫu nghiên cứu dựa trên các khung năng lực đã được chuẩn hóa tại Việt Nam.",
+        "disclaimer": "Bộ đánh giá nguyên mẫu dựa trên các khung năng lực quốc tế, chưa được chuẩn hóa tại Việt Nam.",
         "scales": SCALES,
         "sections": sections,
         "rubrics": parse_rubrics(read("scoring_rubrics")),
         "sources": parse_sources(read("sources")),
         "generation_blueprints": {
             "standard_25_35_min": {
-                "basic_information": {"fixed_flow": True, "question_ids": ["PROFILE_NAME", "PROFILE_AGE", "BI_A_GIAI_DOAN_HOC_TAP_01", "BI_A_GIAI_DOAN_HOC_TAP_02", "BI_A_GIAI_DOAN_HOC_TAP_03", "BI_A_GIAI_DOAN_HOC_TAP_04", "BI_A_GIAI_DOAN_HOC_TAP_05", "BI_B_MUC_TIEU_HUONG_NGHIEP_01", "BI_B_MUC_TIEU_HUONG_NGHIEP_02", "BI_B_MUC_TIEU_HUONG_NGHIEP_03", "BI_B_MUC_TIEU_HUONG_NGHIEP_04", "BI_C_KHU_VUC_VA_KHA_NANG_DI_CHUYEN_01", "BI_C_KHU_VUC_VA_KHA_NANG_DI_CHUYEN_02", "BI_C_KHU_VUC_VA_KHA_NANG_DI_CHUYEN_03", "BI_D_THOI_GIAN_VA_NGUON_LUC_01", "BI_D_THOI_GIAN_VA_NGUON_LUC_02", "BI_D_THOI_GIAN_VA_NGUON_LUC_03", "BI_D_THOI_GIAN_VA_NGUON_LUC_04", "BI_E_RANG_BUOC_TU_NGUYEN_01", "BI_E_RANG_BUOC_TU_NGUYEN_02"]},
+                "basic_information": {"fixed_flow": True, "profile_fields": ["profile_type", "grade_level", "education_program"], "question_ids": ["PROFILE_NAME", "PROFILE_AGE", "BI_B_MUC_TIEU_HUONG_NGHIEP_01", "BI_B_MUC_TIEU_HUONG_NGHIEP_02", "BI_B_MUC_TIEU_HUONG_NGHIEP_03", "BI_B_MUC_TIEU_HUONG_NGHIEP_04", "BI_C_KHU_VUC_VA_KHA_NANG_DI_CHUYEN_01", "BI_C_KHU_VUC_VA_KHA_NANG_DI_CHUYEN_02", "BI_C_KHU_VUC_VA_KHA_NANG_DI_CHUYEN_03", "BI_D_THOI_GIAN_VA_NGUON_LUC_01", "BI_D_THOI_GIAN_VA_NGUON_LUC_02", "BI_D_THOI_GIAN_VA_NGUON_LUC_03", "BI_D_THOI_GIAN_VA_NGUON_LUC_04", "BI_E_RANG_BUOC_TU_NGUYEN_01", "BI_E_RANG_BUOC_TU_NGUYEN_02"]},
                 "riasec": {"min": 18, "max": 24, "balance": {"R": 3, "I": 3, "A": 3, "S": 3, "E": 3, "C": 3}},
                 "career_values": {"ranking_activities": 2},
                 "daily_habits": {"min": 12, "max": 16, "cover_all_categories": True},
@@ -294,7 +287,7 @@ def build_bank():
                 "deep_open_questions": {"count": 4, "adaptive": True},
             },
             "short_15_20_min": {
-                "basic_information": {"fixed_flow": True, "question_ids": ["PROFILE_NAME", "PROFILE_AGE", "BI_A_GIAI_DOAN_HOC_TAP_01", "BI_A_GIAI_DOAN_HOC_TAP_02", "BI_A_GIAI_DOAN_HOC_TAP_03", "BI_A_GIAI_DOAN_HOC_TAP_04", "BI_B_MUC_TIEU_HUONG_NGHIEP_01", "BI_C_KHU_VUC_VA_KHA_NANG_DI_CHUYEN_01", "BI_D_THOI_GIAN_VA_NGUON_LUC_01"]},
+                "basic_information": {"fixed_flow": True, "profile_fields": ["profile_type", "grade_level", "education_program"], "question_ids": ["PROFILE_NAME", "PROFILE_AGE", "BI_B_MUC_TIEU_HUONG_NGHIEP_01", "BI_C_KHU_VUC_VA_KHA_NANG_DI_CHUYEN_01", "BI_D_THOI_GIAN_VA_NGUON_LUC_01"]},
                 "riasec": {"count": 12, "balance": {"R": 2, "I": 2, "A": 2, "S": 2, "E": 2, "C": 2}},
                 "daily_habits": {"count": 8, "cover_all_categories": True},
                 "ability_tasks": {"count": 4, "adaptive": True, "max_one_per_dimension": True},

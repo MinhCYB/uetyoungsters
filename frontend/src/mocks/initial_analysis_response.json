@@ -1,0 +1,20 @@
+{
+  "contract_version": "1.0.0",
+  "response_type": "initial_analysis",
+  "request_id": "iar_uet_0001",
+  "student_id": "stu_uet_0001",
+  "generated_at": "2026-07-19T08:05:00Z",
+  "title": "Hồ sơ năng lực ban đầu",
+  "summary": "Bạn có nền tảng giải quyết vấn đề tốt và cần thêm trải nghiệm làm việc với dữ liệu thực tế.",
+  "ability_profile": [
+    {"ability_id":"ability_problem_solving","display_name":"Giải quyết vấn đề","level":"proficient","score":78,"max_score":100,"confidence":0.84,"explanation":"Thể hiện ổn định qua bài diagnostic và quan sát dự án."},
+    {"ability_id":"ability_communication","display_name":"Giao tiếp","level":"developing","score":64,"max_score":100,"confidence":0.72,"explanation":"Có thể trình bày ý chính, cần luyện giải thích dữ liệu."}
+  ],
+  "gaps": [
+    {"gap_id":"gap_knowledge_01","gap_type":"knowledge","subject_id":"knowledge_statistics","display_name":"Thống kê cơ bản","priority":"high","description":"Chưa vững cách chọn chỉ số mô tả phù hợp."},
+    {"gap_id":"gap_skill_01","gap_type":"skill","subject_id":"skill_data_literacy","display_name":"Đọc hiểu dữ liệu","priority":"high","description":"Cần luyện kiểm tra nguồn và diễn giải biểu đồ."},
+    {"gap_id":"gap_experience_01","gap_type":"experience","subject_id":"experience_real_dataset","display_name":"Dự án dữ liệu thực tế","priority":"medium","description":"Chưa có sản phẩm sử dụng dữ liệu có nhiễu và thiếu."}
+  ],
+  "warnings": [{"code":"LIMITED_EVIDENCE","severity":"caution","title":"Bằng chứng còn hạn chế","message":"Kết quả hiện dựa trên một bài đánh giá và một quan sát.","suggested_action":"Hoàn thành hoạt động thực hành trước khi kết luận."}],
+  "next_steps": [{"step_id":"step_generate_plan","title":"Tạo kế hoạch 3 tuần","description":"Luyện đọc hiểu dữ liệu qua ba hoạt động ngắn.","priority":"high","route":"/roadmap/data-literacy"}]
+}

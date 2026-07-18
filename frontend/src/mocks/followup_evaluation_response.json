@@ -1,0 +1,17 @@
+{
+  "contract_version": "1.0.0",
+  "response_type": "followup_evaluation",
+  "request_id": "fer_uet_0001",
+  "student_id": "stu_uet_0001",
+  "generated_at": "2026-08-09T08:05:00Z",
+  "title": "Tiến triển sau 3 tuần",
+  "summary": "Kỹ năng đọc hiểu dữ liệu tăng rõ; giao tiếp dữ liệu có cải thiện nhưng cần thêm bằng chứng.",
+  "baseline_analysis_id": "analysis_uet_0001",
+  "progress_percentage": 100,
+  "before_after": [
+    {"subject_id":"skill_data_literacy","display_name":"Đọc hiểu dữ liệu","before":55,"after":80,"max_value":100,"delta":25,"interpretation":"Cải thiện rõ qua posttest và hoạt động thực hành."},
+    {"subject_id":"ability_communication","display_name":"Giao tiếp","before":64,"after":72,"max_value":100,"delta":8,"interpretation":"Có tiến bộ, cần thêm lần trình bày để tăng độ tin cậy."}
+  ],
+  "warnings": [{"code":"SHORT_WINDOW","severity":"info","title":"Thời gian theo dõi ngắn","message":"Ba tuần chưa đủ để kết luận năng lực đã ổn định.","suggested_action":"Đánh giá lại sau 4–6 tuần."}],
+  "next_steps": [{"step_id":"step_continue_project","title":"Làm một dự án nhỏ","description":"Áp dụng kỹ năng với bộ dữ liệu mới và trình bày kết quả.","priority":"medium","route":"/activities/data-mini-project"}]
+}
