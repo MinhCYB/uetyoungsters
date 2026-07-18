@@ -97,6 +97,30 @@ Sciences, and Health/Life Sciences.
 Production profile adapters, frontend integration, APIs, databases, auth, and
 deployment remain outside this demo hardening sprint.
 
+## Controlled content generation V1
+
+The optional `student_companion/llm/` layer expands engine-selected tasks,
+creates structured reassessment content, and generates feedback. Engine V1
+still owns skills, career groups, priority, duration, score, outcome, and next
+step; content providers cannot change those decisions.
+
+The default mode is the offline deterministic `TemplateProvider`. Scripted
+`FakeLLMProvider` supports tests. The repository does not currently contain a
+configured live provider, so the existing-provider adapter falls back safely
+and does not claim template output is AI-generated.
+
+Run the content demo without a server, network, or API key:
+
+```powershell
+python -m phase1_demo.scripts.run_llm_content_demo
+python -m phase1_demo.scripts.run_llm_content_demo --provider fake
+```
+
+See `LLM_RULES.md` for the engine/content boundary and `LLM_SCENARIOS.md` for
+failure and privacy coverage. Generated reassessment questions demonstrate
+orchestration and schema validation; they require teacher or curated
+question-bank validation before production use.
+
 Kết quả thành công kết thúc bằng `PRE-FLIGHT PASSED`.
 
 ## Chạy demo
