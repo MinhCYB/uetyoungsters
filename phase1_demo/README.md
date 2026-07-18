@@ -1,46 +1,143 @@
 # Student Companion Phase 1 Demo
 
-Scaffold độc lập cho bản demo Student Companion dành cho học sinh cấp 3.
+Bản demo offline chứng minh một vòng đồng hành khép kín cho học sinh cấp 3:
+từ bằng chứng học tập và sở thích, hệ thống tạo ability profile, ba loại gap,
+kế hoạch tuần 45 phút, rồi cập nhật snapshot sau post-test và micro-experience.
 
-## Trạng thái hiện tại
+Demo không kết luận nghề nghiệp cuối cùng. Nó đề xuất bước thử nhỏ tiếp theo dựa
+trên bằng chứng mới.
 
-**TASK 1 hoàn tất ở mức domain contracts:** package hiện có enum, input model,
-derived-result model, validation và JSON serialization deterministic bằng
-Pydantic v2. Chưa có business calculation, dữ liệu synthetic, pipeline, API
-hoặc giao diện.
+## Persona và synthetic data
 
-## Phạm vi thư mục
+Nguyễn Minh Anh là học sinh lớp 11, có 45 phút mỗi tuần, đang cân nhắc Data/AI
+và Kinh tế. Minh Anh yếu biến đổi lượng giác, khá xác suất và suy luận dữ liệu,
+nhưng chưa có trải nghiệm Data/AI thực tế.
 
-Tất cả code và artifact mới của demo phải nằm trong `phase1_demo/`. Market
-pipeline hiện hữu nằm ngoài phạm vi sửa đổi; các task sau chỉ được đọc output
-đã tạo sẵn khi cần market context.
+Input synthetic nằm trong:
 
-## Cấu trúc
+```text
+fixtures/student_t0/   # hồ sơ, học bạ, giáo viên, pre-test, self-report
+fixtures/student_t1/   # post-test và Data activity result
+```
 
-- `student_companion/domain/`: enum và domain data contracts thuần.
-- `student_companion/application/`: vị trí dự kiến cho điều phối use case.
-- `student_companion/infrastructure/`: vị trí dự kiến cho adapter offline.
-- `tests/`: vị trí dự kiến cho test của từng business rule.
-- `ARCHITECTURE.md`: ranh giới phụ thuộc và kết quả audit schema.
+Fixture chỉ chứa input, dùng timestamp cố định và parse qua domain contracts.
+Không có ability, gap, plan, outcome hay snapshot được viết sẵn.
 
-## Smoke check
+## Kiến trúc
+
+```text
+static UI (HTML/CSS/JS)
+        ↓ local JSON API
+run_demo.py (Python standard-library HTTP server)
+        ↓
+application/service.py (state machine và orchestration)
+        ↓
+domain/rules.py + domain/models.py (business rules thuần)
+        ↑
+infrastructure/fixtures.py + infrastructure/market.py
+```
+
+- `domain`: Pydantic contracts và business rules deterministic, không I/O.
+- `application`: điều phối `initial → analyzed → planned → advanced`.
+- `infrastructure`: đọc fixtures và market output read-only.
+- `run_demo.py`: `ThreadingHTTPServer`, static files và JSON API.
+- `scripts/preflight.py`: kiểm tra end-to-end trước khi demo.
+
+FastAPI không được dùng trong demo đầu tiên vì runtime offline hiện không có
+FastAPI/Uvicorn/HTTPX và sprint không cho phép cài dependency. HTTP boundary
+hiện dùng hoàn toàn Python standard library.
+
+## Market data
+
+Adapter chỉ đọc bốn output hiện có:
+
+- `data/processed/career_skill_matrix.parquet`
+- `data/processed/career_demand_summary.parquet`
+- `data/processed/jobs_clean.parquet`
+- `data/processed/job_skills.parquet`
+
+Hai career group demo được map bằng `career_id` versioned, không join bằng tên
+hiển thị. Foundation skill chỉ giới hạn ở kỹ năng phù hợp học sinh cấp 3.
+
+Khi pipeline output hợp lệ, response đánh dấu `pipeline_export`. Nếu file hoặc
+mapping không đủ, adapter dùng `fixtures/market_fallback.json` và đánh dấu
+`fallback_demo`; demo không cần internet và không chạy crawler.
+
+## Chạy test
 
 Từ repository root:
 
 ```powershell
-python -c "import phase1_demo.student_companion as sc; print(sc.__version__)"
+python -m pytest phase1_demo/tests -q
 ```
 
-Kết quả mong đợi ở TASK 0: `0.0.0`.
+Nếu `python` chưa nằm trong PATH, dùng interpreter phù hợp của workspace.
 
-## Kiểm tra domain contracts
+## Chạy preflight
 
 ```powershell
-pytest phase1_demo/tests -q
-python -c "from phase1_demo.student_companion.domain import StudentProfile, StudentSnapshot; print('domain-imports-ok')"
+python -m phase1_demo.scripts.preflight
 ```
+
+Kết quả thành công kết thúc bằng `PRE-FLIGHT PASSED`.
 
 ## Chạy demo
 
-Chưa áp dụng trong TASK 1. Hướng dẫn chạy sẽ được bổ sung khi pipeline được
-triển khai trong task được phê duyệt riêng.
+```powershell
+python -m phase1_demo.run_demo
+```
+
+Hoặc chọn host/port:
+
+```powershell
+python -m phase1_demo.run_demo --host 127.0.0.1 --port 8000
+```
+
+Mở [http://127.0.0.1:8000](http://127.0.0.1:8000). Server không tự mở browser.
+
+## API routes
+
+| Method | Route | Chức năng |
+|---|---|---|
+| `GET` | `/health` | Trạng thái server, pipeline version, market mode |
+| `POST` | `/api/demo/reset` | Trở về `initial` |
+| `GET` | `/api/demo/state` | State hiện tại, chỉ chứa dữ liệu JSON-serializable |
+| `POST` | `/api/demo/analyze` | Chuẩn hóa T0, tạo ability và gaps |
+| `POST` | `/api/demo/plan` | Tạo weekly plan |
+| `POST` | `/api/demo/advance` | Nạp T1, outcome, snapshot và next step |
+| `GET` | `/api/demo/comparison` | Before/after sau khi advance |
+
+Transition sai trả HTTP `409`; API route không tồn tại trả JSON `404`.
+
+## Luồng demo
+
+1. Xem hồ sơ Minh Anh.
+2. Chọn **Phân tích hồ sơ** để xem điểm mạnh và ba loại gap.
+3. Chọn **Tạo kế hoạch tuần** để nhận plan 20 + 25 = 45 phút.
+4. Chọn **Mô phỏng sau 2 tuần** để nạp post-test 7/10 và Data activity 8/10.
+5. Xem gap Data/AI đóng, decision gap vẫn còn và next step chuyển sang Kinh tế.
+6. Chọn **Đặt lại demo** để chạy lại từ đầu.
+
+## Determinism và riêng tư
+
+- Không gọi external API, không cần API key, không dùng LLM.
+- Evidence ID dùng SHA-256 ổn định.
+- Timestamp và snapshot ID do fixture/use case cung cấp.
+- Cùng input và market snapshot tạo cùng output.
+- Local server chỉ bind `127.0.0.1` theo mặc định và giữ state trong memory.
+
+## Hạn chế
+
+- Persona và post-activity result là synthetic, không đại diện đánh giá tâm lý
+  hay tư vấn nghề nghiệp chính thức.
+- Market snapshot hiện tại nhỏ và không đại diện toàn bộ thị trường Việt Nam.
+- State chỉ tồn tại trong process; restart server sẽ reset demo.
+- Local server phục vụ demo đơn người dùng, chưa có authentication, persistence,
+  rate limit hoặc production hardening.
+- UI dùng label tiếng Việt có cấu hình cục bộ; chưa có hệ thống i18n.
+
+## Hướng migration sang FastAPI
+
+Khi runtime có FastAPI, giữ nguyên `DemoService` và domain rules; chỉ thay HTTP
+adapter trong `run_demo.py` bằng route FastAPI, thêm schema response và dùng
+TestClient. Không cần viết lại pipeline hoặc duplicate business logic.

@@ -169,12 +169,29 @@ class DemoService:
 
     def get_comparison(self) -> dict:
         self._require_stage(DemoStage.ADVANCED)
+        before_scores = {
+            item.skill_id: item for item in self.initial.pretest_attempt.skill_scores
+        }
+        after_scores = {
+            item.skill_id: item for item in self.followup.posttest_attempt.skill_scores
+        }
+        assessment_result = None
+        trig_skill_id = "SKILL_TRIG_TRANSFORMATION"
+        if trig_skill_id in before_scores and trig_skill_id in after_scores:
+            assessment_result = {
+                "skill_id": trig_skill_id,
+                "before_score": before_scores[trig_skill_id].score,
+                "before_max_score": before_scores[trig_skill_id].max_score,
+                "after_score": after_scores[trig_skill_id].score,
+                "after_max_score": after_scores[trig_skill_id].max_score,
+            }
         return {
             "student": self.initial.student.model_dump(mode="json"),
             "before": self.snapshot_t0.model_dump(mode="json"),
             "after": self.snapshot_t1.model_dump(mode="json"),
             "new_evidence": [item.model_dump(mode="json") for item in self.new_evidence_t1],
             "next_step": self.next_step.model_dump(mode="json") if self.next_step else None,
+            "assessment_result": assessment_result,
             "activity_result": self.followup.activity_result.model_dump(mode="json"),
         }
 
@@ -204,4 +221,3 @@ class DemoService:
             raise InvalidTransition(
                 f"Action requires stage '{expected.value}', current stage is '{self.stage.value}'."
             )
-

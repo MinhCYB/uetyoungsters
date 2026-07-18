@@ -2,8 +2,9 @@
 
 ## Trạng thái
 
-Scaffold của **TASK 0** và domain data contracts của **TASK 1** đã hoàn tất.
-Chưa có pipeline, synthetic data, API hay giao diện được triển khai.
+Scaffold, domain contracts và vertical slice Phase 1 đã hoàn tất. Demo có
+synthetic inputs, deterministic pipeline, standard-library local API và static
+UI tiếng Việt.
 
 ## Mục tiêu kiến trúc
 
@@ -13,11 +14,15 @@ market pipeline.
 
 ```text
 phase1_demo/
+├── fixtures/            # Synthetic student inputs và market fallback
+├── static/              # HTML, CSS, vanilla JavaScript
+├── scripts/             # Preflight end-to-end
+├── run_demo.py          # ThreadingHTTPServer và local JSON API
 ├── student_companion/
-│   ├── domain/          # Enum và validated data contracts
-│   ├── application/     # Điều phối use case/pipeline (task sau)
-│   └── infrastructure/  # Adapter đọc input/market output offline (task sau)
-├── tests/               # Test business rules và integration (task sau)
+│   ├── domain/          # Contracts và deterministic business rules
+│   ├── application/     # State machine và use-case orchestration
+│   └── infrastructure/  # Fixture loader và read-only market adapter
+├── tests/               # Domain, pipeline và local server tests
 ├── ARCHITECTURE.md
 └── README.md
 ```
@@ -27,7 +32,9 @@ phase1_demo/
 Hướng phụ thuộc chỉ đi vào trong:
 
 ```text
-infrastructure ──> application ──> domain
+HTTP/UI ──> application ──> domain
+               ↑
+         infrastructure
 ```
 
 - `domain` không đọc file, không gọi mạng và không phụ thuộc framework.
@@ -36,7 +43,7 @@ infrastructure ──> application ──> domain
 - Mọi artifact mới của demo phải nằm trong `phase1_demo/`.
 - LLM và external API không nằm trong critical path.
 
-## Luồng mục tiêu cho các task sau
+## Luồng đã triển khai
 
 ```text
 student input
@@ -51,7 +58,8 @@ student input
   -> before / after presentation
 ```
 
-Luồng trên là định hướng, không phải chức năng đã có ở TASK 0.
+Luồng trên chạy end-to-end qua `DemoService`; local API chỉ gọi service và không
+duplicate business logic.
 
 ## Market output đã audit
 
