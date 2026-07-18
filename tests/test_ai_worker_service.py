@@ -51,6 +51,9 @@ class FakeClient:
 
 def client_for(monkeypatch, models):
     monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    monkeypatch.setenv("DEFAULT_MODEL", "test-gemini-model")
+    monkeypatch.setenv("DEFAULT_MAX_TOKENS", "2048")
+    monkeypatch.setenv("REQUEST_TIMEOUT_SECONDS", "60")
     ai_worker.app.dependency_overrides[ai_worker.get_gemini_client] = lambda: FakeClient(models)
     return TestClient(ai_worker.app)
 
@@ -74,7 +77,7 @@ def test_infer_forwards_multiturn_and_content_blocks(monkeypatch):
     assert response.status_code == 200
     assert response.json() == {
         "content": "raw response", "parsed": True,
-        "model": ai_worker.DEFAULT_MODEL,
+        "model": "test-gemini-model",
         "usage": {"input_tokens": 7, "output_tokens": 3},
     }
     assert messages.call["contents"][2]["parts"] == [{"text": "next"}]

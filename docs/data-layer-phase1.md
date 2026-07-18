@@ -42,6 +42,7 @@ config/sources.yaml
   → same-source dedup / cross-source candidate grouping
   → lifecycle
   → processed tables
+  → Postgres crawl warehouse
   → aggregation + quality/coverage/gap reports
 ```
 
@@ -72,7 +73,10 @@ Implementation production duy nhất nằm trong
 
 ## Outputs và reports
 
-Canonical outputs nằm trong `data/processed/`; reports nằm trong `reports/`.
+Canonical outputs nằm trong `data/processed/` và được publish vào Postgres schema
+do `CRAWL_DATABASE_SCHEMA` cấu hình; reports nằm trong `reports/`. Có thể chạy
+`python -m crawl_service publish-db` để đồng bộ lại database từ các file Parquet
+hiện có mà không crawl lại.
 Chi tiết field và consumer guidance xem [data-contracts.md](data-contracts.md).
 
 ## Vận hành

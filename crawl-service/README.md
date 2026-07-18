@@ -20,8 +20,17 @@ python -m crawl_service collect-greenhouse
 python -m crawl_service collect-viecoi
 python -m crawl_service collect-all
 python -m crawl_service pipeline
+python -m crawl_service publish-db
 python -m crawl_service validate-handoff --fixtures-only
 python -m crawl_service validate-handoff --production-only
+```
+
+With Docker Compose, the image entrypoint already supplies
+`python -m crawl_service`, so pass only the subcommand:
+
+```powershell
+docker compose run --rm crawl-service collect-all
+docker compose run --rm crawl-service pipeline
 ```
 
 The older root scripts remain as deprecated compatibility wrappers.
@@ -33,10 +42,10 @@ The older root scripts remain as deprecated compatibility wrappers.
 - Raw/interim/processed data: `data/`
 - Quality and coverage reports: `reports/`
 
-The service does not create a private taxonomy, data directory, or report
-directory. Core, Profile, and Recommendation consumers use the shared taxonomy,
-market contracts, fixtures, and processed warehouse tables; they do not import
-the service's internal models.
+Canonical processed tables are also published to the Postgres schema configured
+by `CRAWL_DATABASE_SCHEMA`. `publish-db` republishes existing Parquet outputs
+without running collectors. Parquet remains the auditable handoff artifact while
+Postgres is the runtime source for backend consumers.
 
 TopCV remains disabled because of its access challenge. ViecOi collection stays
 limited to three public listing pages with detail pages disabled. Collectors do

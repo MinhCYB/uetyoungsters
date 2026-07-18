@@ -13,14 +13,13 @@ from google.genai import types
 from pydantic import BaseModel, ConfigDict, Field
 
 
-DEFAULT_MODEL = "gemini-2.5-flash"
 JSON_INSTRUCTION = (
     "Return only valid JSON. Do not include explanatory text or Markdown code fences."
 )
 
 
 class Message(BaseModel):
-    """An Anthropic message; content blocks are deliberately passed through."""
+    """A provider-neutral conversation message accepted by the gateway."""
 
     model_config = ConfigDict(extra="forbid")
 
@@ -57,21 +56,30 @@ def _required_api_key() -> str:
     return key
 
 
-def _default_max_tokens() -> int:
-    raw_value = os.environ.get("DEFAULT_MAX_TOKENS", "2048")
+def _required_setting(name: str) -> str:
+    value = os.environ.get(name, "").strip()
+    if not value:
+        raise RuntimeError(f"{name} is required for ai-worker-service")
+    return value
+
+
+def _positive_int_setting(name: str) -> int:
+    raw_value = _required_setting(name)
     try:
         value = int(raw_value)
     except ValueError as exc:
-        raise RuntimeError("DEFAULT_MAX_TOKENS must be an integer") from exc
+        raise RuntimeError(f"{name} must be an integer") from exc
     if value <= 0:
-        raise RuntimeError("DEFAULT_MAX_TOKENS must be greater than zero")
+        raise RuntimeError(f"{name} must be greater than zero")
     return value
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     _required_api_key()
-    _default_max_tokens()
+    _required_setting("DEFAULT_MODEL")
+    _positive_int_setting("DEFAULT_MAX_TOKENS")
+    _positive_int_setting("REQUEST_TIMEOUT_SECONDS")
     yield
 
 
@@ -81,7 +89,9 @@ app = FastAPI(title="AI Worker Service", version="1.0.0", lifespan=lifespan)
 def get_gemini_client() -> genai.Client:
     return genai.Client(
         api_key=_required_api_key(),
-        http_options=types.HttpOptions(timeout=60_000),
+        http_options=types.HttpOptions(
+            timeout=_positive_int_setting("REQUEST_TIMEOUT_SECONDS") * 1000
+        ),
     )
 
 
@@ -117,8 +127,8 @@ async def infer(
     request: InferRequest,
     client: genai.Client = Depends(get_gemini_client),
 ) -> InferResponse:
-    model = request.model or os.environ.get("DEFAULT_MODEL", DEFAULT_MODEL)
-    max_tokens = request.max_tokens or _default_max_tokens()
+    model = request.model or _required_setting("DEFAULT_MODEL")
+    max_tokens = request.max_tokens or _positive_int_setting("DEFAULT_MAX_TOKENS")
     system_prompt = request.system_prompt
     if request.response_format == "json":
         system_prompt = "\n\n".join(part for part in (system_prompt, JSON_INSTRUCTION) if part)
