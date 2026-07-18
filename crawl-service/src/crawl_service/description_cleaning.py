@@ -3,26 +3,20 @@ from __future__ import annotations
 import math
 import re
 from collections import Counter
-from pathlib import Path
 from typing import Any
 
 import pandas as pd
 from bs4 import BeautifulSoup
 
-
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+from .paths import INTERIM_DIR, PROCESSED_DIR
 
 INPUT_PATH = (
-    PROJECT_ROOT
-    / "data"
-    / "interim"
+    INTERIM_DIR
     / "greenhouse_jobs_latest.parquet"
 )
 
 OUTPUT_PATH = (
-    PROJECT_ROOT
-    / "data"
-    / "processed"
+    PROCESSED_DIR
     / "greenhouse_jobs_description_clean.parquet"
 )
 

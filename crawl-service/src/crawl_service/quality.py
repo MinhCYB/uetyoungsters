@@ -36,6 +36,12 @@ def create_quality_report(
     duplicate_rows = int(
         jobs.duplicated(["source_id", "source_job_id"]).sum()
     )
+    snapshot_versions = sorted(
+        jobs["snapshot_version"].dropna().astype(str).unique().tolist()
+    )
+    taxonomy_versions = sorted(
+        jobs["taxonomy_version"].dropna().astype(str).unique().tolist()
+    )
 
     report = {
         "total_rows": total,
@@ -51,8 +57,16 @@ def create_quality_report(
             else None
         ),
         "sources": sorted(jobs["source"].dropna().unique().tolist()),
-        "snapshot_versions": sorted(
-            jobs["snapshot_version"].dropna().unique().tolist()
+        "snapshot_version": (
+            snapshot_versions[0]
+            if len(snapshot_versions) == 1
+            else snapshot_versions
+        ),
+        "snapshot_versions": snapshot_versions,
+        "taxonomy_version": (
+            taxonomy_versions[0]
+            if len(taxonomy_versions) == 1
+            else taxonomy_versions
         ),
         "generated_at": datetime.now(timezone.utc).isoformat(),
     }
@@ -286,7 +300,8 @@ def create_coverage_reports(
             else snapshot_versions
         ),
         "total_current_jobs": total,
-        "total_lifecycle_records": len(valid_lifecycle),
+        "total_lifecycle_records": len(lifecycle),
+        "valid_lifecycle_records": len(valid_lifecycle),
         "active_jobs": int(
             (valid_lifecycle["lifecycle_status"] == "active").sum()
         ),

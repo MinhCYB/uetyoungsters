@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from backend.data.lifecycle import (
+from crawl_service.lifecycle import (
     update_job_lifecycle,
 )
 

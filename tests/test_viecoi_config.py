@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.collect_viecoi import (
+from crawl_service.collectors.viecoi import (
     load_viecoi_source,
 )
 

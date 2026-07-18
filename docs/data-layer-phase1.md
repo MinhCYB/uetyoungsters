@@ -33,7 +33,7 @@ TopCV bị tắt do HTTP 403/Cloudflare challenge. Mã thử nghiệm nằm tạ
 
 ```text
 config/sources.yaml
-  → backend/data/collectors
+  → crawl_service.collectors
   → data/raw
   → data/interim
   → source adapters / RawJobPosting
@@ -45,7 +45,8 @@ config/sources.yaml
   → aggregation + quality/coverage/gap reports
 ```
 
-Logic dùng lại nằm trong `backend/data/`; `scripts/` chỉ là CLI mỏng.
+Implementation production duy nhất nằm trong
+`crawl-service/src/crawl_service/`; `scripts/` chỉ là compatibility wrapper.
 
 ## Quy tắc dữ liệu
 
@@ -77,11 +78,15 @@ Chi tiết field và consumer guidance xem [data-contracts.md](data-contracts.md
 ## Vận hành
 
 ```powershell
-python scripts\collect_greenhouse.py
-python scripts\collect_viecoi.py
-python run_pipeline.py
+pip install -e .\crawl-service
+python -m crawl_service collect-greenhouse
+python -m crawl_service collect-viecoi
+python -m crawl_service pipeline
+python -m crawl_service validate-handoff --production-only
 pytest -q
 ```
+
+Các command cũ vẫn tương thích trong thời gian hackathon.
 
 Nếu collector trả rỗng hoặc thất bại, interim snapshot hợp lệ trước đó không bị
 ghi đè bằng file rỗng.

@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-import importlib.util
 import json
 from pathlib import Path
 
 import pytest
+
+from crawl_service.cli import cli as crawl_cli
+from crawl_service.cli import main as crawl_main
 
 from core.shared.contracts.market import (
     MarketJobRecord,
@@ -19,23 +21,10 @@ from core.shared.taxonomy import (
 
 
 FIXTURE_ROOT = Path("tests/fixtures/integration")
-CRAWL_MAIN_PATH = Path("crawl-service/main.py")
 
 
 def _read_json(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
-
-
-def _load_crawl_main_module():
-    spec = importlib.util.spec_from_file_location(
-        "crawl_service_main",
-        CRAWL_MAIN_PATH,
-    )
-    assert spec is not None
-    assert spec.loader is not None
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
 
 
 def test_core_loads_canonical_taxonomy():
@@ -52,24 +41,15 @@ def test_taxonomy_loader_aliases_are_consistent():
 
 
 def test_crawl_wrapper_rejects_unknown_action():
-    crawl_module = _load_crawl_main_module()
-
     with pytest.raises(
         ValueError,
-        match="không được hỗ trợ",
+        match="Unknown crawl-service command",
     ):
-        crawl_module.main("unknown-action")
+        crawl_main("unknown-action")
 
 
-def test_crawl_cli_reads_status_argument(monkeypatch, capsys):
-    crawl_module = _load_crawl_main_module()
-    monkeypatch.setattr(
-        crawl_module.sys,
-        "argv",
-        ["main.py", "status"],
-    )
-
-    crawl_module.cli()
+def test_crawl_cli_reads_status_argument(capsys):
+    crawl_cli(["status"])
 
     assert "crawl-service is ready" in capsys.readouterr().out
 

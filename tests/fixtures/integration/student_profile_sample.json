@@ -1,5 +1,6 @@
 {
   "id": "sample_profile_001",
+  "taxonomy_version": "0.4.0",
   "education": {
     "level": "high_school",
     "field_of_study": null,
@@ -17,7 +18,22 @@
   },
   "interests": [],
   "strengths": [],
-  "skills": [],
+  "skills": [
+    {
+      "skill_id": "SKILL_SQL",
+      "skill_name": "SQL",
+      "level": 0.7,
+      "confidence": 0.9,
+      "source": "self_report"
+    },
+    {
+      "skill_id": "SKILL_EXCEL",
+      "skill_name": "Excel",
+      "level": 0.8,
+      "confidence": 0.9,
+      "source": "self_report"
+    }
+  ],
   "abilities": [],
   "career_values": [],
   "work_preferences": [],

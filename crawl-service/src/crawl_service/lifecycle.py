@@ -5,6 +5,8 @@ from typing import Any
 
 import pandas as pd
 
+from .paths import PROCESSED_DIR
+
 
 KEY_COLUMNS = [
     "source_id",
@@ -387,3 +389,21 @@ def update_job_lifecycle(
     )
 
     return current_enriched, lifecycle_state
+
+
+def run_lifecycle_update() -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Compatibility command for manually refreshing lifecycle fields."""
+    jobs_path = PROCESSED_DIR / "jobs_clean.parquet"
+    state_path = PROCESSED_DIR / "job_lifecycle.parquet"
+    jobs = pd.read_parquet(jobs_path)
+    current_jobs, lifecycle_state = update_job_lifecycle(
+        current_jobs=jobs,
+        state_path=state_path,
+        inactive_after_missing_runs=3,
+    )
+    current_jobs.to_parquet(jobs_path, index=False)
+    print(f"Current jobs: {len(current_jobs)}")
+    print(f"Lifecycle records: {len(lifecycle_state)}")
+    print("\nLifecycle status:")
+    print(lifecycle_state["lifecycle_status"].value_counts(dropna=False))
+    return current_jobs, lifecycle_state

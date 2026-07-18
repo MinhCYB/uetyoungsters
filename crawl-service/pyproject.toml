@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "career-compass-crawl-service"
+version = "0.1.0"
+description = "Career Compass hiring Data Layer and demand warehouse"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "beautifulsoup4>=4.12",
+  "lxml>=5.2",
+  "pandas>=2.2",
+  "pyarrow>=16.0",
+  "pydantic>=2.7",
+  "python-dateutil>=2.9",
+  "PyYAML>=6.0",
+  "rapidfuzz>=3.9",
+  "requests>=2.32",
+  "urllib3>=2.2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.2"]
+
+[project.scripts]
+career-compass-crawl = "crawl_service.cli:cli"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["crawl_service*"]

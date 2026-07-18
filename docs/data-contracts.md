@@ -2,7 +2,7 @@
 
 ## Nguồn contract
 
-- Internal extraction models: `backend/data/models.py`.
+- Internal extraction models: `crawl-service/src/crawl_service/models.py`.
 - Consumer market contracts: `core/shared/contracts/market.py`.
 - Canonical taxonomy: `backend/shared/taxonomy.json`.
 
@@ -72,3 +72,7 @@ Downstream phải join bằng `career_id`, `skill_id`, `province`, `work_mode`,
 `taxonomy_version` và `snapshot_version`. Display names chỉ dùng cho UI.
 Recommendation/profile schema không được nhập vào Data Layer models. Industry
 và growth rate không được thêm nếu chưa có dữ liệu có bằng chứng.
+
+Profile và Recommendation consumers không import internal `crawl_service`
+models. Họ dùng canonical taxonomy, shared market contracts, integration
+fixtures và các bảng processed ở root repository.

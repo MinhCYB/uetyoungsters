@@ -12,12 +12,11 @@ import requests
 import yaml
 from bs4 import BeautifulSoup
 
+from ..paths import INTERIM_DIR, PROJECT_ROOT, RAW_DIR, SOURCES_CONFIG_PATH
 
-PROJECT_ROOT = Path(__file__).resolve().parents[3]
-
-RAW_ROOT = PROJECT_ROOT / "data" / "raw" / "greenhouse"
-INTERIM_ROOT = PROJECT_ROOT / "data" / "interim"
-SOURCES_PATH = PROJECT_ROOT / "config" / "sources.yaml"
+RAW_ROOT = RAW_DIR / "greenhouse"
+INTERIM_ROOT = INTERIM_DIR
+SOURCES_PATH = SOURCES_CONFIG_PATH
 
 API_TEMPLATE = (
     "https://boards-api.greenhouse.io/v1/boards/"
@@ -269,6 +268,11 @@ def collect_greenhouse(
     print(csv_path)
 
     return dataframe
+
+
+def run_collection() -> pd.DataFrame:
+    """Run the configured Greenhouse collection command."""
+    return collect_greenhouse(SOURCES_CONFIG_PATH)
 
 
 if __name__ == "__main__":

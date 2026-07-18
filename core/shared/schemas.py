@@ -157,6 +157,7 @@ class ConsentSettings(BaseModel):
 
 class StudentProfile(BaseModel):
     id: str
+    taxonomy_version: str
 
     education: EducationContext
     location_constraints: LocationConstraint

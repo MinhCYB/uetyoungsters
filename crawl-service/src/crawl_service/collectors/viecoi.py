@@ -12,9 +12,12 @@ from urllib.parse import parse_qsl, urlencode, urljoin, urlsplit, urlunsplit
 
 import pandas as pd
 import requests
+import yaml
 from bs4 import BeautifulSoup, Tag
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+
+from ..paths import PROJECT_ROOT, SOURCES_CONFIG_PATH
 
 
 BASE_URL = "https://viecoi.vn"
@@ -701,3 +704,48 @@ def collect_viecoi(
     print(csv_path)
 
     return dataframe
+
+
+def load_viecoi_source(
+    config_path: str | Path = SOURCES_CONFIG_PATH,
+) -> dict[str, Any]:
+    """Load the enabled ViecOi source from the shared registry."""
+    path = Path(config_path)
+    if not path.exists():
+        raise FileNotFoundError(f"Không tìm thấy source registry: {path}")
+    payload = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    for source in payload.get("sources", []):
+        if source.get("platform") == "viecoi" and source.get("enabled") is True:
+            return source
+    raise RuntimeError(
+        "Không tìm thấy nguồn ViecOi đang bật trong config/sources.yaml."
+    )
+
+
+def run_collection() -> pd.DataFrame:
+    """Run ViecOi with all scope controls read from sources.yaml."""
+    source = load_viecoi_source()
+    if source.get("detail_pages_enabled", False):
+        raise ValueError(
+            "Collector hiện chỉ hỗ trợ listing-only. "
+            "detail_pages_enabled phải là false."
+        )
+    print("[SOURCE CONFIG]")
+    print(f"  source_id: {source['source_id']}")
+    print(f"  listing_url: {source['listing_url']}")
+    print(f"  max_pages: {source.get('max_pages', 1)}")
+    print(f"  max_jobs: {source.get('max_jobs', 30)}")
+    print(f"  collection_scope: {source.get('collection_scope')}")
+    return collect_viecoi(
+        project_root=PROJECT_ROOT,
+        listing_url=source["listing_url"],
+        max_pages=int(source.get("max_pages", 1)),
+        max_jobs=int(source.get("max_jobs", 30)),
+        min_delay_seconds=float(source.get("min_delay_seconds", 6)),
+        max_delay_seconds=float(source.get("max_delay_seconds", 10)),
+        timeout_seconds=int(source.get("timeout_seconds", 30)),
+        user_agent=source.get(
+            "user_agent",
+            "UETCareerResearch/0.1 (academic project)",
+        ),
+    )

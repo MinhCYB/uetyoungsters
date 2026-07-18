@@ -18,11 +18,10 @@ services:
       - db
     environment:
       DATABASE_URL: postgresql://cc_user:cc_pass@db:5432/career_compass
-      DATA_ACTION: status
     volumes:
       - ./data:/app/data
       - ./reports:/app/reports
-    # Khong expose port - khong phai API runtime, chi chay job (cron/tay). Xem main.py.
+    # Khong expose port - override command de chay collector/pipeline thu cong.
 
   profile-service:
     build: ./profile-service

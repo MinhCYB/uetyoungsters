@@ -1,4 +1,4 @@
-from backend.data.collectors.viecoi import (
+from crawl_service.collectors.viecoi import (
     extract_location,
     extract_salary,
     infer_company,

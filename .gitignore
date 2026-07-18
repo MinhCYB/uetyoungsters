@@ -40,3 +40,6 @@ __pycache__/
 data/pytest_cache/
 data/pytest_tmp/
 node_modules/
+*.egg-info/
+__pycache__/
+*.py[cod]

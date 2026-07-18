@@ -6,17 +6,17 @@ from pathlib import Path
 
 import pandas as pd
 
-from backend.data.aggregation import build_demand_summary
-from backend.data.extraction import load_taxonomy
-from backend.data.lifecycle import update_job_lifecycle
-from backend.data.models import RawJobPosting
-from backend.data.pipeline import (
+from crawl_service.aggregation import build_demand_summary
+from crawl_service.extraction import load_taxonomy
+from crawl_service.lifecycle import update_job_lifecycle
+from crawl_service.models import RawJobPosting
+from crawl_service.pipeline import (
     deduplicate_extracted_rows,
     process_raw_jobs,
     process_viecoi_jobs,
     save_outputs,
 )
-from backend.data.quality import create_coverage_reports
+from crawl_service.quality import create_coverage_reports
 
 
 TAXONOMY_PATH = Path("backend/shared/taxonomy.json")
@@ -242,6 +242,17 @@ def test_coverage_report_schema(tmp_path):
     jobs = pd.read_parquet(jobs_path)
     jobs, lifecycle = update_job_lifecycle(jobs, lifecycle_path)
     jobs.to_parquet(jobs_path, index=False)
+    invalid = lifecycle.iloc[[0]].copy()
+    invalid["source"] = "viecoi"
+    invalid["source_id"] = "viecoi_listing"
+    invalid["source_job_id"] = "category-1"
+    invalid["source_url"] = (
+        "https://viecoi.vn/viec-lam/danh-muc-demo-2.html"
+    )
+    invalid["lifecycle_status"] = "invalid"
+    invalid["is_active"] = False
+    lifecycle = pd.concat([lifecycle, invalid], ignore_index=True)
+    lifecycle.to_parquet(lifecycle_path, index=False)
 
     report, taxonomy_report = create_coverage_reports(
         jobs_path,
@@ -254,6 +265,8 @@ def test_coverage_report_schema(tmp_path):
     required = {
         "snapshot_version",
         "total_current_jobs",
+        "total_lifecycle_records",
+        "valid_lifecycle_records",
         "invalid_records_excluded",
         "source_distribution",
         "remote_job_count",
@@ -264,6 +277,9 @@ def test_coverage_report_schema(tmp_path):
         "generated_at",
     }
     assert required <= report.keys()
+    assert report["total_lifecycle_records"] == 2
+    assert report["valid_lifecycle_records"] == 1
+    assert report["invalid_records_excluded"] == 1
     assert taxonomy_report["taxonomy_version"] == "0.4.0"
     assert (tmp_path / "reports/source_coverage.json").exists()
     assert (tmp_path / "reports/taxonomy_coverage.json").exists()

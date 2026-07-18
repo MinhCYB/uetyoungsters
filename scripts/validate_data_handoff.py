@@ -1,4 +1,4 @@
-"""Deprecated compatibility wrapper for Greenhouse collection."""
+"""Deprecated compatibility wrapper for handoff validation."""
 
 from __future__ import annotations
 
@@ -11,8 +11,8 @@ CRAWL_SERVICE_SRC = PROJECT_ROOT / "crawl-service" / "src"
 if str(CRAWL_SERVICE_SRC) not in sys.path:
     sys.path.insert(0, str(CRAWL_SERVICE_SRC))
 
-from crawl_service.cli import main
+from crawl_service.handoff_validation import cli
 
 
 if __name__ == "__main__":
-    raise SystemExit(main("collect-greenhouse"))
+    raise SystemExit(cli())

@@ -2,13 +2,13 @@ from pathlib import Path
 
 import pandas as pd
 
-from backend.data.description_cleaning import clean_job_descriptions
-from backend.data.extraction import (
+from crawl_service.description_cleaning import clean_job_descriptions
+from crawl_service.extraction import (
     extract_experience_years,
     extract_skills,
     load_taxonomy,
 )
-from backend.data.normalization import normalize_location
+from crawl_service.normalization import normalize_location
 
 
 TAXONOMY_PATH = Path("backend/shared/taxonomy.json")

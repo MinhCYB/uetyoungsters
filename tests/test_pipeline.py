@@ -1,5 +1,5 @@
-from backend.data.extraction import load_taxonomy, normalize_career, extract_skills
-from backend.data.normalization import (
+from crawl_service.extraction import load_taxonomy, normalize_career, extract_skills
+from crawl_service.normalization import (
     normalize_location,
     normalize_work_mode,
     parse_salary,
