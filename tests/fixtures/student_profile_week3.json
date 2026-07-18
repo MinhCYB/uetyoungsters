@@ -1,0 +1,94 @@
+{
+  "schema_version": "1.0.0",
+  "profile_version": 2,
+  "generated_at": "2026-08-09T08:00:00Z",
+  "student": {
+    "student_id": "stu_uet_0001",
+    "tenant_id": "ten_uet",
+    "class_id": "cls_12a1_2026",
+    "student_code": "HS0001",
+    "display_name": "Nguyễn Minh An",
+    "profile_type": "HIGH_SCHOOL",
+    "grade_level": "12",
+    "date_of_birth": null
+  },
+  "academic_records": [
+    {
+      "record_id": "acr_math_2026_s1_0001",
+      "student_id": "stu_uet_0001",
+      "subject_id": "sub_math",
+      "subject_name": "Toán",
+      "period": "2026-S1",
+      "score": 8.2,
+      "score_scale": 10,
+      "recorded_at": "2026-07-18T09:00:00Z",
+      "source": "school_system"
+    }
+  ],
+  "teacher_observations": [
+    {
+      "observation_id": "obs_project_0002",
+      "student_id": "stu_uet_0001",
+      "teacher_id": "usr_teacher_01",
+      "observed_at": "2026-08-06T03:30:00Z",
+      "context": "project",
+      "skill_ids": ["skill_data_literacy", "skill_communication"],
+      "observation": "Đã giải thích được biểu đồ cho nhóm và kiểm tra lại nguồn dữ liệu trước khi kết luận.",
+      "visibility": "student_visible"
+    }
+  ],
+  "assessment_attempts": [
+    {
+      "attempt_id": "att_pretest_0001",
+      "student_id": "stu_uet_0001",
+      "assessment_id": "asm_data_literacy_v1",
+      "purpose": "pretest",
+      "started_at": "2026-07-18T02:00:00Z",
+      "submitted_at": "2026-07-18T02:20:00Z",
+      "status": "scored",
+      "total_score": 11,
+      "total_max_score": 20,
+      "skill_scores": [
+        {"skill_id": "skill_data_literacy", "score": 11, "max_score": 20, "evidence_item_ids": ["dl_01", "dl_02", "dl_03"]}
+      ]
+    },
+    {
+      "attempt_id": "att_posttest_0001",
+      "student_id": "stu_uet_0001",
+      "assessment_id": "asm_data_literacy_v1",
+      "purpose": "posttest",
+      "started_at": "2026-08-08T02:00:00Z",
+      "submitted_at": "2026-08-08T02:18:00Z",
+      "status": "scored",
+      "total_score": 16,
+      "total_max_score": 20,
+      "skill_scores": [
+        {"skill_id": "skill_data_literacy", "score": 16, "max_score": 20, "evidence_item_ids": ["dl_01", "dl_02", "dl_03"]}
+      ]
+    }
+  ],
+  "self_report": {
+    "submitted_at": "2026-08-07T10:00:00Z",
+    "interest_ids": ["interest_technology", "interest_business"],
+    "career_value_ids": ["value_learning", "value_stability"],
+    "preferred_career_ids": ["career_data_analyst"],
+    "skills": [
+      {"skill_id": "skill_data_literacy", "level": 0.7, "confidence": 0.8}
+    ],
+    "weekly_learning_hours": 6,
+    "free_text": "Em muốn thử thêm các bài tập phân tích dữ liệu thực tế."
+  },
+  "activity_results": [
+    {
+      "activity_result_id": "act_spreadsheet_0001",
+      "student_id": "stu_uet_0001",
+      "activity_id": "activity_clean_sales_data",
+      "completed_at": "2026-08-02T09:20:00Z",
+      "skill_id": "skill_data_literacy",
+      "score": 17,
+      "max_score": 20,
+      "duration_minutes": 42,
+      "evidence": "Làm sạch đúng dữ liệu thiếu và phát hiện hai bản ghi trùng."
+    }
+  ]
+}

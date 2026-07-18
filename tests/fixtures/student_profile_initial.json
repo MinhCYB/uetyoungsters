@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0.0",
+  "profile_version": 1,
+  "generated_at": "2026-07-19T08:00:00Z",
+  "student": {
+    "student_id": "stu_uet_0001",
+    "tenant_id": "ten_uet",
+    "class_id": "cls_12a1_2026",
+    "student_code": "HS0001",
+    "display_name": "Nguyễn Minh An",
+    "profile_type": "HIGH_SCHOOL",
+    "grade_level": "12",
+    "date_of_birth": null
+  },
+  "academic_records": [
+    {
+      "record_id": "acr_math_2026_s1_0001",
+      "student_id": "stu_uet_0001",
+      "subject_id": "sub_math",
+      "subject_name": "Toán",
+      "period": "2026-S1",
+      "score": 8.2,
+      "score_scale": 10,
+      "recorded_at": "2026-07-18T09:00:00Z",
+      "source": "school_system"
+    }
+  ],
+  "teacher_observations": [
+    {
+      "observation_id": "obs_project_0001",
+      "student_id": "stu_uet_0001",
+      "teacher_id": "usr_teacher_01",
+      "observed_at": "2026-07-17T03:30:00Z",
+      "context": "project",
+      "skill_ids": ["skill_problem_solving", "skill_collaboration"],
+      "observation": "Chủ động chia nhỏ vấn đề và hỗ trợ các thành viên hoàn thành phần việc.",
+      "visibility": "analysis_only"
+    }
+  ],
+  "assessment_attempts": [
+    {
+      "attempt_id": "att_diagnostic_0001",
+      "student_id": "stu_uet_0001",
+      "assessment_id": "asm_career_diagnostic_v1",
+      "purpose": "diagnostic",
+      "started_at": "2026-07-16T02:00:00Z",
+      "submitted_at": "2026-07-16T02:35:00Z",
+      "status": "scored",
+      "total_score": 72,
+      "total_max_score": 100,
+      "skill_scores": [
+        {"skill_id": "skill_problem_solving", "score": 16, "max_score": 20, "evidence_item_ids": ["q_01", "q_07"]},
+        {"skill_id": "skill_communication", "score": 13, "max_score": 20, "evidence_item_ids": ["q_03", "q_09"]}
+      ]
+    },
+    {
+      "attempt_id": "att_pretest_0001",
+      "student_id": "stu_uet_0001",
+      "assessment_id": "asm_data_literacy_v1",
+      "purpose": "pretest",
+      "started_at": "2026-07-18T02:00:00Z",
+      "submitted_at": "2026-07-18T02:20:00Z",
+      "status": "scored",
+      "total_score": 11,
+      "total_max_score": 20,
+      "skill_scores": [
+        {"skill_id": "skill_data_literacy", "score": 11, "max_score": 20, "evidence_item_ids": ["dl_01", "dl_02", "dl_03"]}
+      ]
+    }
+  ],
+  "self_report": null,
+  "activity_results": []
+}

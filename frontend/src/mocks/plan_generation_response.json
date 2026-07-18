@@ -1,0 +1,19 @@
+{
+  "contract_version": "1.0.0",
+  "response_type": "plan_generation",
+  "request_id": "pgr_uet_0001",
+  "student_id": "stu_uet_0001",
+  "generated_at": "2026-07-19T08:06:00Z",
+  "title": "Kế hoạch phát triển kỹ năng dữ liệu",
+  "summary": "Ba tuần, mỗi tuần khoảng 90 phút, tập trung vào dữ liệu thực tế.",
+  "plan_id": "plan_data_0001",
+  "duration_weeks": 3,
+  "progress_percentage": 0,
+  "weekly_plan": [
+    {"week_number":1,"title":"Đọc và kiểm tra dữ liệu","objective":"Nhận biết dữ liệu thiếu, trùng và nguồn không đáng tin.","estimated_minutes":90,"activities":[{"activity_id":"activity_clean_data","title":"Làm sạch bảng dữ liệu bán hàng","status":"not_started"}]},
+    {"week_number":2,"title":"Tóm tắt bằng biểu đồ","objective":"Chọn biểu đồ và chỉ số phù hợp với câu hỏi.","estimated_minutes":90,"activities":[{"activity_id":"activity_chart","title":"Tạo biểu đồ và giải thích kết quả","status":"not_started"}]},
+    {"week_number":3,"title":"Trình bày kết luận","objective":"Nêu kết luận có giới hạn và dẫn nguồn.","estimated_minutes":90,"activities":[{"activity_id":"activity_present","title":"Trình bày insight trong 3 phút","status":"not_started"}]}
+  ],
+  "warnings": [],
+  "next_steps": [{"step_id":"step_start_week_1","title":"Bắt đầu tuần 1","description":"Hoàn thành hoạt động làm sạch dữ liệu.","priority":"high","route":"/activities/activity_clean_data"}]
+}

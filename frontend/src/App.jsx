@@ -7,6 +7,7 @@ import { RoadmapAI } from './pages/Roadmap';
 import { Home, Locked } from './components/common';
 import { AcceptInvitation, ForgotPassword, Login, ProfessionalRegister } from './pages/Auth';
 import { Dashboard } from './pages/Dashboard';
+import { ResponseContractPreview } from './pages/ResponseContractPreview';
 import { restoreAuth } from './lib/api';
 import {
   readSession,
@@ -36,20 +37,20 @@ export default function App() {
   if (path === '/register/professional') return <ProfessionalRegister onAuthenticated={setAuthUser}/>;
   if (path === '/accept-invitation') return <AcceptInvitation onAuthenticated={setAuthUser}/>;
   if (path === '/forgot-password') return <ForgotPassword/>;
+  if (path === '/contract-preview') return <ResponseContractPreview/>;
   if (path === '/dashboard') {
     if (!authReady) return <main className="page backend-state"><div className="loading-ring"/><h1>Đang xác thực phiên</h1></main>;
     return authUser ? <Dashboard user={authUser} onLogout={()=>setAuthUser(null)}/> : <Login onAuthenticated={setAuthUser}/>;
   }
 
   const session = readSession();
-  const unlocked = session.assessmentCompleted && session.profileStatus === 'confirmed';
   if (path.startsWith('/assessment')) return <AssessmentPersistent />;
   if (path === '/profile') return <CandidateProfile />;
-  if (path === '/abilities') return session.assessmentCompleted ? <AbilitiesSchema /> : <Locked type="abilities" />;
-  if (path === '/careers') return unlocked ? <CareersAISchema /> : <Locked />;
+  if (path === '/abilities') return <AbilitiesSchema />;
+  if (path === '/careers') return <CareersAISchema />;
   if (path.startsWith('/roadmap')) {
     const id = path.split('/')[2];
-    return unlocked && session.selectedCareerId ? <RoadmapAI id={id} /> : <Locked type="roadmap" />;
+    return session.selectedCareerId ? <RoadmapAI id={id} /> : <Locked type="roadmap" />;
   }
   return <Home />;
 }
