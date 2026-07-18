@@ -40,6 +40,7 @@ services:
       - db
     environment:
       DATABASE_URL: postgresql://cc_user:cc_pass@db:5432/career_compass
+      CRAWL_DATABASE_SCHEMA: ${CRAWL_DATABASE_SCHEMA}
       CAREER_COMPASS_ROOT: /app
     volumes:
       - ./data:/app/data
@@ -68,12 +69,18 @@ services:
 
   ai-worker-service:
     build: ./ai-worker-service
-    depends_on:
-      - db
-      - redis
+    ports:
+      - "8001:8000"
     environment:
-      DATABASE_URL: postgresql://cc_user:cc_pass@db:5432/career_compass
-      REDIS_URL: redis://redis:6379/0
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      DEFAULT_MODEL: ${DEFAULT_MODEL}
+      DEFAULT_MAX_TOKENS: ${DEFAULT_MAX_TOKENS}
+      REQUEST_TIMEOUT_SECONDS: ${REQUEST_TIMEOUT_SECONDS}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
 
   roadmap-service:
     build: ./roadmap-service

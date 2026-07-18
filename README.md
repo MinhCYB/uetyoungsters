@@ -32,7 +32,7 @@ hiển thị.
 
 - `backend-api/`: FastAPI modular monolith skeleton. Modules: auth, assessment,
   candidate, recommendation. Reads `data/processed/`.
-- `ai-worker-service/`: async worker service for essay scoring and CV parsing.
+- `ai-worker-service/`: generic synchronous HTTP gateway to the configured LLM; callers own prompts, parsing, and persistence.
 - `nginx/`: reverse proxy routing `/api/` to backend-api.
 - `crawl-service/`: service sở hữu Data Layer Phase 1 production, gồm
   collectors, adapters, normalization, extraction, lifecycle, dedup,

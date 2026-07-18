@@ -18,6 +18,7 @@ from .quality import (
     create_quality_report,
     create_viecoi_taxonomy_reports,
 )
+from .database import publish_processed_outputs
 
 
 GREENHOUSE_INTERIM_PATH = (
@@ -184,6 +185,10 @@ def run_pipeline() -> None:
         collector_versions=collector_versions,
     )
 
+    # 6. Chá»‰ publish database sau khi toÃ n bá»™ pipeline vÃ  quality checks
+    # Ä‘Ã£ hoÃ n táº¥t, Ä‘á»ƒ consumer khÃ´ng Ä‘á»c pháº£i snapshot dá»Ÿ dang.
+    manifest = publish_processed_outputs(PROCESSED_ROOT)
+
     print("\nLIFECYCLE")
     print(
         lifecycle_state[
@@ -214,6 +219,9 @@ def run_pipeline() -> None:
 
     print("\nSOURCE COVERAGE")
     print(coverage_report)
+
+    print("\nDATABASE WAREHOUSE")
+    print(manifest.to_string(index=False))
 
 
 if __name__ == "__main__":

@@ -150,7 +150,8 @@ def test_docker_uses_module_entrypoint_and_no_data_copy():
     dockerfile = (PROJECT_ROOT / "crawl-service/Dockerfile").read_text(
         encoding="utf-8"
     )
-    assert 'CMD ["python", "-m", "crawl_service", "status"]' in dockerfile
+    assert 'ENTRYPOINT ["python", "-m", "crawl_service"]' in dockerfile
+    assert 'CMD ["status"]' in dockerfile
     assert "COPY data " not in dockerfile
     assert "COPY core " not in dockerfile
     assert "COPY backend" not in dockerfile

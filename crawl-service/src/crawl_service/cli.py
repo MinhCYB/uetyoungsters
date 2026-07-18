@@ -15,6 +15,7 @@ COMMANDS = (
     "collect-viecoi",
     "collect-all",
     "pipeline",
+    "publish-db",
     "validate-handoff",
 )
 
@@ -60,6 +61,13 @@ def main(action: str, arguments: Sequence[str] | None = None) -> int:
         from .runner import run_pipeline
 
         run_pipeline()
+        return 0
+
+    if action == "publish-db":
+        from .database import publish_processed_outputs
+
+        manifest = publish_processed_outputs()
+        print(manifest.to_string(index=False))
         return 0
 
     if action == "validate-handoff":
