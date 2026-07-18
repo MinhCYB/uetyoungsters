@@ -5,7 +5,8 @@
 essay, or roadmap business logic.
 
 The configured provider is Gemini. It reads `GEMINI_API_KEY`, `DEFAULT_MODEL`,
-and `DEFAULT_MAX_TOKENS` from the environment.
+`DEFAULT_MAX_TOKENS`, and `REQUEST_TIMEOUT_SECONDS` from the environment. All
+four settings are required; service configuration has no hardcoded fallback.
 
 Older architecture notes allowing AI Worker to write directly to assessment
 responses or `professional_profiles.parsed_data` are obsolete. The gateway does

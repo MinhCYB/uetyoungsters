@@ -8,4 +8,5 @@ RUN pip install --no-cache-dir /app/crawl-service
 
 COPY config /app/config
 
-CMD ["python", "-m", "crawl_service", "status"]
+ENTRYPOINT ["python", "-m", "crawl_service"]
+CMD ["status"]
