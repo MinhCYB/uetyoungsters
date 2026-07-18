@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import pandas as pd
+import numpy as np
 
 from .paths import PROCESSED_DIR
 
@@ -18,6 +19,9 @@ PROCESSED_TABLE_FILES = {
     "job_lifecycle": "job_lifecycle.parquet",
     "career_demand_summary": "career_demand_summary.parquet",
     "career_skill_matrix": "career_skill_matrix.parquet",
+    "career_evidence": "career_evidence.parquet",
+    "career_evidence_facts": "career_evidence_facts.parquet",
+    "career_profiles": "career_profiles.parquet",
 }
 
 INDEX_STATEMENTS = (
@@ -28,6 +32,9 @@ INDEX_STATEMENTS = (
     "CREATE INDEX IF NOT EXISTS ix_crawl_lifecycle_source ON {schema}.job_lifecycle (source_id, source_job_id)",
     "CREATE INDEX IF NOT EXISTS ix_crawl_demand_career ON {schema}.career_demand_summary (career_id)",
     "CREATE INDEX IF NOT EXISTS ix_crawl_matrix_career ON {schema}.career_skill_matrix (career_id, skill_id)",
+    "CREATE INDEX IF NOT EXISTS ix_crawl_evidence_career ON {schema}.career_evidence (career_id)",
+    "CREATE INDEX IF NOT EXISTS ix_crawl_facts_career ON {schema}.career_evidence_facts (career_id, fact_type)",
+    "CREATE UNIQUE INDEX IF NOT EXISTS ux_crawl_profiles_career ON {schema}.career_profiles (career_id)",
 )
 
 
@@ -45,13 +52,25 @@ def database_schema() -> str:
     return schema
 
 
+def _json_value(value):
+    if isinstance(value, np.ndarray):
+        return [_json_value(item) for item in value.tolist()]
+    if isinstance(value, dict):
+        return {str(key): _json_value(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_json_value(item) for item in value]
+    if isinstance(value, np.generic):
+        return value.item()
+    return value
+
+
 def _json_columns(dataframe: pd.DataFrame) -> list[str]:
     columns = []
     for column in dataframe.columns:
         if not pd.api.types.is_object_dtype(dataframe[column].dtype):
             continue
         values = dataframe[column].dropna()
-        if any(isinstance(value, (dict, list)) for value in values.head(100)):
+        if any(isinstance(value, (dict, list, tuple, np.ndarray)) for value in values.head(100)):
             columns.append(column)
     return columns
 
@@ -82,6 +101,9 @@ def publish_dataframes(tables: dict[str, pd.DataFrame]) -> pd.DataFrame:
         connection.execute(text(f'CREATE SCHEMA IF NOT EXISTS "{schema}"'))
         for table_name, dataframe in tables.items():
             json_types = {column: JSON for column in _json_columns(dataframe)}
+            dataframe = dataframe.copy()
+            for column in json_types:
+                dataframe[column] = dataframe[column].map(_json_value)
             dataframe.to_sql(
                 table_name,
                 con=connection,

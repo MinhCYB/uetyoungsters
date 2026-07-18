@@ -25,6 +25,8 @@ services:
       DATABASE_URL: postgresql://cc_user:cc_pass@db:5432/career_compass
       CRAWL_DATABASE_SCHEMA: ${CRAWL_DATABASE_SCHEMA}
       CAREER_COMPASS_ROOT: /app
+      AI_WORKER_URL: http://ai-worker-service:8000
+      TRANSLATION_MODEL: ${TRANSLATION_MODEL:-gemini-3.1-flash-lite}
     volumes:
       - ./data:/app/data
       - ./reports:/app/reports
@@ -41,6 +43,7 @@ services:
       DATABASE_URL: postgresql://cc_user:cc_pass@db:5432/career_compass
       AUTH_SECRET: ${AUTH_SECRET:-replace-this-secret-before-production}
       COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      CRAWL_DATABASE_SCHEMA: ${CRAWL_DATABASE_SCHEMA}
 
   ai-worker-service:
     build: ./ai-worker-service

@@ -37,14 +37,29 @@ function roadmapRequirements(session) {
 
 function CareerCard({ career, rank, skills, expanded, source, onToggle, onRoadmap }) {
   const gaps = career.skillGaps || [];
+  const [detail, setDetail] = useState(null);
+  const [detailError, setDetailError] = useState('');
+  const [detailLoading, setDetailLoading] = useState(false);
+  useEffect(() => {
+    if (!expanded || detail) return undefined;
+    const controller = new AbortController();
+    const base = (import.meta.env.VITE_API_BASE_URL || '/api').replace(/\/$/, '');
+    setDetailLoading(true);
+    fetch(`${base}/careers/${encodeURIComponent(career.id)}`, { signal: controller.signal })
+      .then(async response => { if (!response.ok) throw new Error(`HTTP ${response.status}`); return response.json(); })
+      .then(payload => { setDetail(payload); setDetailError(''); })
+      .catch(error => { if (error.name !== 'AbortError') setDetailError('Chưa có dữ liệu chi tiết đã được kiểm chứng cho nghề này.'); })
+      .finally(() => setDetailLoading(false));
+    return () => controller.abort();
+  }, [expanded, career.id, detail]);
   return <article className="career-result-card">
     <div className="career-result-rank"><small>{source === 'ai' ? 'AI gợi ý' : 'Tự chọn'}</small><b>{String(rank).padStart(2, '0')}</b></div>
     <div className="career-result-main">
       <div className="career-result-head"><div><div className="career-source"><Pill tone={source === 'ai' ? 'success' : 'outline'}>{source === 'ai' ? 'Kết quả AI' : 'Danh mục nghề'}</Pill></div><h3>{career.title}</h3><p>{career.reason || 'Nghề được chọn từ danh mục để bạn chủ động khám phá và tạo lộ trình.'}</p></div>{source === 'ai' && <div className="career-match-score"><b>{career.matchScore ?? '—'}</b><span>{career.matchScore != null ? '/100' : 'Chưa chấm'}</span></div>}</div>
       {expanded && <div className="career-expanded">
-        <div><h4>Nội dung chi tiết</h4><p>Thông tin nhiệm vụ, môi trường làm việc và yêu cầu nghề sẽ được kết nối ở bước xử lý tiếp theo.</p></div>
+        <div><h4>Công việc thường làm</h4>{detailLoading && <p>Đang tải dữ liệu nghề…</p>}{detailError && <p>{detailError}</p>}{detail && <>{detail.typical_tasks?.length ? <ul>{detail.typical_tasks.slice(0, 8).map((item, index) => <li key={`${item.evidence_id || 'task'}-${index}`}>{item.text_vi || item.text || item}{item.source_name && <small> · {item.source_name}</small>}</li>)}</ul> : <p>Chưa trích xuất được nhiệm vụ cụ thể từ các nguồn hiện có.</p>}<small>{detail.posting_count} tin tuyển dụng · {detail.company_count} doanh nghiệp · {detail.evidence_count} nguồn bằng chứng</small>{detail.work_modes?.length > 0 && <p>Hình thức: {detail.work_modes.join(', ')}</p>}{detail.sources?.length > 0 && <p>Nguồn: {detail.sources.filter(item => item.source_url).slice(0, 3).map((item, index) => <React.Fragment key={item.evidence_id}>{index > 0 ? ', ' : ''}<a href={item.source_url} target="_blank" rel="noreferrer">{item.source_name || item.title}</a></React.Fragment>)}</p>}</>}</div>
         <div><h4>Kỹ năng đang có</h4>{skills.length ? <div className="pills">{skills.map(item => <Pill key={item.name}>{item.name}</Pill>)}</div> : <p>Chưa có kỹ năng được xác nhận trong hồ sơ.</p>}</div>
-        <div><h4>Kỹ năng cần bổ sung</h4>{gaps.length ? <ul>{gaps.map(item => <li key={item}>{item}</li>)}</ul> : <p>Chưa có dữ liệu khoảng cách kỹ năng.</p>}</div>
+        <div><h4>Kỹ năng thị trường yêu cầu</h4>{detail?.top_skills?.length ? <ul>{detail.top_skills.slice(0, 10).map(item => <li key={item.skill_id}>{item.skill_name}{item.source_type === 'job_posting' ? ` (${Math.round((item.share_of_career_jobs || 0) * 100)}% tin tuyển dụng)` : item.source_type === 'onet_software' ? ` (${item.in_demand ? 'đang được tuyển dụng yêu cầu' : 'công nghệ phổ biến'})` : item.importance_score != null ? ` (độ quan trọng ${item.importance_score.toFixed(1)}/5)` : ''}</li>)}</ul> : gaps.length ? <ul>{gaps.map(item => <li key={item}>{item}</li>)}</ul> : <p>Chưa có đủ dữ liệu kỹ năng cho nghề này.</p>}</div>
       </div>}
       <div className="career-result-actions"><button className="ghost" onClick={onToggle}>{expanded ? 'Thu gọn' : 'Xem chi tiết'}</button><button className="primary" onClick={onRoadmap}>Lộ trình <span>→</span></button></div>
     </div>
@@ -65,8 +80,8 @@ export function CareersAISchema() {
   useEffect(() => {
     const controller = new AbortController();
     const timer = setTimeout(() => {
-      const base = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
-      fetch(`${base}/api/careers/search?q=${encodeURIComponent(query)}&limit=40`, { signal: controller.signal })
+      const base = (import.meta.env.VITE_API_BASE_URL || '/api').replace(/\/$/, '');
+      fetch(`${base}/careers/search?q=${encodeURIComponent(query)}&limit=40`, { signal: controller.signal })
         .then(async response => { if (!response.ok) throw new Error(`HTTP ${response.status}`); return response.json(); })
         .then(data => { setCatalog(data.items || []); setSearchError(''); })
         .catch(error => { if (error.name !== 'AbortError') setSearchError('Chưa thể tải danh mục nghề từ backend.'); })

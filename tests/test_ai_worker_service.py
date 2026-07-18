@@ -95,6 +95,7 @@ def test_json_response_is_parsed_and_instruction_is_added(monkeypatch):
     assert response.json()["content"] == {"score": 9}
     assert response.json()["parsed"] is True
     assert ai_worker.JSON_INSTRUCTION in messages.call["config"].system_instruction
+    assert messages.call["config"].response_mime_type == "application/json"
 
 
 def test_invalid_json_is_returned_unchanged(monkeypatch):

@@ -1,0 +1,283 @@
+Career Compass data refresh started at 2026-07-19T06:18:51.8493861+07:00
+docker.exe :  Container uetyoungster-db-1 Starting 
+At D:\Dev\uetyoungster\scripts\dev.ps1:45 char:9
++         & docker compose @ComposeArguments 2>&1 | Out-File -FilePath  ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( Container uetyoungster-db-1 Starting :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ Container uetyoungster-db-1 Started 
+ Container uetyoungster-crawl-service-run-583d488a595f Creating 
+ Container uetyoungster-crawl-service-run-583d488a595f Created 
+[SOURCE] greenhouse_navervietnam
+  Thu ─æ╞░ß╗úc 16 jobs.
+
+─É├ú l╞░u 16 jobs:
+/app/data/interim/greenhouse_jobs_latest.parquet
+/app/data/interim/greenhouse_jobs_latest.csv
+[SOURCE CONFIG]
+  source_id: viecoi_listing
+  listing_url: https://viecoi.vn/tim-viec/all.html
+  max_pages: 3
+  max_jobs: 90
+  collection_scope: public_listing_fields_only
+[LIST 1] https://viecoi.vn/tim-viec/all.html
+  HTTP status: 200
+  HTML length: 1,375,975
+  Parsed jobs: 30
+  New jobs: 30
+[LIST 2] https://viecoi.vn/tim-viec/all.html?page=2
+  HTTP status: 200
+  HTML length: 1,377,426
+  Parsed jobs: 30
+  New jobs: 30
+[LIST 3] https://viecoi.vn/tim-viec/all.html?page=3
+  HTTP status: 200
+  HTML length: 1,371,292
+  Parsed jobs: 30
+  New jobs: 30
+
+─É├ú l╞░u 90 jobs:
+/app/data/interim/viecoi_jobs_latest.parquet
+/app/data/interim/viecoi_jobs_latest.csv
+O*NET 30.3: occupation_data.json, task_statements.json, career_interest_types.json, essential_skills.json, transferable_skills.json, software_skills.json
+docker.exe :  Container uetyoungster-db-1 Running 
+At D:\Dev\uetyoungster\scripts\dev.ps1:45 char:9
++         & docker compose @ComposeArguments 2>&1 | Out-File -FilePath  ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( Container uetyoungster-db-1 Running :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ Container uetyoungster-crawl-service-run-dd3bfaf2cef2 Creating 
+ Container uetyoungster-crawl-service-run-dd3bfaf2cef2 Created 
+
+SOURCE INPUT
+Greenhouse: 16
+ViecOi:     90
+Combined:   106
+
+LIFECYCLE
+lifecycle_status
+active    106
+Name: count, dtype: int64
+
+Current jobs: 106
+Lifecycle records: 106
+
+CAREER DEMAND
+                             career_id                      career_name   province   work_mode       snapshot_version  posting_count  unique_company_count  salary_median_vnd  salary_sample_size  average_confidence data_from data_to
+            CAREER_3D_CHARACTER_ARTIST              3D Character Artist     TP.HCM UNSPECIFIED 2026-07-18-multisource              2                     1                NaN                   0            0.990000       NaN     NaN
+          CAREER_3D_ENVIRONMENT_ARTIST            3D Environment Artist     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1                NaN                   0            0.990000       NaN     NaN
+                     CAREER_3D_MODELER                       3D Modeler     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1         25000000.0                   1            0.990000       NaN     NaN
+                     CAREER_ACCOUNTANT                       Accountant     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              2                     2         16500000.0                   2            1.000000       NaN     NaN
+                     CAREER_ACCOUNTANT                       Accountant   L├óm ─Éß╗ông UNSPECIFIED 2026-07-18-multisource              1                     1         17500000.0                   1            0.990000       NaN     NaN
+                     CAREER_ACCOUNTANT                       Accountant     TP.HCM UNSPECIFIED 2026-07-18-multisource              3                     3          9000000.0                   3            0.996667       NaN     NaN
+                     CAREER_ACCOUNTANT                       Accountant    ─É├á Nß║╡ng UNSPECIFIED 2026-07-18-multisource              1                     1         16500000.0                   1            1.000000       NaN     NaN
+                     CAREER_ACCOUNTANT                       Accountant   ─Éß╗ông Nai UNSPECIFIED 2026-07-18-multisource              1                     1         12500000.0                   1            0.990000       NaN     NaN
+       CAREER_ADMINISTRATIVE_ASSISTANT         Administrative Assistant     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              1                     1          9000000.0                   1            1.000000       NaN     NaN
+       CAREER_ADMINISTRATIVE_ASSISTANT         Administrative Assistant    Long An UNSPECIFIED 2026-07-18-multisource              1                     1         12000000.0                   1            1.000000       NaN     NaN
+                      CAREER_ARCHITECT                        Architect     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              2                     2         26500000.0                   2            0.990000       NaN     NaN
+               CAREER_BACKEND_ENGINEER                 Backend Engineer     TP.HCM UNSPECIFIED 2026-07-18-multisource              2                     1                NaN                   0            0.990000       NaN     NaN
+                     CAREER_BI_ANALYST    Business Intelligence Analyst     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1         33500000.0                   1            0.990000       NaN     NaN
+                    CAREER_BOOK_EDITOR                      Book Editor     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1          3500000.0                   1            1.000000       NaN     NaN
+               CAREER_BUSINESS_ANALYST                 Business Analyst     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              1                     1         15000000.0                   1            1.000000       NaN     NaN
+ CAREER_BUSINESS_DEVELOPMENT_EXECUTIVE   Business Development Executive     TP.HCM UNSPECIFIED 2026-07-18-multisource              2                     2         12750000.0                   2            0.990000       NaN     NaN
+  CAREER_CIVIL_INFRASTRUCTURE_ENGINEER    Civil Infrastructure Engineer     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              1                     1         18500000.0                   1            1.000000       NaN     NaN
+              CAREER_COMPOSITOR_EDITOR                Compositor/Editor     TP.HCM UNSPECIFIED 2026-07-18-multisource              2                     1                NaN                   0            1.000000       NaN     NaN
+      CAREER_CONSTRUCTION_SITE_MANAGER        Construction Site Manager   Lß║íng S╞ín UNSPECIFIED 2026-07-18-multisource              1                     1         30500000.0                   1            1.000000       NaN     NaN
+                CAREER_CONTENT_CREATOR                  Content Creator     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1         13500000.0                   1            1.000000       NaN     NaN
+            CAREER_CREDIT_RISK_ANALYST              Credit Risk Analyst     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              1                     1         25000000.0                   1            0.990000       NaN     NaN
+CAREER_CUSTOMER_SERVICE_REPRESENTATIVE  Customer Service Representative     TP.HCM UNSPECIFIED 2026-07-18-multisource              4                     4         11375000.0                   4            0.990000       NaN     NaN
+                CAREER_DELIVERY_DRIVER                  Delivery Driver     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1         14000000.0                   1            0.815000       NaN     NaN
+CAREER_ECOMMERCE_OPERATIONS_SPECIALIST E-commerce Operations Specialist     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              1                     1          3250000.0                   1            0.990000       NaN     NaN
+CAREER_ECOMMERCE_OPERATIONS_SPECIALIST E-commerce Operations Specialist     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1         13500000.0                   1            1.000000       NaN     NaN
+             CAREER_FRONTEND_DEVELOPER               Frontend Developer     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1                NaN                   0            0.990000       NaN     NaN
+             CAREER_FULLSTACK_ENGINEER               Fullstack Engineer     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1                NaN                   0            0.990000       NaN     NaN
+               CAREER_GRAPHIC_DESIGNER                 Graphic Designer     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1          3500000.0                   1            0.990000       NaN     NaN
+            CAREER_HELPDESK_TECHNICIAN              Helpdesk Technician     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1         12500000.0                   1            1.000000       NaN     NaN
+        CAREER_HUMAN_RESOURCES_MANAGER          Human Resources Manager     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              1                     1         14000000.0                   1            1.000000       NaN     NaN
+     CAREER_HUMAN_RESOURCES_SPECIALIST       Human Resources Specialist  B├¼nh ─Éß╗ïnh UNSPECIFIED 2026-07-18-multisource              1                     1         12000000.0                   1            1.000000       NaN     NaN
+     CAREER_HUMAN_RESOURCES_SPECIALIST       Human Resources Specialist     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1          8750000.0                   1            1.000000       NaN     NaN
+                   CAREER_IOS_ENGINEER                     iOS Engineer     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1                NaN                   0            0.990000       NaN     NaN
+              CAREER_KITCHEN_ASSISTANT                Kitchen Assistant     TP.HCM UNSPECIFIED 2026-07-18-multisource              3                     3          8500000.0                   3            1.000000       NaN     NaN
+                   CAREER_LEVEL_ARTIST                     Level Artist     TP.HCM UNSPECIFIED 2026-07-18-multisource              2                     1                NaN                   0            0.990000       NaN     NaN
+                CAREER_LIVESTREAM_HOST                  Livestream Host        NaN      REMOTE 2026-07-18-multisource              1                     1         10000000.0                   1            0.850000       NaN     NaN
+       CAREER_MANUFACTURING_TECHNICIAN         Manufacturing Technician   ─Éß╗ông Nai UNSPECIFIED 2026-07-18-multisource              1                     1          8250000.0                   1            1.000000       NaN     NaN
+           CAREER_MARKETING_SPECIALIST             Marketing Specialist     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              3                     2         10000000.0                   3            0.996667       NaN     NaN
+           CAREER_MARKETING_SPECIALIST             Marketing Specialist  Hß║úi Ph├▓ng UNSPECIFIED 2026-07-18-multisource              1                     1        100000000.0                   1            1.000000       NaN     NaN
+           CAREER_MARKETING_SPECIALIST             Marketing Specialist     TP.HCM UNSPECIFIED 2026-07-18-multisource              3                     3          9500000.0                   3            0.996667       NaN     NaN
+           CAREER_MARKETING_SPECIALIST             Marketing Specialist        NaN UNSPECIFIED 2026-07-18-multisource              1                     1         10750000.0                   1            0.850000       NaN     NaN
+          CAREER_MECHANICAL_TECHNICIAN            Mechanical Technician     TP.HCM UNSPECIFIED 2026-07-18-multisource              3                     2         15000000.0                   3            0.876667       NaN     NaN
+                   CAREER_MEP_ENGINEER                     MEP Engineer Quß║úng Ninh UNSPECIFIED 2026-07-18-multisource              1                     1         17500000.0                   1            1.000000       NaN     NaN
+  CAREER_PARTNER_OPERATIONS_SPECIALIST    Partner Operations Specialist     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1          9500000.0                   1            1.000000       NaN     NaN
+              CAREER_PRESALES_ENGINEER                Presales Engineer     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1         20000000.0                   1            1.000000       NaN     NaN
+                CAREER_PRODUCTION_LEAD                  Production Lead     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1                NaN                   0            0.990000       NaN     NaN
+             CAREER_PRODUCTION_MANAGER               Production Manager   T├óy Ninh UNSPECIFIED 2026-07-18-multisource              1                     1         12500000.0                   1            1.000000       NaN     NaN
+              CAREER_PRODUCTION_WORKER                Production Worker     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              2                     2         10000000.0                   2            0.995000       NaN     NaN
+              CAREER_PRODUCTION_WORKER                Production Worker   H╞░ng Y├¬n UNSPECIFIED 2026-07-18-multisource              1                     1          9000000.0                   1            1.000000       NaN     NaN
+              CAREER_PRODUCTION_WORKER                Production Worker     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1          7750000.0                   1            0.815000       NaN     NaN
+              CAREER_PRODUCTION_WORKER                Production Worker        NaN UNSPECIFIED 2026-07-18-multisource              1                     1         13000000.0                   1            0.665000       NaN     NaN
+                    CAREER_QA_ENGINEER                      QA Engineer     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1                NaN                   0            0.990000       NaN     NaN
+     CAREER_QUALITY_CONTROL_SPECIALIST       Quality Control Specialist   H╞░ng Y├¬n UNSPECIFIED 2026-07-18-multisource              1                     1          9000000.0                   1            1.000000       NaN     NaN
+        CAREER_QUANTITATIVE_RESEARCHER          Quantitative Researcher     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1         25000000.0                   1            1.000000       NaN     NaN
+              CAREER_QUANTITY_SURVEYOR                Quantity Surveyor     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              2                     2         22500000.0                   2            0.990000       NaN     NaN
+         CAREER_RETAIL_SALES_ASSOCIATE           Retail Sales Associate     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              1                     1         13000000.0                   1            0.981000       NaN     NaN
+         CAREER_RETAIL_SALES_ASSOCIATE           Retail Sales Associate     TP.HCM UNSPECIFIED 2026-07-18-multisource              3                     3          6000000.0                   3            1.000000       NaN     NaN
+                CAREER_SALES_EXECUTIVE                  Sales Executive     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              2                     2         10250000.0                   2            0.990000       NaN     NaN
+                CAREER_SALES_EXECUTIVE                  Sales Executive     TP.HCM UNSPECIFIED 2026-07-18-multisource              5                     5         13000000.0                   4            0.992000       NaN     NaN
+                CAREER_SALES_EXECUTIVE                  Sales Executive    ─É├á Nß║╡ng UNSPECIFIED 2026-07-18-multisource              1                     1         14500000.0                   1            1.000000       NaN     NaN
+                CAREER_SALES_EXECUTIVE                  Sales Executive        NaN      REMOTE 2026-07-18-multisource              1                     1          2500000.0                   1            0.850000       NaN     NaN
+                CAREER_SALES_EXECUTIVE                  Sales Executive        NaN UNSPECIFIED 2026-07-18-multisource              1                     1         18500000.0                   1            0.840000       NaN     NaN
+               CAREER_TECHNICAL_ARTIST                 Technical Artist     TP.HCM UNSPECIFIED 2026-07-18-multisource              2                     1                NaN                   0            0.990000       NaN     NaN
+       CAREER_TELESALES_REPRESENTATIVE         Telesales Representative     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1         10000000.0                   1            0.990000       NaN     NaN
+                   CAREER_VIDEO_EDITOR                     Video Editor     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              1                     1         13000000.0                   1            0.985000       NaN     NaN
+                CAREER_WAREHOUSE_STAFF                  Warehouse Staff        NaN UNSPECIFIED 2026-07-18-multisource              1                     1          8500000.0                   1            0.840000       NaN     NaN
+
+DATA QUALITY
+{'total_rows': 106, 'unique_content_hashes': 106, 'duplicate_rows': 0, 'mapped_career_rows': 96, 'mapped_location_rows': 97, 'remote_job_count': 2, 'salary_disclosed_rows': 89, 'average_extraction_confidence': 0.949, 'sources': ['greenhouse', 'viecoi'], 'snapshot_version': '2026-07-18-multisource', 'snapshot_versions': ['2026-07-18-multisource'], 'taxonomy_version': '0.4.0', 'generated_at': '2026-07-18T23:19:20.753435+00:00'}
+
+TAXONOMY GAP REPORTS
+{'career_gap_rows': 10, 'skill_gap_rows': 71, 'location_gap_rows': 9, 'unique_skill_tags': 125, 'unmapped_skill_tags': 60}
+
+SOURCE COVERAGE
+{'snapshot_version': '2026-07-18-multisource', 'total_current_jobs': 106, 'total_lifecycle_records': 106, 'valid_lifecycle_records': 106, 'active_jobs': 106, 'missing_unconfirmed_jobs': 0, 'inactive_jobs': 0, 'invalid_records_excluded': 0, 'active_sources': ['greenhouse', 'viecoi'], 'source_distribution': {'viecoi': 90, 'greenhouse': 16}, 'unique_companies': 81, 'unique_careers': 48, 'unique_provinces': 12, 'remote_job_count': 2, 'unknown_location_count': 7, 'salary_available_count': 89, 'salary_available_rate': 0.8396, 'description_available_rate': 1.0, 'career_mapping_rate': 0.9057, 'location_mapping_rate_non_remote': 0.9327, 'jobs_with_mapped_skills': 100, 'skill_mapping_rate': 0.9434, 'duplicate_count': 0, 'average_extraction_confidence': 0.9488, 'average_extraction_confidence_by_source': {'greenhouse': 0.9912, 'viecoi': 0.9413}, 'taxonomy_version': '0.4.0', 'collector_versions': {'greenhouse': ['0.1.0'], 'viecoi': ['0.1.0']}, 'generated_at': '2026-07-18T23:19:20.821932+00:00', 'coverage_note': 'Snapshot from monitored sources; it does not represent the entire Vietnamese labour market. Greenhouse covers one company with full job descriptions. ViecOi covers three public listing pages and listing fields only.'}
+
+DATABASE WAREHOUSE
+         dataset_name  row_count                   snapshot_versions                     published_at
+           jobs_clean        106            [2026-07-18-multisource] 2026-07-18 23:19:22.779854+00:00
+           job_skills        369                                  [] 2026-07-18 23:19:22.779854+00:00
+        job_lifecycle        106            [2026-07-18-multisource] 2026-07-18 23:19:22.779854+00:00
+career_demand_summary         66            [2026-07-18-multisource] 2026-07-18 23:19:22.779854+00:00
+  career_skill_matrix        290                                  [] 2026-07-18 23:19:22.779854+00:00
+      career_evidence        152 [2026-07-18-multisource, onet-30.3] 2026-07-18 23:19:22.779854+00:00
+career_evidence_facts        593                         [onet-30.3] 2026-07-18 23:19:22.779854+00:00
+      career_profiles         54                                  [] 2026-07-18 23:19:22.779854+00:00
+docker.exe :  Container uetyoungster-ai-worker-service-1 Starting 
+At D:\Dev\uetyoungster\scripts\dev.ps1:45 char:9
++         & docker compose @ComposeArguments 2>&1 | Out-File -FilePath  ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( Container uety...ice-1 Starting :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ Container uetyoungster-ai-worker-service-1 Started 
+docker.exe :  Container uetyoungster-db-1 Running 
+At D:\Dev\uetyoungster\scripts\dev.ps1:45 char:9
++         & docker compose @ComposeArguments 2>&1 | Out-File -FilePath  ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( Container uetyoungster-db-1 Running :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ Container uetyoungster-crawl-service-run-769458fecc3d Creating 
+ Container uetyoungster-crawl-service-run-769458fecc3d Created 
+Vietnamese career enrichment is current: /app/data/interim/career_profile_vi.json
+docker.exe :  Container uetyoungster-db-1 Running 
+At D:\Dev\uetyoungster\scripts\dev.ps1:45 char:9
++         & docker compose @ComposeArguments 2>&1 | Out-File -FilePath  ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( Container uetyoungster-db-1 Running :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ Container uetyoungster-crawl-service-run-1b12b2bae3bf Creating 
+ Container uetyoungster-crawl-service-run-1b12b2bae3bf Created 
+
+SOURCE INPUT
+Greenhouse: 16
+ViecOi:     90
+Combined:   106
+
+LIFECYCLE
+lifecycle_status
+active    106
+Name: count, dtype: int64
+
+Current jobs: 106
+Lifecycle records: 106
+
+CAREER DEMAND
+                             career_id                      career_name   province   work_mode       snapshot_version  posting_count  unique_company_count  salary_median_vnd  salary_sample_size  average_confidence data_from data_to
+            CAREER_3D_CHARACTER_ARTIST              3D Character Artist     TP.HCM UNSPECIFIED 2026-07-18-multisource              2                     1                NaN                   0            0.990000       NaN     NaN
+          CAREER_3D_ENVIRONMENT_ARTIST            3D Environment Artist     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1                NaN                   0            0.990000       NaN     NaN
+                     CAREER_3D_MODELER                       3D Modeler     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1         25000000.0                   1            0.990000       NaN     NaN
+                     CAREER_ACCOUNTANT                       Accountant     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              2                     2         16500000.0                   2            1.000000       NaN     NaN
+                     CAREER_ACCOUNTANT                       Accountant   L├óm ─Éß╗ông UNSPECIFIED 2026-07-18-multisource              1                     1         17500000.0                   1            0.990000       NaN     NaN
+                     CAREER_ACCOUNTANT                       Accountant     TP.HCM UNSPECIFIED 2026-07-18-multisource              3                     3          9000000.0                   3            0.996667       NaN     NaN
+                     CAREER_ACCOUNTANT                       Accountant    ─É├á Nß║╡ng UNSPECIFIED 2026-07-18-multisource              1                     1         16500000.0                   1            1.000000       NaN     NaN
+                     CAREER_ACCOUNTANT                       Accountant   ─Éß╗ông Nai UNSPECIFIED 2026-07-18-multisource              1                     1         12500000.0                   1            0.990000       NaN     NaN
+       CAREER_ADMINISTRATIVE_ASSISTANT         Administrative Assistant     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              1                     1          9000000.0                   1            1.000000       NaN     NaN
+       CAREER_ADMINISTRATIVE_ASSISTANT         Administrative Assistant    Long An UNSPECIFIED 2026-07-18-multisource              1                     1         12000000.0                   1            1.000000       NaN     NaN
+                      CAREER_ARCHITECT                        Architect     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              2                     2         26500000.0                   2            0.990000       NaN     NaN
+               CAREER_BACKEND_ENGINEER                 Backend Engineer     TP.HCM UNSPECIFIED 2026-07-18-multisource              2                     1                NaN                   0            0.990000       NaN     NaN
+                     CAREER_BI_ANALYST    Business Intelligence Analyst     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1         33500000.0                   1            0.990000       NaN     NaN
+                    CAREER_BOOK_EDITOR                      Book Editor     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1          3500000.0                   1            1.000000       NaN     NaN
+               CAREER_BUSINESS_ANALYST                 Business Analyst     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              1                     1         15000000.0                   1            1.000000       NaN     NaN
+ CAREER_BUSINESS_DEVELOPMENT_EXECUTIVE   Business Development Executive     TP.HCM UNSPECIFIED 2026-07-18-multisource              2                     2         12750000.0                   2            0.990000       NaN     NaN
+  CAREER_CIVIL_INFRASTRUCTURE_ENGINEER    Civil Infrastructure Engineer     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              1                     1         18500000.0                   1            1.000000       NaN     NaN
+              CAREER_COMPOSITOR_EDITOR                Compositor/Editor     TP.HCM UNSPECIFIED 2026-07-18-multisource              2                     1                NaN                   0            1.000000       NaN     NaN
+      CAREER_CONSTRUCTION_SITE_MANAGER        Construction Site Manager   Lß║íng S╞ín UNSPECIFIED 2026-07-18-multisource              1                     1         30500000.0                   1            1.000000       NaN     NaN
+                CAREER_CONTENT_CREATOR                  Content Creator     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1         13500000.0                   1            1.000000       NaN     NaN
+            CAREER_CREDIT_RISK_ANALYST              Credit Risk Analyst     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              1                     1         25000000.0                   1            0.990000       NaN     NaN
+CAREER_CUSTOMER_SERVICE_REPRESENTATIVE  Customer Service Representative     TP.HCM UNSPECIFIED 2026-07-18-multisource              4                     4         11375000.0                   4            0.990000       NaN     NaN
+                CAREER_DELIVERY_DRIVER                  Delivery Driver     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1         14000000.0                   1            0.815000       NaN     NaN
+CAREER_ECOMMERCE_OPERATIONS_SPECIALIST E-commerce Operations Specialist     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              1                     1          3250000.0                   1            0.990000       NaN     NaN
+CAREER_ECOMMERCE_OPERATIONS_SPECIALIST E-commerce Operations Specialist     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1         13500000.0                   1            1.000000       NaN     NaN
+             CAREER_FRONTEND_DEVELOPER               Frontend Developer     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1                NaN                   0            0.990000       NaN     NaN
+             CAREER_FULLSTACK_ENGINEER               Fullstack Engineer     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1                NaN                   0            0.990000       NaN     NaN
+               CAREER_GRAPHIC_DESIGNER                 Graphic Designer     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1          3500000.0                   1            0.990000       NaN     NaN
+            CAREER_HELPDESK_TECHNICIAN              Helpdesk Technician     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1         12500000.0                   1            1.000000       NaN     NaN
+        CAREER_HUMAN_RESOURCES_MANAGER          Human Resources Manager     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              1                     1         14000000.0                   1            1.000000       NaN     NaN
+     CAREER_HUMAN_RESOURCES_SPECIALIST       Human Resources Specialist  B├¼nh ─Éß╗ïnh UNSPECIFIED 2026-07-18-multisource              1                     1         12000000.0                   1            1.000000       NaN     NaN
+     CAREER_HUMAN_RESOURCES_SPECIALIST       Human Resources Specialist     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1          8750000.0                   1            1.000000       NaN     NaN
+                   CAREER_IOS_ENGINEER                     iOS Engineer     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1                NaN                   0            0.990000       NaN     NaN
+              CAREER_KITCHEN_ASSISTANT                Kitchen Assistant     TP.HCM UNSPECIFIED 2026-07-18-multisource              3                     3          8500000.0                   3            1.000000       NaN     NaN
+                   CAREER_LEVEL_ARTIST                     Level Artist     TP.HCM UNSPECIFIED 2026-07-18-multisource              2                     1                NaN                   0            0.990000       NaN     NaN
+                CAREER_LIVESTREAM_HOST                  Livestream Host        NaN      REMOTE 2026-07-18-multisource              1                     1         10000000.0                   1            0.850000       NaN     NaN
+       CAREER_MANUFACTURING_TECHNICIAN         Manufacturing Technician   ─Éß╗ông Nai UNSPECIFIED 2026-07-18-multisource              1                     1          8250000.0                   1            1.000000       NaN     NaN
+           CAREER_MARKETING_SPECIALIST             Marketing Specialist     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              3                     2         10000000.0                   3            0.996667       NaN     NaN
+           CAREER_MARKETING_SPECIALIST             Marketing Specialist  Hß║úi Ph├▓ng UNSPECIFIED 2026-07-18-multisource              1                     1        100000000.0                   1            1.000000       NaN     NaN
+           CAREER_MARKETING_SPECIALIST             Marketing Specialist     TP.HCM UNSPECIFIED 2026-07-18-multisource              3                     3          9500000.0                   3            0.996667       NaN     NaN
+           CAREER_MARKETING_SPECIALIST             Marketing Specialist        NaN UNSPECIFIED 2026-07-18-multisource              1                     1         10750000.0                   1            0.850000       NaN     NaN
+          CAREER_MECHANICAL_TECHNICIAN            Mechanical Technician     TP.HCM UNSPECIFIED 2026-07-18-multisource              3                     2         15000000.0                   3            0.876667       NaN     NaN
+                   CAREER_MEP_ENGINEER                     MEP Engineer Quß║úng Ninh UNSPECIFIED 2026-07-18-multisource              1                     1         17500000.0                   1            1.000000       NaN     NaN
+  CAREER_PARTNER_OPERATIONS_SPECIALIST    Partner Operations Specialist     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1          9500000.0                   1            1.000000       NaN     NaN
+              CAREER_PRESALES_ENGINEER                Presales Engineer     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1         20000000.0                   1            1.000000       NaN     NaN
+                CAREER_PRODUCTION_LEAD                  Production Lead     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1                NaN                   0            0.990000       NaN     NaN
+             CAREER_PRODUCTION_MANAGER               Production Manager   T├óy Ninh UNSPECIFIED 2026-07-18-multisource              1                     1         12500000.0                   1            1.000000       NaN     NaN
+              CAREER_PRODUCTION_WORKER                Production Worker     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              2                     2         10000000.0                   2            0.995000       NaN     NaN
+              CAREER_PRODUCTION_WORKER                Production Worker   H╞░ng Y├¬n UNSPECIFIED 2026-07-18-multisource              1                     1          9000000.0                   1            1.000000       NaN     NaN
+              CAREER_PRODUCTION_WORKER                Production Worker     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1          7750000.0                   1            0.815000       NaN     NaN
+              CAREER_PRODUCTION_WORKER                Production Worker        NaN UNSPECIFIED 2026-07-18-multisource              1                     1         13000000.0                   1            0.665000       NaN     NaN
+                    CAREER_QA_ENGINEER                      QA Engineer     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1                NaN                   0            0.990000       NaN     NaN
+     CAREER_QUALITY_CONTROL_SPECIALIST       Quality Control Specialist   H╞░ng Y├¬n UNSPECIFIED 2026-07-18-multisource              1                     1          9000000.0                   1            1.000000       NaN     NaN
+        CAREER_QUANTITATIVE_RESEARCHER          Quantitative Researcher     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1         25000000.0                   1            1.000000       NaN     NaN
+              CAREER_QUANTITY_SURVEYOR                Quantity Surveyor     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              2                     2         22500000.0                   2            0.990000       NaN     NaN
+         CAREER_RETAIL_SALES_ASSOCIATE           Retail Sales Associate     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              1                     1         13000000.0                   1            0.981000       NaN     NaN
+         CAREER_RETAIL_SALES_ASSOCIATE           Retail Sales Associate     TP.HCM UNSPECIFIED 2026-07-18-multisource              3                     3          6000000.0                   3            1.000000       NaN     NaN
+                CAREER_SALES_EXECUTIVE                  Sales Executive     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              2                     2         10250000.0                   2            0.990000       NaN     NaN
+                CAREER_SALES_EXECUTIVE                  Sales Executive     TP.HCM UNSPECIFIED 2026-07-18-multisource              5                     5         13000000.0                   4            0.992000       NaN     NaN
+                CAREER_SALES_EXECUTIVE                  Sales Executive    ─É├á Nß║╡ng UNSPECIFIED 2026-07-18-multisource              1                     1         14500000.0                   1            1.000000       NaN     NaN
+                CAREER_SALES_EXECUTIVE                  Sales Executive        NaN      REMOTE 2026-07-18-multisource              1                     1          2500000.0                   1            0.850000       NaN     NaN
+                CAREER_SALES_EXECUTIVE                  Sales Executive        NaN UNSPECIFIED 2026-07-18-multisource              1                     1         18500000.0                   1            0.840000       NaN     NaN
+               CAREER_TECHNICAL_ARTIST                 Technical Artist     TP.HCM UNSPECIFIED 2026-07-18-multisource              2                     1                NaN                   0            0.990000       NaN     NaN
+       CAREER_TELESALES_REPRESENTATIVE         Telesales Representative     TP.HCM UNSPECIFIED 2026-07-18-multisource              1                     1         10000000.0                   1            0.990000       NaN     NaN
+                   CAREER_VIDEO_EDITOR                     Video Editor     H├á Nß╗Öi UNSPECIFIED 2026-07-18-multisource              1                     1         13000000.0                   1            0.985000       NaN     NaN
+                CAREER_WAREHOUSE_STAFF                  Warehouse Staff        NaN UNSPECIFIED 2026-07-18-multisource              1                     1          8500000.0                   1            0.840000       NaN     NaN
+
+DATA QUALITY
+{'total_rows': 106, 'unique_content_hashes': 106, 'duplicate_rows': 0, 'mapped_career_rows': 96, 'mapped_location_rows': 97, 'remote_job_count': 2, 'salary_disclosed_rows': 89, 'average_extraction_confidence': 0.949, 'sources': ['greenhouse', 'viecoi'], 'snapshot_version': '2026-07-18-multisource', 'snapshot_versions': ['2026-07-18-multisource'], 'taxonomy_version': '0.4.0', 'generated_at': '2026-07-18T23:19:35.824006+00:00'}
+
+TAXONOMY GAP REPORTS
+{'career_gap_rows': 10, 'skill_gap_rows': 71, 'location_gap_rows': 9, 'unique_skill_tags': 125, 'unmapped_skill_tags': 60}
+
+SOURCE COVERAGE
+{'snapshot_version': '2026-07-18-multisource', 'total_current_jobs': 106, 'total_lifecycle_records': 106, 'valid_lifecycle_records': 106, 'active_jobs': 106, 'missing_unconfirmed_jobs': 0, 'inactive_jobs': 0, 'invalid_records_excluded': 0, 'active_sources': ['greenhouse', 'viecoi'], 'source_distribution': {'viecoi': 90, 'greenhouse': 16}, 'unique_companies': 81, 'unique_careers': 48, 'unique_provinces': 12, 'remote_job_count': 2, 'unknown_location_count': 7, 'salary_available_count': 89, 'salary_available_rate': 0.8396, 'description_available_rate': 1.0, 'career_mapping_rate': 0.9057, 'location_mapping_rate_non_remote': 0.9327, 'jobs_with_mapped_skills': 100, 'skill_mapping_rate': 0.9434, 'duplicate_count': 0, 'average_extraction_confidence': 0.9488, 'average_extraction_confidence_by_source': {'greenhouse': 0.9912, 'viecoi': 0.9413}, 'taxonomy_version': '0.4.0', 'collector_versions': {'greenhouse': ['0.1.0'], 'viecoi': ['0.1.0']}, 'generated_at': '2026-07-18T23:19:35.885354+00:00', 'coverage_note': 'Snapshot from monitored sources; it does not represent the entire Vietnamese labour market. Greenhouse covers one company with full job descriptions. ViecOi covers three public listing pages and listing fields only.'}
+
+DATABASE WAREHOUSE
+         dataset_name  row_count                   snapshot_versions                     published_at
+           jobs_clean        106            [2026-07-18-multisource] 2026-07-18 23:19:37.823654+00:00
+           job_skills        369                                  [] 2026-07-18 23:19:37.823654+00:00
+        job_lifecycle        106            [2026-07-18-multisource] 2026-07-18 23:19:37.823654+00:00
+career_demand_summary         66            [2026-07-18-multisource] 2026-07-18 23:19:37.823654+00:00
+  career_skill_matrix        290                                  [] 2026-07-18 23:19:37.823654+00:00
+      career_evidence        152 [2026-07-18-multisource, onet-30.3] 2026-07-18 23:19:37.823654+00:00
+career_evidence_facts        593                         [onet-30.3] 2026-07-18 23:19:37.823654+00:00
+      career_profiles         54                                  [] 2026-07-18 23:19:37.823654+00:00

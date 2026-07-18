@@ -13,6 +13,8 @@ COMMANDS = (
     "status",
     "collect-greenhouse",
     "collect-viecoi",
+    "collect-onet",
+    "enrich-onet-vi",
     "collect-all",
     "pipeline",
     "publish-db",
@@ -49,12 +51,26 @@ def main(action: str, arguments: Sequence[str] | None = None) -> int:
         run_collection()
         return 0
 
+    if action == "collect-onet":
+        from .collectors.onet import run_collection
+
+        run_collection()
+        return 0
+
+    if action == "enrich-onet-vi":
+        from .onet_enrichment import enrich_career_profiles_vi
+
+        enrich_career_profiles_vi()
+        return 0
+
     if action == "collect-all":
         from .collectors.greenhouse import run_collection as greenhouse
         from .collectors.viecoi import run_collection as viecoi
+        from .collectors.onet import run_collection as onet
 
         greenhouse()
         viecoi()
+        onet()
         return 0
 
     if action == "pipeline":
