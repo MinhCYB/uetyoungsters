@@ -1,0 +1,140 @@
+{
+  "academic_records": [
+    {
+      "max_score": 10.0,
+      "observed_at": "2026-06-20T08:00:00+07:00",
+      "record_id": "ACADEMIC_TRIG_001",
+      "schema_version": "1.0.0",
+      "score": 4.5,
+      "source": "synthetic_school_record",
+      "student_id": "STUDENT_MINH_ANH_001",
+      "subject_id": "SUBJECT_MATH",
+      "topic_id": "SKILL_TRIG_TRANSFORMATION"
+    },
+    {
+      "max_score": 10.0,
+      "observed_at": "2026-06-20T08:00:00+07:00",
+      "record_id": "ACADEMIC_PROBABILITY_001",
+      "schema_version": "1.0.0",
+      "score": 7.8,
+      "source": "synthetic_school_record",
+      "student_id": "STUDENT_MINH_ANH_001",
+      "subject_id": "SUBJECT_MATH",
+      "topic_id": "SKILL_PROBABILITY"
+    },
+    {
+      "max_score": 10.0,
+      "observed_at": "2026-06-20T08:00:00+07:00",
+      "record_id": "ACADEMIC_DATA_REASONING_001",
+      "schema_version": "1.0.0",
+      "score": 7.5,
+      "source": "synthetic_school_record",
+      "student_id": "STUDENT_MINH_ANH_001",
+      "subject_id": "SUBJECT_MATH",
+      "topic_id": "SKILL_DATA_REASONING"
+    }
+  ],
+  "assessment_attempts": [
+    {
+      "assessment_id": "ASSESSMENT_FOUNDATION_MATH",
+      "assessment_type": "pretest",
+      "assessment_version": "1.0.0",
+      "attempt_id": "ASSESSMENT_PRETEST_001",
+      "completed_at": "2026-07-01T10:00:00+07:00",
+      "schema_version": "1.0.0",
+      "skill_scores": [
+        {
+          "max_score": 10.0,
+          "score": 4.0,
+          "skill_id": "SKILL_TRIG_TRANSFORMATION"
+        },
+        {
+          "max_score": 10.0,
+          "score": 8.0,
+          "skill_id": "SKILL_PROBABILITY"
+        },
+        {
+          "max_score": 10.0,
+          "score": 7.5,
+          "skill_id": "SKILL_DATA_REASONING"
+        }
+      ],
+      "student_id": "STUDENT_MINH_ANH_001"
+    }
+  ],
+  "metadata": {
+    "contract_version": "1.0.0",
+    "request_id": "DEMO_INITIAL_ANALYSIS_001",
+    "requested_at": "2026-07-01T10:00:00+07:00",
+    "source_system": "phase1_demo.synthetic_fixtures",
+    "taxonomy_version": "0.4.0"
+  },
+  "prior_activity_results": [],
+  "self_report": {
+    "career_interests": [
+      {
+        "career_group_id": "CAREER_GROUP_DATA_AI",
+        "interest_score": 3.0,
+        "max_score": 5.0
+      },
+      {
+        "career_group_id": "CAREER_GROUP_ECONOMICS",
+        "interest_score": 3.0,
+        "max_score": 5.0
+      }
+    ],
+    "note": "Em muốn thử cả Data/AI và Kinh tế trước khi thu hẹp lựa chọn.",
+    "observed_at": "2026-07-01T09:00:00+07:00",
+    "preferred_task_types": [
+      "phân tích số liệu",
+      "giải quyết tình huống"
+    ],
+    "report_id": "SELF_REPORT_001",
+    "schema_version": "1.0.0",
+    "stated_strength_skill_ids": [
+      "SKILL_DATA_REASONING",
+      "SKILL_PROBABILITY"
+    ],
+    "stated_weakness_skill_ids": [
+      "SKILL_TRIG_TRANSFORMATION"
+    ],
+    "student_id": "STUDENT_MINH_ANH_001"
+  },
+  "student": {
+    "career_clarity": "exploring",
+    "career_interest_ids": [
+      "CAREER_GROUP_DATA_AI",
+      "CAREER_GROUP_ECONOMICS"
+    ],
+    "display_name": "Nguyễn Minh Anh",
+    "exam_week": false,
+    "grade_level": 11,
+    "schema_version": "1.0.0",
+    "student_id": "STUDENT_MINH_ANH_001",
+    "weekly_available_minutes": 45
+  },
+  "teacher_observations": [
+    {
+      "confidence": 0.9,
+      "note": "Em còn lúng túng khi chọn công thức biến đổi lượng giác.",
+      "observation_id": "TEACHER_TRIG_001",
+      "observation_type": "weakness",
+      "observed_at": "2026-06-22T09:00:00+07:00",
+      "schema_version": "1.0.0",
+      "severity": "high",
+      "skill_id": "SKILL_TRIG_TRANSFORMATION",
+      "student_id": "STUDENT_MINH_ANH_001"
+    },
+    {
+      "confidence": 0.85,
+      "note": "Em đọc bảng số liệu tốt và giải thích được xu hướng chính.",
+      "observation_id": "TEACHER_DATA_001",
+      "observation_type": "strength",
+      "observed_at": "2026-06-22T09:00:00+07:00",
+      "schema_version": "1.0.0",
+      "severity": "medium",
+      "skill_id": "SKILL_DATA_REASONING",
+      "student_id": "STUDENT_MINH_ANH_001"
+    }
+  ]
+}

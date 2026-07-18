@@ -1,0 +1,16 @@
+{
+  "attempt_id": "ASSESSMENT_POSTTEST_001",
+  "student_id": "STUDENT_MINH_ANH_001",
+  "assessment_id": "ASSESSMENT_FOUNDATION_MATH",
+  "assessment_type": "posttest",
+  "skill_scores": [
+    {
+      "skill_id": "SKILL_TRIG_TRANSFORMATION",
+      "score": 7.0,
+      "max_score": 10.0
+    }
+  ],
+  "completed_at": "2026-07-15T10:00:00+07:00",
+  "assessment_version": "1.0.0",
+  "schema_version": "1.0.0"
+}
