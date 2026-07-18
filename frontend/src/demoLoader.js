@@ -41,7 +41,7 @@ export function createDemoSession(){
         reasoning:item.reasoning,
       })),
       careers:demoProfile.career_recommendations.map(item=>({
-        id:item.id,title:item.title,reason:item.reason,matchScore:item.match_score,skillGaps:item.skill_gaps,
+        id:item.id,title:item.title,group:item.group,reason:item.reason,matchScore:item.match_score,skillGaps:item.skill_gaps,
       })),
       roadmaps:[{
         targetCareer:{id:demoProfile.roadmap.target_career_id},
