@@ -9,17 +9,19 @@ from typing import Iterable
 
 from phase1_demo.student_companion.config import (
     ABILITY_TREND_THRESHOLD,
-    ACADEMIC_HIGH_PRIORITY_GAP,
     ACADEMIC_THRESHOLDS,
     ACTIVITY_CATALOG,
     ACTIVITY_VERSION,
     CAREER_ACTIVITY_BY_GROUP,
     CAREER_EXPLORATION_RULES,
+    CONFIDENCE_POLICY,
     CONFIG_VERSION,
     ESTIMATE_VERSION,
     EVIDENCE_VERSION,
     GAP_VERSION,
+    GAP_PRIORITY_POLICY,
     OUTCOME_THRESHOLDS,
+    PREREQUISITE_IMPORTANCE,
     SOURCE_WEIGHTS,
     TEACHER_OBSERVATION_VALUES,
 )
@@ -205,7 +207,28 @@ def build_ability_profile(
         estimated_level = sum(
             item.normalized_value * weight for item, weight in weighted_items
         ) / denominator
-        confidence = min(1.0, denominator / len(weighted_items))
+        confidence = min(
+            1.0,
+            denominator / CONFIDENCE_POLICY["minimum_evidence_count"],
+        )
+        source_types = {item.source_type for item in items}
+        if len(items) == 1 and items[0].source_type.value == "self_report":
+            confidence *= CONFIDENCE_POLICY["single_self_report_factor"]
+        elif len(items) > 1 and len(source_types) == 1:
+            confidence *= CONFIDENCE_POLICY["single_source_diversity_factor"]
+        spread = max(item.normalized_value for item in items) - min(
+            item.normalized_value for item in items
+        )
+        if spread > CONFIDENCE_POLICY["conflict_threshold"]:
+            conflict_range = 1.0 - CONFIDENCE_POLICY["conflict_threshold"]
+            agreement_factor = max(
+                0.25,
+                1.0
+                - (spread - CONFIDENCE_POLICY["conflict_threshold"])
+                / conflict_range,
+            )
+            confidence *= agreement_factor
+        confidence = min(1.0, max(0.0, confidence))
         trend = AbilityTrend.UNKNOWN
         if skill_id in previous_by_skill:
             delta = estimated_level - previous_by_skill[skill_id].estimated_level
@@ -242,7 +265,13 @@ def build_gaps(
         if estimate is None or estimate.estimated_level >= expected:
             continue
         size = round(expected - estimate.estimated_level, 6)
-        priority = GapPriority.HIGH if size >= ACADEMIC_HIGH_PRIORITY_GAP else GapPriority.MEDIUM
+        priority_score = academic_priority_score(student, estimate, size)
+        priority = _priority_band(priority_score)
+        if (
+            estimate.confidence < CONFIDENCE_POLICY["low_confidence_threshold"]
+            and priority is GapPriority.HIGH
+        ):
+            priority = GapPriority.MEDIUM
         evidence_ids = estimate.evidence_ids
         gaps.append(
             Gap(
@@ -278,7 +307,11 @@ def build_gaps(
                 current_level=None,
                 expected_level=None,
                 gap_size=None,
-                priority=GapPriority.HIGH,
+                priority=(
+                    GapPriority.HIGH
+                    if _career_activity_is_feasible(student, career_group_id)
+                    else GapPriority.MEDIUM
+                ),
                 reason=(
                     "Chưa có micro-experience đạt chuẩn; dựa trên evidence: "
                     f"{', '.join(evidence_ids) or 'không có activity evidence'}."
@@ -315,6 +348,64 @@ def build_gaps(
             )
         )
     return sorted(gaps, key=lambda item: (item.gap_type.value, item.gap_id))
+
+
+def _priority_band(score: float) -> GapPriority:
+    if score >= GAP_PRIORITY_POLICY["high_score"]:
+        return GapPriority.HIGH
+    if score >= GAP_PRIORITY_POLICY["medium_score"]:
+        return GapPriority.MEDIUM
+    return GapPriority.LOW
+
+
+def _academic_activity_id(skill_id: str) -> str | None:
+    if skill_id == "SKILL_TRIG_TRANSFORMATION":
+        return "ACTIVITY_TRIG_PRACTICE"
+    return None
+
+
+def academic_priority_score(
+    student: StudentProfile,
+    estimate: AbilityEstimate,
+    gap_size: float,
+) -> float:
+    """Return the internal, deterministic score behind public priority bands."""
+
+    activity_id = _academic_activity_id(estimate.skill_id)
+    feasible = bool(
+        activity_id
+        and ACTIVITY_CATALOG[activity_id]["estimated_minutes"]
+        <= student.weekly_available_minutes
+    )
+    school_priority = (
+        GAP_PRIORITY_POLICY["exam_week_school_priority"]
+        if student.exam_week
+        else GAP_PRIORITY_POLICY["current_school_priority"]
+    )
+    return round(
+        gap_size
+        * estimate.confidence
+        * PREREQUISITE_IMPORTANCE.get(estimate.skill_id, 1.0)
+        * school_priority
+        * (
+            GAP_PRIORITY_POLICY["feasible_activity_factor"]
+            if feasible
+            else GAP_PRIORITY_POLICY["missing_activity_factor"]
+        ),
+        6,
+    )
+
+
+def _career_activity_is_feasible(
+    student: StudentProfile,
+    career_group_id: str,
+) -> bool:
+    activity_id = CAREER_ACTIVITY_BY_GROUP.get(career_group_id)
+    return bool(
+        activity_id
+        and ACTIVITY_CATALOG[activity_id]["estimated_minutes"]
+        <= student.weekly_available_minutes
+    )
 
 
 def _completed_exploration_groups(
@@ -354,7 +445,7 @@ def generate_weekly_plan(
         key=lambda item: (-float(item.gap_size or 0), item.gap_id),
     )
     for gap in academic_gaps:
-        activity_id = "ACTIVITY_TRIG_PRACTICE" if gap.skill_id == "SKILL_TRIG_TRANSFORMATION" else None
+        activity_id = _academic_activity_id(gap.skill_id or "")
         if activity_id and activity_id not in completed:
             minutes = ACTIVITY_CATALOG[activity_id]["estimated_minutes"]
             if minutes <= remaining:
@@ -472,6 +563,31 @@ def select_next_step(
     completed_activity_ids: Iterable[str],
 ) -> PlanTask | None:
     completed = set(completed_activity_ids)
+    academic_gaps = sorted(
+        (
+            item
+            for item in gaps
+            if item.gap_type is GapType.ACADEMIC
+            and item.priority is GapPriority.HIGH
+        ),
+        key=lambda item: (-float(item.gap_size or 0), item.gap_id),
+    )
+    for gap in academic_gaps:
+        activity_id = _academic_activity_id(gap.skill_id or "")
+        if activity_id is None or activity_id in completed:
+            continue
+        catalog = ACTIVITY_CATALOG[activity_id]
+        return PlanTask(
+            task_id=stable_id("TASK", "next-step", activity_id),
+            task_type=catalog["task_type"],
+            title=catalog["title"],
+            skill_id=catalog["skill_id"],
+            career_group_id=catalog["career_group_id"],
+            estimated_minutes=catalog["estimated_minutes"],
+            reason="Kết quả gần nhất cho thấy cần củng cố nền tảng và tìm hỗ trợ phù hợp.",
+            evidence_ids=gap.evidence_ids,
+            activity_version=ACTIVITY_VERSION,
+        )
     gap_by_group = {
         item.career_group_ids[0]: item
         for item in gaps

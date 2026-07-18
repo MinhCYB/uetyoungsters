@@ -10,7 +10,7 @@
   "snapshot": {
     "ability_profile": [
       {
-        "confidence": 0.86,
+        "confidence": 1.0,
         "estimate_version": "ability-1.0.0",
         "estimated_level": 0.763178,
         "evidence_ids": [
@@ -33,7 +33,7 @@
         "trend": "unknown"
       },
       {
-        "confidence": 0.873333,
+        "confidence": 1.0,
         "estimate_version": "ability-1.0.0",
         "estimated_level": 0.334733,
         "evidence_ids": [

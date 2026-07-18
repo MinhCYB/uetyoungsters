@@ -2,9 +2,9 @@
   "current_snapshot": {
     "ability_profile": [
       {
-        "confidence": 0.9,
+        "confidence": 0.85,
         "estimate_version": "ability-1.0.0",
-        "estimated_level": 0.772222,
+        "estimated_level": 0.770588,
         "evidence_ids": [
           "EVIDENCE_ddfa933dc7cd9615",
           "EVIDENCE_fdd04d0cd8c48cba"
@@ -13,7 +13,7 @@
         "trend": "stable"
       },
       {
-        "confidence": 1.0,
+        "confidence": 0.5,
         "estimate_version": "ability-1.0.0",
         "estimated_level": 0.8,
         "evidence_ids": [
@@ -23,7 +23,7 @@
         "trend": "stable"
       },
       {
-        "confidence": 1.0,
+        "confidence": 0.85,
         "estimate_version": "ability-1.0.0",
         "estimated_level": 0.55,
         "evidence_ids": [
@@ -228,5 +228,16 @@
       "skill_id": null
     }
   ],
-  "warnings": []
+  "warnings": [
+    {
+      "affected_field": "ability_profile.SKILL_PROBABILITY",
+      "message": "This ability estimate is based on limited evidence.",
+      "warning_code": "insufficient_evidence"
+    },
+    {
+      "affected_field": "ability_profile.SKILL_PROBABILITY",
+      "message": "This estimate has low confidence and should not support a strong conclusion.",
+      "warning_code": "low_confidence_estimate"
+    }
+  ]
 }

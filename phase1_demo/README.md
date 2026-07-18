@@ -79,6 +79,24 @@ Nếu `python` chưa nằm trong PATH, dùng interpreter phù hợp của worksp
 python -m phase1_demo.scripts.preflight
 ```
 
+## Engine V1 hardening
+
+Public contract remains frozen at `1.0.0`. Run the 18 deterministic engine
+scenarios without starting the server or UI:
+
+```powershell
+python -m phase1_demo.scripts.run_engine_scenarios
+```
+
+The versioned activity catalog is defined in
+`student_companion/config.py`; rule details and scenario coverage are documented
+in `ENGINE_RULES.md` and `SCENARIO_MATRIX.md`. The catalog covers Data/AI,
+Economics/Business, Marketing/Communication, Design/UX, Engineering, Law/Social
+Sciences, and Health/Life Sciences.
+
+Production profile adapters, frontend integration, APIs, databases, auth, and
+deployment remain outside this demo hardening sprint.
+
 Kết quả thành công kết thúc bằng `PRE-FLIGHT PASSED`.
 
 ## Chạy demo

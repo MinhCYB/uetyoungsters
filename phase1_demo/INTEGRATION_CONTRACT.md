@@ -109,11 +109,11 @@ integration lỗi có `ContractExecutionError.error: ContractError`.
 |---|---|
 | Thiếu diagnostic/pretest ban đầu | Request bị reject |
 | Nested student ID không khớp | Request bị reject với field context |
-| Unknown career group | `unknown_career_group`, recoverable |
+| Unknown career group | Warning `unknown_career_group`; academic analysis continues and no unsupported activity is assigned |
 | Evidence quá ít | Warning `insufficient_evidence` |
 | Optional profile data thiếu | Warning `optional_data_missing` |
 | Market sample dưới 5 | Warning `small_market_sample` |
-| Posttest thiếu baseline so sánh | Warning; không tạo assessment outcome giả |
+| Posttest thiếu baseline so sánh | Warning `baseline_not_found`; không tạo assessment outcome giả |
 
 Warning không chứa teacher note hoặc dữ liệu nhạy cảm. Evidence summary chỉ có
 source type và count.

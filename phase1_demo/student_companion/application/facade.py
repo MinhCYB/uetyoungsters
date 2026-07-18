@@ -7,8 +7,6 @@ from collections import Counter
 from phase1_demo.student_companion.application.ports import MarketContextProvider
 from phase1_demo.student_companion.config import PIPELINE_VERSION
 from phase1_demo.student_companion.contracts import (
-    ContractError,
-    ContractExecutionError,
     ContractWarning,
     EvidenceSummary,
     FollowupEvaluationRequest,
@@ -18,7 +16,12 @@ from phase1_demo.student_companion.contracts import (
     PlanGenerationRequest,
     PlanGenerationResponse,
 )
-from phase1_demo.student_companion.domain import AssessmentType, StudentSnapshot
+from phase1_demo.student_companion.domain import (
+    AbilityTrend,
+    AssessmentType,
+    OutcomeStatus,
+    StudentSnapshot,
+)
 from phase1_demo.student_companion.domain.rules import (
     build_ability_profile,
     build_gaps,
@@ -33,6 +36,12 @@ from phase1_demo.student_companion.domain.rules import (
     normalize_teacher_observations,
     select_next_step,
     stable_id,
+)
+from phase1_demo.student_companion.domain.warnings import (
+    evidence_warnings,
+    followup_warnings,
+    initial_warnings,
+    normalize_warnings,
 )
 
 
@@ -70,33 +79,11 @@ class StudentCompanionFacade:
         market_context = self._market_provider.get_market_context(
             request.student.career_interest_ids
         )
-        returned_groups = {item.career_group_id for item in market_context}
-        missing_groups = [
-            item
-            for item in request.student.career_interest_ids
-            if item not in returned_groups
-        ]
-        if missing_groups:
-            raise ContractExecutionError(
-                ContractError(
-                    error_code="unknown_career_group",
-                    message=f"No market context for: {', '.join(missing_groups)}",
-                    field_path="student.career_interest_ids",
-                    recoverable=True,
-                )
-            )
         market_version = "+".join(
             sorted({item.snapshot_version for item in market_context})
         )
         if not market_version:
-            raise ContractExecutionError(
-                ContractError(
-                    error_code="market_context_unavailable",
-                    message="Market context did not provide a snapshot version.",
-                    field_path="market_context",
-                    recoverable=True,
-                )
-            )
+            market_version = "market-context-unavailable-v1"
         snapshot = StudentSnapshot(
             snapshot_id=stable_id(
                 "SNAPSHOT", "initial", request.metadata.request_id, request.student.student_id
@@ -111,7 +98,12 @@ class StudentCompanionFacade:
             market_snapshot_version=market_version,
             pipeline_version=PIPELINE_VERSION,
         )
-        warnings = self._initial_warnings(request, market_context, evidence)
+        warnings = initial_warnings(
+            request,
+            market_context,
+            evidence,
+            ability_profile,
+        )
         return InitialAnalysisResponse(
             metadata=request.metadata,
             student_id=request.student.student_id,
@@ -133,7 +125,7 @@ class StudentCompanionFacade:
             ),
             completed_activity_ids=request.completed_activity_ids,
         )
-        warnings = []
+        warnings: list[ContractWarning] = []
         if not plan.tasks:
             warnings.append(
                 ContractWarning(
@@ -146,7 +138,7 @@ class StudentCompanionFacade:
             metadata=request.metadata,
             student_id=request.student.student_id,
             plan=plan,
-            warnings=warnings,
+            warnings=normalize_warnings(warnings),
         )
 
     def evaluate_followup(
@@ -165,10 +157,31 @@ class StudentCompanionFacade:
             *assessment_evidence.values(),
             *activity_evidence.values(),
         )
+        outcomes = self._followup_outcomes(
+            request,
+            assessment_evidence,
+            activity_evidence,
+        )
         updated_estimates = build_ability_profile(
             new_evidence,
             previous=request.previous_snapshot.ability_profile,
         )
+        assessment_trends = {
+            item.metric_type: {
+                OutcomeStatus.MEANINGFUL_IMPROVEMENT: AbilityTrend.IMPROVING,
+                OutcomeStatus.PARTIAL_IMPROVEMENT: AbilityTrend.IMPROVING,
+                OutcomeStatus.NO_MEANINGFUL_CHANGE: AbilityTrend.STABLE,
+                OutcomeStatus.REGRESSION: AbilityTrend.DECLINING,
+            }[item.status]
+            for item in outcomes
+            if not item.metric_type.startswith("INTEREST_")
+        }
+        updated_estimates = [
+            item.model_copy(
+                update={"trend": assessment_trends.get(item.skill_id, item.trend)}
+            )
+            for item in updated_estimates
+        ]
         estimates_by_skill = {
             item.skill_id: item for item in request.previous_snapshot.ability_profile
         }
@@ -179,11 +192,6 @@ class StudentCompanionFacade:
             ability_profile,
             new_evidence,
             activity_results=request.activity_results,
-        )
-        outcomes = self._followup_outcomes(
-            request,
-            assessment_evidence,
-            activity_evidence,
         )
         completed_activity_ids = [
             item.activity_id for item in request.activity_results if item.completed
@@ -210,7 +218,12 @@ class StudentCompanionFacade:
             market_snapshot_version=request.previous_snapshot.market_snapshot_version,
             pipeline_version=PIPELINE_VERSION,
         )
-        warnings = self._followup_warnings(request)
+        warnings = normalize_warnings(
+            [
+                *followup_warnings(request),
+                *evidence_warnings(new_evidence, updated_estimates),
+            ]
+        )
         return FollowupEvaluationResponse(
             metadata=request.metadata,
             student_id=request.student.student_id,
@@ -222,42 +235,6 @@ class StudentCompanionFacade:
             evidence_summary=_summarize_evidence(new_evidence),
             warnings=warnings,
         )
-
-    @staticmethod
-    def _initial_warnings(request, market_context, evidence) -> list[ContractWarning]:
-        warnings: list[ContractWarning] = []
-        optional_fields = (
-            ("academic_records", request.academic_records),
-            ("teacher_observations", request.teacher_observations),
-            ("self_report", request.self_report),
-        )
-        for field_name, value in optional_fields:
-            if not value:
-                warnings.append(
-                    ContractWarning(
-                        warning_code="optional_data_missing",
-                        message=f"Optional input '{field_name}' was not provided.",
-                        affected_field=field_name,
-                    )
-                )
-        if len(evidence) < 2:
-            warnings.append(
-                ContractWarning(
-                    warning_code="insufficient_evidence",
-                    message="Ability estimates are based on fewer than two evidence items.",
-                    affected_field="ability_profile",
-                )
-            )
-        for item in market_context:
-            if item.sample_size < 5:
-                warnings.append(
-                    ContractWarning(
-                        warning_code="small_market_sample",
-                        message=f"Market sample for {item.career_group_id} is below 5.",
-                        affected_field="market_context",
-                    )
-                )
-        return _sorted_warnings(warnings)
 
     @staticmethod
     def _followup_outcomes(request, assessment_evidence, activity_evidence):
@@ -306,39 +283,9 @@ class StudentCompanionFacade:
                 outcomes.append(evaluate_interest_outcome(activity, normalized))
         return sorted(outcomes, key=lambda item: item.evaluation_id)
 
-    @staticmethod
-    def _followup_warnings(request) -> list[ContractWarning]:
-        has_posttest = any(
-            item.assessment_type is AssessmentType.POSTTEST
-            for item in request.assessment_attempts
-        )
-        has_baseline = any(
-            item.assessment_type in {AssessmentType.DIAGNOSTIC, AssessmentType.PRETEST}
-            for item in request.assessment_attempts
-        )
-        warnings = []
-        if has_posttest and not has_baseline:
-            warnings.append(
-                ContractWarning(
-                    warning_code="optional_data_missing",
-                    message="Posttest was provided without a comparable diagnostic/pretest.",
-                    affected_field="assessment_attempts",
-                )
-            )
-        return warnings
-
-
 def _summarize_evidence(evidence) -> list[EvidenceSummary]:
     counts = Counter(item.source_type for item in evidence)
     return [
         EvidenceSummary(source_type=source_type, evidence_count=counts[source_type])
         for source_type in sorted(counts, key=lambda item: item.value)
     ]
-
-
-def _sorted_warnings(warnings: list[ContractWarning]) -> list[ContractWarning]:
-    return sorted(
-        warnings,
-        key=lambda item: (item.warning_code, item.affected_field or "", item.message),
-    )
-
