@@ -7,12 +7,19 @@ export function setAccessToken(token) {
 async function parse(response) {
   if (response.status === 204) return null;
   const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(data.detail || data.message || 'Yêu cầu không thành công');
+  if (!response.ok) {
+    const detail = data.detail || data.message || 'Yêu cầu không thành công';
+    const error = new Error(typeof detail === 'string' ? detail : detail.message || 'Yêu cầu không thành công');
+    error.status = response.status;
+    error.detail = detail;
+    throw error;
+  }
   return data;
 }
 
 export async function api(path, options = {}, retry = true) {
-  const headers = { 'Content-Type': 'application/json', ...options.headers };
+  const headers = { ...options.headers };
+  if (!(options.body instanceof FormData)) headers['Content-Type'] = headers['Content-Type'] || 'application/json';
   if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
   const response = await fetch(path, { ...options, headers, credentials: 'include' });
   if (response.status === 401 && retry && path !== '/api/auth/refresh') {

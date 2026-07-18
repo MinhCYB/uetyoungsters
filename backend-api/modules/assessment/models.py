@@ -94,6 +94,9 @@ class Assessment(Base):
     schema_version: Mapped[str] = mapped_column(String(40))
     question_ids: Mapped[list] = mapped_column(JSON)
     status: Mapped[str] = mapped_column(String(24), default="in_progress", index=True)
+    version: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
+    current_question_id: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    last_saved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     submitted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 

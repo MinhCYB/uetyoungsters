@@ -1,51 +1,39 @@
-"""Public career catalog backed by the canonical taxonomy."""
+"""Public career catalog queried from PostgreSQL."""
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.orm import Session
 
-import json
-import os
-import unicodedata
-from functools import lru_cache
-from pathlib import Path
+from database import get_db
 
-from fastapi import APIRouter, Query
+from .models import CareerAlias, CareerCatalogItem
+from .repository import search_catalog
 
 router = APIRouter()
 
 
-def normalize(value: str) -> str:
-    value = unicodedata.normalize("NFD", value.lower())
-    return "".join(char for char in value if unicodedata.category(char) != "Mn")
-
-
-@lru_cache(maxsize=1)
-def career_catalog() -> list[dict]:
-    configured = os.getenv("CAREER_TAXONOMY_PATH")
-    candidates = [
-        Path(configured) if configured else None,
-        Path(__file__).resolve().parents[2] / "data" / "taxonomy.json",
-        Path(__file__).resolve().parents[3] / "crawl-service" / "data" / "taxonomy.json",
-    ]
-    path = next((item for item in candidates if item and item.exists()), None)
-    if not path:
-        return []
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    return [
-        {
-            "id": item["career_id"],
-            "title": item["canonical_name"],
-            "aliases": item.get("aliases", []),
-            "searchText": normalize(" ".join([item["canonical_name"], *item.get("aliases", [])])),
-        }
-        for item in payload.get("careers", [])
-    ]
-
-
 @router.get("/search")
-def search_careers(q: str = Query(default="", max_length=120), limit: int = Query(default=20, ge=1, le=100)):
-    """Search canonical careers by display name and aliases."""
-    term = normalize(q.strip())
-    matches = [item for item in career_catalog() if not term or term in item["searchText"]]
+def search_careers(
+    q: str = Query(default="", max_length=120),
+    limit: int = Query(default=20, ge=1, le=100),
+    db: Session = Depends(get_db),
+):
+    total, matches = search_catalog(db, q, limit)
     return {
         "query": q,
-        "total": len(matches),
-        "items": [{"id": item["id"], "title": item["title"]} for item in matches[:limit]],
+        "total": total,
+        "items": [{"id": item.id, "title": item.canonical_name} for item in matches],
+    }
+
+
+@router.get("/{career_id}")
+def career_detail(career_id: str, db: Session = Depends(get_db)):
+    item = db.get(CareerCatalogItem, career_id)
+    if not item or not item.active:
+        raise HTTPException(404, "Không tìm thấy nghề nghiệp")
+    aliases = [row.alias for row in db.query(CareerAlias).filter_by(career_id=item.id).order_by(CareerAlias.alias)]
+    return {
+        "id": item.id,
+        "title": item.canonical_name,
+        "taxonomy_version": item.taxonomy_version,
+        "aliases": aliases,
+        **(item.metadata_json or {}),
     }

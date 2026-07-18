@@ -1,5 +1,6 @@
 import secrets
 from datetime import date, datetime, timedelta, timezone
+from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, EmailStr, Field
@@ -8,8 +9,9 @@ from sqlalchemy.orm import Session
 
 from database import get_db
 from modules.auth.dependencies import require_roles
-from modules.auth.models import AuditLog, ClassAssignment, Invitation, Role, SchoolClass, StudentProfile, Tenant, User
+from modules.auth.models import AuditLog, ClassAssignment, Invitation, Role, SchoolClass, Tenant, User
 from modules.auth.security import hash_token
+from modules.candidate.models import CandidateProfile
 
 router = APIRouter(tags=["provisioning"])
 
@@ -25,7 +27,7 @@ class InviteInput(BaseModel):
 
 
 class StudentInvite(InviteInput):
-    profile_type: str = "HIGH_SCHOOL"
+    profile_type: Literal["HIGH_SCHOOL", "UNIVERSITY"] = "HIGH_SCHOOL"
 
 
 class ClassInput(BaseModel):
@@ -48,9 +50,10 @@ def invite(db, actor, payload, role, tenant_id, class_id=None):
     if db.scalar(select(User).where(User.email == payload.email.lower())):
         raise HTTPException(409, "Email đã có tài khoản")
     raw = secrets.token_urlsafe(32)
-    row = Invitation(email=payload.email.lower(), display_name=payload.display_name, role=role, tenant_id=tenant_id, class_id=class_id, token_hash=hash_token(raw), expires_at=datetime.now(timezone.utc) + timedelta(days=3), invited_by=actor.id)
-    db.add(row); db.flush(); audit(db, actor, "ACCOUNT_INVITED", "INVITATION", row.id, tenant_id, {"role": role.value, "email": payload.email.lower()}); db.commit()
-    return {"id": row.id, "email": row.email, "role": role.value, "expiresAt": row.expires_at, "acceptToken": raw}
+    profile_type = getattr(payload, "profile_type", None) if role == Role.STUDENT else None
+    row = Invitation(email=payload.email.lower(), display_name=payload.display_name, role=role, tenant_id=tenant_id, class_id=class_id, profile_type=profile_type, token_hash=hash_token(raw), expires_at=datetime.now(timezone.utc) + timedelta(days=3), invited_by=actor.id)
+    db.add(row); db.flush(); audit(db, actor, "ACCOUNT_INVITED", "INVITATION", row.id, tenant_id, {"role": role.value, "profile_type": profile_type, "email": payload.email.lower()}); db.commit()
+    return {"id": row.id, "email": row.email, "role": role.value, "profileType": profile_type, "expiresAt": row.expires_at, "acceptToken": raw}
 
 
 @router.post("/api/admin/tenants", status_code=201)
@@ -122,7 +125,7 @@ def my_classes(db: Session = Depends(get_db), actor: User = Depends(require_role
 @router.get("/api/teacher/classes/{class_id}/students")
 def class_students(class_id: str, db: Session = Depends(get_db), actor: User = Depends(require_roles(Role.HOMEROOM_TEACHER))):
     if not active_assignment(db, actor, class_id): raise HTTPException(403, "Bạn không được phân công lớp này")
-    return db.execute(select(User, StudentProfile).join(StudentProfile, StudentProfile.user_id == User.id).where(StudentProfile.tenant_id == actor.tenant_id, StudentProfile.class_id == class_id)).all()
+    return db.execute(select(User, CandidateProfile).join(CandidateProfile, CandidateProfile.user_id == User.id).where(CandidateProfile.tenant_id == actor.tenant_id, CandidateProfile.class_id == class_id)).all()
 
 
 @router.post("/api/teacher/classes/{class_id}/students/invitations", status_code=201)
