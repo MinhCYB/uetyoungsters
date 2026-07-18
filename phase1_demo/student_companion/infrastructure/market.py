@@ -31,6 +31,32 @@ class MarketDataError(RuntimeError):
     """Raised when pipeline market output cannot satisfy the demo contract."""
 
 
+class ReadOnlyMarketContextProvider:
+    """Protocol-compatible provider backed by pipeline output with fallback."""
+
+    def __init__(
+        self,
+        processed_root: Path = DEFAULT_PROCESSED_ROOT,
+        fallback_path: Path = DEFAULT_FALLBACK_PATH,
+    ) -> None:
+        self.processed_root = processed_root
+        self.fallback_path = fallback_path
+
+    def get_market_context(
+        self,
+        career_group_ids: list[str],
+    ) -> list[MarketCareerGroup]:
+        context_by_id = {
+            item.career_group_id: item
+            for item in build_market_snapshot(self.processed_root, self.fallback_path)
+        }
+        return [
+            context_by_id[group_id]
+            for group_id in career_group_ids
+            if group_id in context_by_id
+        ]
+
+
 def _require_columns(frame: pd.DataFrame, required: set[str], filename: str) -> None:
     missing = sorted(required - set(frame.columns))
     if missing:
@@ -137,4 +163,3 @@ def _build_pipeline_groups(
             )
         )
     return result
-

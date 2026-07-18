@@ -1,0 +1,303 @@
+{
+  "ability_profile": [
+    {
+      "confidence": 0.86,
+      "estimate_version": "ability-1.0.0",
+      "estimated_level": 0.763178,
+      "evidence_ids": [
+        "EVIDENCE_41fbf95522dd52b2",
+        "EVIDENCE_86d8c3762a0226d9",
+        "EVIDENCE_fdd04d0cd8c48cba"
+      ],
+      "skill_id": "SKILL_DATA_REASONING",
+      "trend": "unknown"
+    },
+    {
+      "confidence": 0.95,
+      "estimate_version": "ability-1.0.0",
+      "estimated_level": 0.790526,
+      "evidence_ids": [
+        "EVIDENCE_5f63218e0617b2a0",
+        "EVIDENCE_d4a9d6af6fec6e9a"
+      ],
+      "skill_id": "SKILL_PROBABILITY",
+      "trend": "unknown"
+    },
+    {
+      "confidence": 0.873333,
+      "estimate_version": "ability-1.0.0",
+      "estimated_level": 0.334733,
+      "evidence_ids": [
+        "EVIDENCE_31372ff28be949bc",
+        "EVIDENCE_713a843929c316bd",
+        "EVIDENCE_8d476896b05c1c2c"
+      ],
+      "skill_id": "SKILL_TRIG_TRANSFORMATION",
+      "trend": "unknown"
+    }
+  ],
+  "evidence_summary": [
+    {
+      "evidence_count": 3,
+      "source_type": "academic_record"
+    },
+    {
+      "evidence_count": 3,
+      "source_type": "assessment"
+    },
+    {
+      "evidence_count": 2,
+      "source_type": "self_report"
+    },
+    {
+      "evidence_count": 2,
+      "source_type": "teacher_observation"
+    }
+  ],
+  "gaps": [
+    {
+      "career_group_ids": [],
+      "current_level": 0.334733,
+      "evidence_ids": [
+        "EVIDENCE_31372ff28be949bc",
+        "EVIDENCE_713a843929c316bd",
+        "EVIDENCE_8d476896b05c1c2c"
+      ],
+      "expected_level": 0.65,
+      "gap_id": "GAP_ef86540df15111f4",
+      "gap_size": 0.315267,
+      "gap_type": "academic",
+      "gap_version": "gap-1.0.0",
+      "priority": "high",
+      "reason": "Mức hiện tại dưới ngưỡng; dựa trên evidence: EVIDENCE_31372ff28be949bc, EVIDENCE_713a843929c316bd, EVIDENCE_8d476896b05c1c2c.",
+      "skill_id": "SKILL_TRIG_TRANSFORMATION"
+    },
+    {
+      "career_group_ids": [
+        "CAREER_GROUP_DATA_AI",
+        "CAREER_GROUP_ECONOMICS"
+      ],
+      "current_level": null,
+      "evidence_ids": [
+        "EVIDENCE_70079940a9c43931",
+        "EVIDENCE_7083a09db5b807f2"
+      ],
+      "expected_level": null,
+      "gap_id": "GAP_ebf35044015a57bd",
+      "gap_size": null,
+      "gap_type": "decision",
+      "gap_version": "gap-1.0.0",
+      "priority": "medium",
+      "reason": "Chưa đủ trải nghiệm để so sánh các hướng; dựa trên evidence: EVIDENCE_70079940a9c43931, EVIDENCE_7083a09db5b807f2.",
+      "skill_id": null
+    },
+    {
+      "career_group_ids": [
+        "CAREER_GROUP_DATA_AI"
+      ],
+      "current_level": null,
+      "evidence_ids": [
+        "EVIDENCE_70079940a9c43931"
+      ],
+      "expected_level": null,
+      "gap_id": "GAP_672d4d62c7fc1fc1",
+      "gap_size": null,
+      "gap_type": "exploration",
+      "gap_version": "gap-1.0.0",
+      "priority": "high",
+      "reason": "Chưa có micro-experience đạt chuẩn; dựa trên evidence: EVIDENCE_70079940a9c43931.",
+      "skill_id": null
+    },
+    {
+      "career_group_ids": [
+        "CAREER_GROUP_ECONOMICS"
+      ],
+      "current_level": null,
+      "evidence_ids": [
+        "EVIDENCE_7083a09db5b807f2"
+      ],
+      "expected_level": null,
+      "gap_id": "GAP_a3820fdca5cda989",
+      "gap_size": null,
+      "gap_type": "exploration",
+      "gap_version": "gap-1.0.0",
+      "priority": "high",
+      "reason": "Chưa có micro-experience đạt chuẩn; dựa trên evidence: EVIDENCE_7083a09db5b807f2.",
+      "skill_id": null
+    }
+  ],
+  "market_context": [
+    {
+      "career_group_id": "CAREER_GROUP_DATA_AI",
+      "data_mode": "pipeline_export",
+      "display_name": "Data/AI",
+      "foundation_skill_ids": [
+        "SKILL_DATA_REASONING"
+      ],
+      "market_signal": "2 lượt tin trong snapshot; mapping từ CAREER_BI_ANALYST, CAREER_BUSINESS_ANALYST.",
+      "sample_size": 2,
+      "snapshot_version": "2026-07-18-multisource|market-groups-1.0.0",
+      "source_output_files": [
+        "career_skill_matrix.parquet",
+        "career_demand_summary.parquet",
+        "jobs_clean.parquet",
+        "job_skills.parquet"
+      ],
+      "taxonomy_version": "0.4.0"
+    },
+    {
+      "career_group_id": "CAREER_GROUP_ECONOMICS",
+      "data_mode": "pipeline_export",
+      "display_name": "Kinh tế",
+      "foundation_skill_ids": [
+        "SKILL_COMMUNICATION",
+        "SKILL_DATA_REASONING",
+        "SKILL_DECISION_MAKING"
+      ],
+      "market_signal": "12 lượt tin trong snapshot; mapping từ CAREER_ACCOUNTANT, CAREER_BUSINESS_DEVELOPMENT_EXECUTIVE, CAREER_CREDIT_RISK_ANALYST.",
+      "sample_size": 12,
+      "snapshot_version": "2026-07-18-multisource|market-groups-1.0.0",
+      "source_output_files": [
+        "career_skill_matrix.parquet",
+        "career_demand_summary.parquet",
+        "jobs_clean.parquet",
+        "job_skills.parquet"
+      ],
+      "taxonomy_version": "0.4.0"
+    }
+  ],
+  "metadata": {
+    "contract_version": "1.0.0",
+    "request_id": "DEMO_INITIAL_ANALYSIS_001",
+    "requested_at": "2026-07-01T10:00:00+07:00",
+    "source_system": "phase1_demo.synthetic_fixtures",
+    "taxonomy_version": "0.4.0"
+  },
+  "snapshot": {
+    "ability_profile": [
+      {
+        "confidence": 0.86,
+        "estimate_version": "ability-1.0.0",
+        "estimated_level": 0.763178,
+        "evidence_ids": [
+          "EVIDENCE_41fbf95522dd52b2",
+          "EVIDENCE_86d8c3762a0226d9",
+          "EVIDENCE_fdd04d0cd8c48cba"
+        ],
+        "skill_id": "SKILL_DATA_REASONING",
+        "trend": "unknown"
+      },
+      {
+        "confidence": 0.95,
+        "estimate_version": "ability-1.0.0",
+        "estimated_level": 0.790526,
+        "evidence_ids": [
+          "EVIDENCE_5f63218e0617b2a0",
+          "EVIDENCE_d4a9d6af6fec6e9a"
+        ],
+        "skill_id": "SKILL_PROBABILITY",
+        "trend": "unknown"
+      },
+      {
+        "confidence": 0.873333,
+        "estimate_version": "ability-1.0.0",
+        "estimated_level": 0.334733,
+        "evidence_ids": [
+          "EVIDENCE_31372ff28be949bc",
+          "EVIDENCE_713a843929c316bd",
+          "EVIDENCE_8d476896b05c1c2c"
+        ],
+        "skill_id": "SKILL_TRIG_TRANSFORMATION",
+        "trend": "unknown"
+      }
+    ],
+    "active_plan": null,
+    "created_at": "2026-07-01T10:00:00+07:00",
+    "gaps": [
+      {
+        "career_group_ids": [],
+        "current_level": 0.334733,
+        "evidence_ids": [
+          "EVIDENCE_31372ff28be949bc",
+          "EVIDENCE_713a843929c316bd",
+          "EVIDENCE_8d476896b05c1c2c"
+        ],
+        "expected_level": 0.65,
+        "gap_id": "GAP_ef86540df15111f4",
+        "gap_size": 0.315267,
+        "gap_type": "academic",
+        "gap_version": "gap-1.0.0",
+        "priority": "high",
+        "reason": "Mức hiện tại dưới ngưỡng; dựa trên evidence: EVIDENCE_31372ff28be949bc, EVIDENCE_713a843929c316bd, EVIDENCE_8d476896b05c1c2c.",
+        "skill_id": "SKILL_TRIG_TRANSFORMATION"
+      },
+      {
+        "career_group_ids": [
+          "CAREER_GROUP_DATA_AI",
+          "CAREER_GROUP_ECONOMICS"
+        ],
+        "current_level": null,
+        "evidence_ids": [
+          "EVIDENCE_70079940a9c43931",
+          "EVIDENCE_7083a09db5b807f2"
+        ],
+        "expected_level": null,
+        "gap_id": "GAP_ebf35044015a57bd",
+        "gap_size": null,
+        "gap_type": "decision",
+        "gap_version": "gap-1.0.0",
+        "priority": "medium",
+        "reason": "Chưa đủ trải nghiệm để so sánh các hướng; dựa trên evidence: EVIDENCE_70079940a9c43931, EVIDENCE_7083a09db5b807f2.",
+        "skill_id": null
+      },
+      {
+        "career_group_ids": [
+          "CAREER_GROUP_DATA_AI"
+        ],
+        "current_level": null,
+        "evidence_ids": [
+          "EVIDENCE_70079940a9c43931"
+        ],
+        "expected_level": null,
+        "gap_id": "GAP_672d4d62c7fc1fc1",
+        "gap_size": null,
+        "gap_type": "exploration",
+        "gap_version": "gap-1.0.0",
+        "priority": "high",
+        "reason": "Chưa có micro-experience đạt chuẩn; dựa trên evidence: EVIDENCE_70079940a9c43931.",
+        "skill_id": null
+      },
+      {
+        "career_group_ids": [
+          "CAREER_GROUP_ECONOMICS"
+        ],
+        "current_level": null,
+        "evidence_ids": [
+          "EVIDENCE_7083a09db5b807f2"
+        ],
+        "expected_level": null,
+        "gap_id": "GAP_a3820fdca5cda989",
+        "gap_size": null,
+        "gap_type": "exploration",
+        "gap_version": "gap-1.0.0",
+        "priority": "high",
+        "reason": "Chưa có micro-experience đạt chuẩn; dựa trên evidence: EVIDENCE_7083a09db5b807f2.",
+        "skill_id": null
+      }
+    ],
+    "market_snapshot_version": "2026-07-18-multisource|market-groups-1.0.0",
+    "outcomes": [],
+    "pipeline_version": "phase1-pipeline-1.0.0",
+    "previous_snapshot_id": null,
+    "snapshot_id": "SNAPSHOT_6ea030317a682365",
+    "student_id": "STUDENT_MINH_ANH_001"
+  },
+  "student_id": "STUDENT_MINH_ANH_001",
+  "warnings": [
+    {
+      "affected_field": "market_context",
+      "message": "Market sample for CAREER_GROUP_DATA_AI is below 5.",
+      "warning_code": "small_market_sample"
+    }
+  ]
+}

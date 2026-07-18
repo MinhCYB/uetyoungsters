@@ -6,11 +6,16 @@ from .fixtures import (
     load_followup_fixtures,
     load_initial_fixtures,
 )
-from .market import build_market_snapshot, load_fallback_market
+from .market import (
+    ReadOnlyMarketContextProvider,
+    build_market_snapshot,
+    load_fallback_market,
+)
 
 __all__ = [
     "FollowupFixtures",
     "InitialFixtures",
+    "ReadOnlyMarketContextProvider",
     "build_market_snapshot",
     "load_fallback_market",
     "load_followup_fixtures",
