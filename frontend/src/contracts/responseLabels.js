@@ -41,6 +41,18 @@ export const STEP_STATUS_LABELS = {
   skipped: 'Đã bỏ qua',
 };
 
+export const OUTCOME_LABELS = {
+  partial_improvement: 'Cải thiện một phần',
+  meaningful_improvement: 'Cải thiện rõ rệt',
+  no_meaningful_change: 'Chưa có thay đổi rõ rệt',
+  regression: 'Kết quả giảm',
+};
+
+export const CONTENT_MODE_LABELS = {
+  template_fallback: 'Nội dung mẫu an toàn',
+  fallback_demo: 'Dữ liệu dự phòng cho demo',
+};
+
 export function enumLabel(dictionary, value) {
-  return dictionary[value] || value || 'Chưa xác định';
+  return dictionary[value] || 'Chưa xác định';
 }

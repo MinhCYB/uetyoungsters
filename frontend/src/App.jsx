@@ -37,7 +37,7 @@ export default function App() {
   if (path === '/register/professional') return <ProfessionalRegister onAuthenticated={setAuthUser}/>;
   if (path === '/accept-invitation') return <AcceptInvitation onAuthenticated={setAuthUser}/>;
   if (path === '/forgot-password') return <ForgotPassword/>;
-  if (path === '/contract-preview') return <ResponseContractPreview/>;
+  if (path === '/companion' || path === '/contract-preview') return <ResponseContractPreview/>;
   if (path === '/dashboard') {
     if (!authReady) return <main className="page backend-state"><div className="loading-ring"/><h1>Đang xác thực phiên</h1></main>;
     return authUser ? <Dashboard user={authUser} onLogout={()=>setAuthUser(null)}/> : <Login onAuthenticated={setAuthUser}/>;

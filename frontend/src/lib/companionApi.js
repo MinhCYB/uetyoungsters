@@ -1,4 +1,4 @@
-const API_ROOT = (import.meta.env.VITE_API_URL || 'http://localhost:8000').replace(/\/$/, '');
+const API_ROOT = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
 
 async function post(path, body = {}) {
   const response = await fetch(`${API_ROOT}${path}`, {
