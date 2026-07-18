@@ -1,7 +1,7 @@
 """Normalized database models for the assessment domain."""
 from datetime import datetime, timezone
 
-from sqlalchemy import BigInteger, Boolean, DateTime, ForeignKey, Integer, JSON, String, Text, UniqueConstraint
+from sqlalchemy import BigInteger, Boolean, DateTime, Float, ForeignKey, Integer, JSON, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
 from database import Base
@@ -86,6 +86,8 @@ class BlueprintRule(Base):
 class Assessment(Base):
     __tablename__ = "assessments"
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), index=True)
+    tenant_id: Mapped[str | None] = mapped_column(String(36), nullable=True, index=True)
     question_set_id: Mapped[str] = mapped_column(String(40), unique=True, index=True)
     mode: Mapped[str] = mapped_column(String(80))
     seed: Mapped[int] = mapped_column(BigInteger)
@@ -104,4 +106,6 @@ class AssessmentAnswer(Base):
     question_id: Mapped[str] = mapped_column(String(120), index=True)
     question_type: Mapped[str] = mapped_column(String(40))
     answer: Mapped[object] = mapped_column(JSON)
+    score: Mapped[float | None] = mapped_column(Float, nullable=True)
+    ai_feedback: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)

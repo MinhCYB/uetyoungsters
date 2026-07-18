@@ -46,10 +46,20 @@ services:
       DATABASE_URL: postgresql://cc_user:cc_pass@db:5432/career_compass
       REDIS_URL: redis://redis:6379/0
 
+  roadmap-service:
+    build: ./roadmap-service
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://cc_user:cc_pass@db:5432/career_compass
+      BACKEND_API_URL: http://backend-api:8000
+      LLM_API_KEY: ${LLM_API_KEY:-}
+
   nginx:
     build: ./nginx
     depends_on:
       - backend-api
+      - roadmap-service
       - frontend
     ports:
       - "80:80"
