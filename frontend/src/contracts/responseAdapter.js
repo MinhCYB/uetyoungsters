@@ -15,7 +15,7 @@ export function adaptAnalysisResponse(response) {
     kind,
     requestId: required(response.request_id, 'request_id'),
     studentId: required(response.student_id, 'student_id'),
-    displayName: response.display_name || 'Minh Anh',
+    displayName: response.display_name || 'Nguyễn Minh Anh',
     generatedAt: required(response.generated_at, 'generated_at'),
     title: required(response.title, 'title'),
     summary: response.summary || null,
