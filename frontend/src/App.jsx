@@ -7,6 +7,7 @@ import { RoadmapAI } from './pages/Roadmap';
 import { Home, Locked } from './components/common';
 import { AcceptInvitation, ForgotPassword, Login, ProfessionalRegister } from './pages/Auth';
 import { Dashboard } from './pages/Dashboard';
+import { ResponseContractPreview } from './pages/ResponseContractPreview';
 import { restoreAuth } from './lib/api';
 import {
   readSession,
@@ -36,6 +37,7 @@ export default function App() {
   if (path === '/register/professional') return <ProfessionalRegister onAuthenticated={setAuthUser}/>;
   if (path === '/accept-invitation') return <AcceptInvitation onAuthenticated={setAuthUser}/>;
   if (path === '/forgot-password') return <ForgotPassword/>;
+  if (path === '/contract-preview') return <ResponseContractPreview/>;
   if (path === '/dashboard') {
     if (!authReady) return <main className="page backend-state"><div className="loading-ring"/><h1>Đang xác thực phiên</h1></main>;
     return authUser ? <Dashboard user={authUser} onLogout={()=>setAuthUser(null)}/> : <Login onAuthenticated={setAuthUser}/>;
