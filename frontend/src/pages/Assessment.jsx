@@ -74,7 +74,8 @@ function AssessmentPersistent() {
   const [lastSavedAt, setLastSavedAt] = useState(null);
   const [index, setIndex] = useState(cached?.index || 0);
   const [responses, setResponses] = useState(cached?.responses || {});
-  const apiBase = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
+  const configuredApiBase = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
+  const apiBase = configuredApiBase.endsWith("/api") ? configuredApiBase : `${configuredApiBase}/api`;
   const responsesRef = useRef(cached?.responses || {});
   const dirtyQuestionIds = useRef(/* @__PURE__ */ new Set());
   const saveInFlight = useRef(false);
@@ -84,7 +85,7 @@ function AssessmentPersistent() {
   useEffect(() => {
     if (payload) return;
     const controller = new AbortController();
-    api(`${apiBase}/api/assessment/questions?mode=standard_25_35_min`, { signal: controller.signal, headers: { Accept: "application/json" } }).then((data) => {
+    api(`${apiBase}/assessment/questions?mode=standard_25_35_min`, { signal: controller.signal, headers: { Accept: "application/json" } }).then((data) => {
       if (!Array.isArray(data.questions)) throw new Error("Ph\u1EA3n h\u1ED3i kh\xF4ng c\xF3 tr\u01B0\u1EDDng questions d\u1EA1ng m\u1EA3ng");
       setPayload(data);
       setError(null);
@@ -105,7 +106,7 @@ function AssessmentPersistent() {
   useEffect(() => {
     if (!payload?.assessment_id) return;
     let active = true;
-    api(`${apiBase}/api/assessment/${payload.assessment_id}/draft`).then((draft) => {
+    api(`${apiBase}/assessment/${payload.assessment_id}/draft`).then((draft) => {
       if (!active) return;
       draftVersion.current = draft.version || 1;
       setLastSavedAt(draft.last_saved_at || null);
@@ -133,7 +134,7 @@ function AssessmentPersistent() {
     saveInFlight.current = true;
     setSaveState("saving");
     try {
-      const result = await api(`${apiBase}/api/assessment/${payload.assessment_id}/draft`, { method: "PATCH", keepalive, body: JSON.stringify({ question_set_id: payload.question_set_id, version: draftVersion.current, current_question_id: currentQuestionId.current, responses: changed }) });
+      const result = await api(`${apiBase}/assessment/${payload.assessment_id}/draft`, { method: "PATCH", keepalive, body: JSON.stringify({ question_set_id: payload.question_set_id, version: draftVersion.current, current_question_id: currentQuestionId.current, responses: changed }) });
       draftVersion.current = result.version;
       setLastSavedAt(result.saved_at || (/* @__PURE__ */ new Date()).toISOString());
       setSaveState("saved");
@@ -142,7 +143,7 @@ function AssessmentPersistent() {
       metadataDirty.current = true;
       if (reason.status === 409) {
         try {
-          const draft = await api(`${apiBase}/api/assessment/${payload.assessment_id}/draft`);
+          const draft = await api(`${apiBase}/assessment/${payload.assessment_id}/draft`);
           draftVersion.current = draft.version;
           setLastSavedAt(draft.last_saved_at || null);
           setSaveState("pending");
@@ -204,7 +205,7 @@ function AssessmentPersistent() {
     setSubmitting(true);
     setSubmitError(null);
     try {
-      const result = await api(`${apiBase}/api/assessment/submit`, { method: "POST", headers: { Accept: "application/json" }, body: JSON.stringify({ assessment_id: payload.assessment_id, question_set_id: payload.question_set_id, mode: payload.mode, seed: payload.seed, responses: visibleResponses }) });
+      const result = await api(`${apiBase}/assessment/submit`, { method: "POST", headers: { Accept: "application/json" }, body: JSON.stringify({ assessment_id: payload.assessment_id, question_set_id: payload.question_set_id, mode: payload.mode, seed: payload.seed, responses: visibleResponses }) });
       const session = readSession();
       const nameQuestion = questions.find((item) => item.field === "display_name");
       saveSession({ displayName: nameQuestion ? String(result.responses?.[nameQuestion.id] || "").trim() || null : session.displayName, answers: { assessmentId: payload.assessment_id || null, questionSetId: payload.question_set_id, responses: result.responses }, assessmentCompleted: true, profileStatus: "ready_for_review" });
