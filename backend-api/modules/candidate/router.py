@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from database import get_db
 from modules.auth.dependencies import current_user
-from modules.auth.models import User
+from modules.auth.models import Role, User
 
 from .snapshot_builder import (SnapshotBuildError,
                                build_initial_analysis_request,
@@ -31,6 +31,8 @@ def my_profile(db: Session = Depends(get_db), user: User = Depends(current_user)
 @router.patch("/me", response_model=CandidateProfileResponse)
 def update_my_profile(payload: CandidateProfileUpdate, db: Session = Depends(get_db), user: User = Depends(current_user)):
     profile = _profile(db, user)
+    if user.role == Role.STUDENT or profile.profile_type in {"HIGH_SCHOOL", "UNIVERSITY"}:
+        raise HTTPException(403, "Hồ sơ học sinh/sinh viên do giáo viên quản lý; bạn chỉ có thể làm bài đánh giá năng lực")
     for key, value in payload.model_dump(exclude_unset=True).items():
         setattr(profile, key, value)
     profile.version += 1
@@ -48,6 +50,8 @@ def academic_records(db: Session = Depends(get_db), user: User = Depends(current
 @router.post("/me/academic-records", response_model=AcademicRecordResponse, status_code=201)
 def create_academic_record(payload: AcademicRecordInput, db: Session = Depends(get_db), user: User = Depends(current_user)):
     profile = _profile(db, user)
+    if user.role == Role.STUDENT:
+        raise HTTPException(403, "Bảng điểm của người học do giáo viên quản lý")
     row = AcademicRecord(candidate_profile_id=profile.id, **payload.model_dump())
     profile.version += 1
     db.add(row)
@@ -66,6 +70,8 @@ def _owned_record(db: Session, user: User, record_id: str) -> tuple[CandidatePro
 
 @router.put("/me/academic-records/{record_id}", response_model=AcademicRecordResponse)
 def update_academic_record(record_id: str, payload: AcademicRecordInput, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    if user.role == Role.STUDENT:
+        raise HTTPException(403, "Bảng điểm của người học do giáo viên quản lý")
     profile, row = _owned_record(db, user, record_id)
     for key, value in payload.model_dump().items():
         setattr(row, key, value)
@@ -77,6 +83,8 @@ def update_academic_record(record_id: str, payload: AcademicRecordInput, db: Ses
 
 @router.delete("/me/academic-records/{record_id}", status_code=204)
 def delete_academic_record(record_id: str, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    if user.role == Role.STUDENT:
+        raise HTTPException(403, "Bảng điểm của người học do giáo viên quản lý")
     profile, row = _owned_record(db, user, record_id)
     profile.version += 1
     db.delete(row)

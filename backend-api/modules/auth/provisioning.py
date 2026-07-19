@@ -11,7 +11,11 @@ from database import get_db
 from modules.auth.dependencies import require_roles
 from modules.auth.models import AuditLog, ClassAssignment, Invitation, Role, SchoolClass, Tenant, User, UserStatus
 from modules.auth.security import hash_token
-from modules.candidate.models import CandidateProfile
+from modules.candidate.models import AcademicRecord, CandidateProfile, TeacherEvaluation
+from modules.candidate.schemas import (AcademicRecordInput, AcademicRecordResponse,
+                                       CandidateProfileUpdate,
+                                       TeacherEvaluationInput,
+                                       TeacherEvaluationResponse)
 from modules.assessment.models import Assessment
 
 router = APIRouter(tags=["provisioning"])
@@ -29,6 +33,15 @@ class InviteInput(BaseModel):
 
 class StudentInvite(InviteInput):
     profile_type: Literal["HIGH_SCHOOL", "UNIVERSITY"] = "HIGH_SCHOOL"
+    student_code: str = Field(min_length=1, max_length=80)
+    gender: str | None = Field(default=None, max_length=30)
+    age: int | None = Field(default=None, ge=10, le=100)
+    region: str | None = Field(default=None, max_length=200)
+    school: str | None = Field(default=None, max_length=240)
+    grade: str | None = Field(default=None, max_length=40)
+    major: str | None = Field(default=None, max_length=240)
+    study_year: int | None = Field(default=None, ge=1, le=12)
+    gpa: float | None = Field(default=None, ge=0, le=10)
 
 
 class ClassInput(BaseModel):
@@ -52,7 +65,8 @@ def invite(db, actor, payload, role, tenant_id, class_id=None):
         raise HTTPException(409, "Email đã có tài khoản")
     raw = secrets.token_urlsafe(32)
     profile_type = getattr(payload, "profile_type", None) if role == Role.STUDENT else None
-    row = Invitation(email=payload.email.lower(), display_name=payload.display_name, role=role, tenant_id=tenant_id, class_id=class_id, profile_type=profile_type, token_hash=hash_token(raw), expires_at=datetime.now(timezone.utc) + timedelta(days=3), invited_by=actor.id)
+    profile_data = payload.model_dump(exclude={"email", "display_name", "profile_type"}, exclude_none=True) if role == Role.STUDENT else {}
+    row = Invitation(email=payload.email.lower(), display_name=payload.display_name, role=role, tenant_id=tenant_id, class_id=class_id, profile_type=profile_type, profile_data=profile_data, token_hash=hash_token(raw), expires_at=datetime.now(timezone.utc) + timedelta(days=3), invited_by=actor.id)
     db.add(row); db.flush(); audit(db, actor, "ACCOUNT_INVITED", "INVITATION", row.id, tenant_id, {"role": role.value, "profile_type": profile_type, "email": payload.email.lower()}); db.commit()
     return {"id": row.id, "email": row.email, "role": role.value, "profileType": profile_type, "expiresAt": row.expires_at, "acceptToken": raw}
 
@@ -134,6 +148,72 @@ def class_students(class_id: str, db: Session = Depends(get_db), actor: User = D
 def invite_student(class_id: str, payload: StudentInvite, db: Session = Depends(get_db), actor: User = Depends(require_roles(Role.HOMEROOM_TEACHER))):
     if not active_assignment(db, actor, class_id): raise HTTPException(403, "Bạn không được phân công lớp này")
     return invite(db, actor, payload, Role.STUDENT, actor.tenant_id, class_id)
+
+
+def assigned_student_profile(db: Session, actor: User, class_id: str, student_id: str) -> CandidateProfile:
+    if not active_assignment(db, actor, class_id):
+        raise HTTPException(403, "Bạn không được phân công lớp này")
+    profile = db.scalar(select(CandidateProfile).where(
+        CandidateProfile.user_id == student_id,
+        CandidateProfile.tenant_id == actor.tenant_id,
+        CandidateProfile.class_id == class_id,
+        CandidateProfile.profile_type.in_(("HIGH_SCHOOL", "UNIVERSITY")),
+    ))
+    if not profile:
+        raise HTTPException(404, "Không tìm thấy người học trong lớp")
+    return profile
+
+
+@router.get("/api/teacher/classes/{class_id}/students/{student_id}/profile")
+def student_profile(class_id: str, student_id: str, db: Session = Depends(get_db), actor: User = Depends(require_roles(Role.HOMEROOM_TEACHER))):
+    return assigned_student_profile(db, actor, class_id, student_id)
+
+
+@router.patch("/api/teacher/classes/{class_id}/students/{student_id}/profile")
+def update_student_profile(class_id: str, student_id: str, payload: CandidateProfileUpdate, db: Session = Depends(get_db), actor: User = Depends(require_roles(Role.HOMEROOM_TEACHER))):
+    profile = assigned_student_profile(db, actor, class_id, student_id)
+    changes = payload.model_dump(exclude_unset=True)
+    if changes.get("profile_type") not in (None, "HIGH_SCHOOL", "UNIVERSITY"):
+        raise HTTPException(422, "Giáo viên chỉ quản lý hồ sơ người học")
+    for key, value in changes.items():
+        setattr(profile, key, value)
+    profile.version += 1
+    audit(db, actor, "STUDENT_PROFILE_UPDATED", "CANDIDATE_PROFILE", profile.id, details={"student_id": student_id})
+    db.commit(); db.refresh(profile)
+    return profile
+
+
+@router.get("/api/teacher/classes/{class_id}/students/{student_id}/academic-records", response_model=list[AcademicRecordResponse])
+def student_academic_records(class_id: str, student_id: str, db: Session = Depends(get_db), actor: User = Depends(require_roles(Role.HOMEROOM_TEACHER))):
+    profile = assigned_student_profile(db, actor, class_id, student_id)
+    return db.scalars(select(AcademicRecord).where(AcademicRecord.candidate_profile_id == profile.id).order_by(AcademicRecord.semester, AcademicRecord.subject)).all()
+
+
+@router.post("/api/teacher/classes/{class_id}/students/{student_id}/academic-records", response_model=AcademicRecordResponse, status_code=201)
+def add_student_academic_record(class_id: str, student_id: str, payload: AcademicRecordInput, db: Session = Depends(get_db), actor: User = Depends(require_roles(Role.HOMEROOM_TEACHER))):
+    profile = assigned_student_profile(db, actor, class_id, student_id)
+    row = AcademicRecord(candidate_profile_id=profile.id, **payload.model_dump())
+    profile.version += 1
+    db.add(row); db.flush()
+    audit(db, actor, "STUDENT_ACADEMIC_RECORD_ADDED", "ACADEMIC_RECORD", row.id, details={"student_id": student_id, "subject": row.subject})
+    db.commit(); db.refresh(row)
+    return row
+
+
+@router.get("/api/teacher/classes/{class_id}/students/{student_id}/evaluations", response_model=list[TeacherEvaluationResponse])
+def student_evaluations(class_id: str, student_id: str, db: Session = Depends(get_db), actor: User = Depends(require_roles(Role.HOMEROOM_TEACHER))):
+    profile = assigned_student_profile(db, actor, class_id, student_id)
+    return db.scalars(select(TeacherEvaluation).where(TeacherEvaluation.candidate_profile_id == profile.id).order_by(TeacherEvaluation.created_at.desc())).all()
+
+
+@router.post("/api/teacher/classes/{class_id}/students/{student_id}/evaluations", response_model=TeacherEvaluationResponse, status_code=201)
+def evaluate_student(class_id: str, student_id: str, payload: TeacherEvaluationInput, db: Session = Depends(get_db), actor: User = Depends(require_roles(Role.HOMEROOM_TEACHER))):
+    profile = assigned_student_profile(db, actor, class_id, student_id)
+    row = TeacherEvaluation(candidate_profile_id=profile.id, teacher_id=actor.id, rating=0, **payload.model_dump())
+    profile.version += 1
+    db.add(row); db.flush(); audit(db, actor, "STUDENT_EVALUATED", "TEACHER_EVALUATION", row.id, details={"student_id": student_id})
+    db.commit(); db.refresh(row)
+    return row
 
 
 @router.delete("/api/admin/tenants/{tenant_id}", status_code=204)

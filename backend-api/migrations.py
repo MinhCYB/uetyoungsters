@@ -27,7 +27,9 @@ ASSESSMENT_DRAFT_MIGRATIONS = (
        END IF;
        END $$""",
     "ALTER TABLE invitations ADD COLUMN IF NOT EXISTS profile_type VARCHAR(30) NULL",
+    "ALTER TABLE invitations ADD COLUMN IF NOT EXISTS profile_data JSONB NOT NULL DEFAULT '{}'::jsonb",
     "ALTER TABLE candidate_profiles ADD COLUMN IF NOT EXISTS student_code VARCHAR(80) NULL",
+    "ALTER TABLE teacher_evaluations ALTER COLUMN rating SET DEFAULT 0",
 )
 
 CANDIDATE_PROFILE_BACKFILL = (

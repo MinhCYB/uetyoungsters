@@ -1,9 +1,9 @@
-from fastapi import APIRouter, BackgroundTasks, Depends, File, Response, UploadFile
+from fastapi import APIRouter, BackgroundTasks, Depends, File, HTTPException, Response, UploadFile
 from sqlalchemy.orm import Session
 
 from database import get_db
 from modules.auth.dependencies import current_user
-from modules.auth.models import User
+from modules.auth.models import Role, User
 
 from database import SessionLocal
 from .schemas import DocumentDetail, DocumentDownload, DocumentSummary
@@ -12,6 +12,11 @@ from .service import (delete_document, document_for_user, documents_for_user,
                       upload_document)
 
 router = APIRouter()
+
+
+def require_profile_document_access(user: User) -> None:
+    if user.role == Role.STUDENT:
+        raise HTTPException(403, "Hồ sơ học sinh/sinh viên do giáo viên quản lý; tài khoản người học chỉ làm bài đánh giá")
 
 
 @router.get("", response_model=list[DocumentSummary])
@@ -31,6 +36,7 @@ def upload_cv(
     db: Session = Depends(get_db),
     user: User = Depends(current_user),
 ):
+    require_profile_document_access(user)
     row = upload_document(db, user.id, file)
     background_tasks.add_task(_process_in_background, row.id)
     return row
@@ -65,6 +71,7 @@ def document_download(document_id: str, db: Session = Depends(get_db), user: Use
 
 @router.post("/{document_id}/extract", response_model=DocumentSummary, status_code=202)
 def retry_extraction(document_id: str, background_tasks: BackgroundTasks, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    require_profile_document_access(user)
     row = retry_document(db, user.id, document_id)
     background_tasks.add_task(_process_in_background, row.id)
     return row
@@ -72,5 +79,6 @@ def retry_extraction(document_id: str, background_tasks: BackgroundTasks, db: Se
 
 @router.delete("/{document_id}", status_code=204)
 def remove_document(document_id: str, db: Session = Depends(get_db), user: User = Depends(current_user)):
+    require_profile_document_access(user)
     delete_document(db, user.id, document_id)
     return Response(status_code=204)

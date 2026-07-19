@@ -53,3 +53,14 @@ class AcademicRecordResponse(AcademicRecordInput):
     id: str
     created_at: datetime
     updated_at: datetime
+
+
+class TeacherEvaluationInput(BaseModel):
+    observation: str = Field(min_length=1, max_length=4000)
+
+
+class TeacherEvaluationResponse(TeacherEvaluationInput):
+    model_config = ConfigDict(from_attributes=True)
+    id: str
+    teacher_id: str
+    created_at: datetime

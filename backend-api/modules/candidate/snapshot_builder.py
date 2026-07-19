@@ -11,8 +11,8 @@ from modules.auth.models import User
 from .analysis_contracts import (AcademicRecord as AcademicRecordContract,
                                  AssessmentAttempt, AssessmentPurpose,
                                  InitialAnalysisRequest, Student,
-                                 StudentProfilePayload)
-from .models import AcademicRecord, CandidateProfile
+                                 StudentProfilePayload, TeacherObservation)
+from .models import AcademicRecord, CandidateProfile, TeacherEvaluation
 
 
 class SnapshotBuildError(ValueError):
@@ -38,6 +38,7 @@ def build_student_snapshot(db: Session, user: User) -> StudentProfilePayload:
 
     student_id = _external("stu", user.id)
     academic_rows = db.query(AcademicRecord).filter_by(candidate_profile_id=profile.id).order_by(AcademicRecord.created_at).all()
+    evaluations = db.query(TeacherEvaluation).filter_by(candidate_profile_id=profile.id).order_by(TeacherEvaluation.created_at).all()
     assessments = db.query(Assessment).filter_by(user_id=user.id).order_by(Assessment.created_at).all()
 
     return StudentProfilePayload(
@@ -64,11 +65,23 @@ def build_student_snapshot(db: Session, user: User) -> StudentProfilePayload:
                 score=row.score,
                 score_scale=10,
                 recorded_at=row.updated_at,
-                source="user_entry",
+                source="teacher_entry",
             )
             for row in academic_rows
         ],
-        teacher_observations=[],
+        teacher_observations=[
+            TeacherObservation(
+                observation_id=_external("obs", row.id),
+                student_id=student_id,
+                teacher_id=_external("tch", row.teacher_id),
+                observed_at=row.created_at,
+                context="classroom",
+                skill_ids=["general_ability"],
+                observation=row.observation,
+                visibility="student_visible",
+            )
+            for row in evaluations
+        ],
         assessment_attempts=[
             AssessmentAttempt(
                 attempt_id=_external("att", row.id),

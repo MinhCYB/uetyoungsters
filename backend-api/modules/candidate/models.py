@@ -59,3 +59,15 @@ class AcademicRecord(Base):
     teacher_note: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow, onupdate=_utcnow)
+
+
+class TeacherEvaluation(Base):
+    """A teacher's dated evaluation of one learner in an assigned class."""
+    __tablename__ = "teacher_evaluations"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_uuid)
+    candidate_profile_id: Mapped[str] = mapped_column(ForeignKey("candidate_profiles.id"), index=True)
+    teacher_id: Mapped[str] = mapped_column(ForeignKey("users.id"), index=True)
+    rating: Mapped[int] = mapped_column(Integer, default=0)
+    observation: Mapped[str] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)

@@ -90,6 +90,7 @@ class Invitation(Base):
     tenant_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
     class_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
     profile_type: Mapped[str | None] = mapped_column(String(30), nullable=True)
+    profile_data: Mapped[dict] = mapped_column(JSON, default=dict)
     token_hash: Mapped[str] = mapped_column(String(64), unique=True)
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     accepted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

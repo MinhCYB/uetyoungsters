@@ -1,6 +1,7 @@
 import os
 import secrets
 from datetime import datetime, timedelta, timezone
+from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import BaseModel, EmailStr, Field
@@ -23,6 +24,7 @@ class Credentials(BaseModel):
 
 class Registration(Credentials):
     display_name: str = Field(min_length=2, max_length=160)
+    graduated: Literal[True]
 
 
 class AcceptInvitation(BaseModel):
@@ -103,7 +105,8 @@ def accept_invitation(token: str, payload: AcceptInvitation, response: Response,
     db.add(user); db.flush()
     if invitation.role == Role.STUDENT:
         profile_type = invitation.profile_type or "HIGH_SCHOOL"
-        db.add(CandidateProfile(user_id=user.id, tenant_id=invitation.tenant_id, class_id=invitation.class_id, student_code=user.id[:8], profile_type=profile_type))
+        profile_data = dict(invitation.profile_data or {})
+        db.add(CandidateProfile(user_id=user.id, tenant_id=invitation.tenant_id, class_id=invitation.class_id, profile_type=profile_type, **profile_data))
     invitation.accepted_at = now
     db.add(AuditLog(actor_id=invitation.invited_by, tenant_id=invitation.tenant_id, action="INVITATION_ACCEPTED", resource_type="USER", resource_id=user.id))
     db.commit(); db.refresh(user)
