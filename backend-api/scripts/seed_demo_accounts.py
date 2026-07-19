@@ -1,4 +1,3 @@
--- Active: 1778558687701@@127.0.0.1@5432
 """Create the five demo roles and their required school relationships.
 
 Safe to run repeatedly: existing demo rows are updated instead of duplicated.
@@ -14,10 +13,10 @@ from sqlalchemy import select
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from database import SessionLocal, init_db
-from modules.auth.models import (ClassAssignment, ProfessionalProfile, Role,
-                                 SchoolClass, StudentProfile, Tenant, User,
-                                 UserStatus)
+from modules.auth.models import (ClassAssignment, Role, SchoolClass, Tenant,
+                                 User, UserStatus)
 from modules.auth.security import hash_password
+from modules.candidate.models import CandidateProfile
 
 
 PASSWORD = os.getenv("DEMO_PASSWORD", "Demo@123456")
@@ -74,7 +73,8 @@ def seed() -> None:
         professional = upsert_user(db, *ACCOUNTS[4], tenant_id=None)
 
         classroom = db.scalar(select(SchoolClass).where(
-            SchoolClass.tenant_id == tenant.id, SchoolClass.name == "Demo 12A1",
+            SchoolClass.tenant_id == tenant.id,
+            SchoolClass.name == "Demo 12A1",
             SchoolClass.school_year == "2026-2027",
         ))
         if not classroom:
@@ -96,30 +96,29 @@ def seed() -> None:
                 created_by=admin.id,
             ))
 
-        student_profile = db.scalar(select(StudentProfile).where(StudentProfile.user_id == student.id))
+        student_profile = db.scalar(select(CandidateProfile).where(CandidateProfile.user_id == student.id))
         if not student_profile:
-            student_profile = StudentProfile(
-                user_id=student.id,
-                tenant_id=tenant.id,
-                class_id=classroom.id,
-                student_code="DEMO-STUDENT-001",
-            )
+            student_profile = CandidateProfile(user_id=student.id)
             db.add(student_profile)
         student_profile.tenant_id = tenant.id
         student_profile.class_id = classroom.id
         student_profile.profile_type = "HIGH_SCHOOL"
         student_profile.student_code = "DEMO-STUDENT-001"
-        student_profile.basic_information = {"school": tenant.name, "grade": "12"}
+        student_profile.school = tenant.name
+        student_profile.grade = "12"
 
-        professional_profile = db.scalar(select(ProfessionalProfile).where(ProfessionalProfile.user_id == professional.id))
+        professional_profile = db.scalar(select(CandidateProfile).where(CandidateProfile.user_id == professional.id))
         if not professional_profile:
-            professional_profile = ProfessionalProfile(user_id=professional.id)
+            professional_profile = CandidateProfile(user_id=professional.id)
             db.add(professional_profile)
-        professional_profile.current_career_id = "CAREER_DATA_ANALYST"
-        professional_profile.parsed_data = {"current_job": "Data Analyst", "experience_years": 2}
+        professional_profile.tenant_id = None
+        professional_profile.class_id = None
+        professional_profile.profile_type = "PROFESSIONAL"
+        professional_profile.current_job = "Data Analyst"
+        professional_profile.experience_years = 2
 
         db.commit()
-        print("Seeded 5 demo roles, tenant, class, assignment, and role-specific profiles.")
+        print("Seeded 5 demo roles, tenant, class, assignment, and candidate profiles.")
 
 
 if __name__ == "__main__":

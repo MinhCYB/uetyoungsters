@@ -12,17 +12,24 @@ function meetsTextRequirement(question, value) {
   const words = wordCount(text);
   return words >= (question.min_words || 1) && text.length >= (question.min_chars || 1) && (!question.max_words || words <= question.max_words);
 }
+function normalizeOption(option, index) {
+  if (option && typeof option === "object") {
+    const optionValue = option.value ?? option.id ?? String(index);
+    return { value: optionValue, label: String(option.label ?? option.prompt ?? optionValue) };
+  }
+  return { value: option, label: String(option ?? "") };
+}
 function QuestionInput({ question, value, setValue, toggleOption }) {
   const options = question.options || question.scale?.labels || [];
   if (["single_choice", "likert_5"].includes(question.type)) return <div className="backend-options">{options.map((option, i) => {
-    const optionValue = typeof option === "object" ? option.value ?? option.id : question.type === "likert_5" ? i + (question.scale?.min || 1) : option;
-    const label = typeof option === "object" ? option.label : option;
+    const normalized = normalizeOption(option, i);
+    const optionValue = typeof option === "object" ? normalized.value : question.type === "likert_5" ? i + (question.scale?.min || 1) : normalized.value;
+    const label = normalized.label;
     return <button key={String(optionValue)} className={value === optionValue ? "chosen" : ""} onClick={() => setValue(optionValue)}><span>{label}</span></button>;
   })}</div>;
-  if (question.type === "multi_choice") return <div className="backend-options">{options.map((option) => {
-    const optionValue = typeof option === "object" ? option.value ?? option.id : option;
-    const label = typeof option === "object" ? option.label : option;
-    return <button key={String(optionValue)} className={value.includes(optionValue) ? "chosen" : ""} onClick={() => toggleOption(optionValue)}><span>{label}</span></button>;
+  if (question.type === "multi_choice") return <div className="backend-options">{options.map((option, i) => {
+    const { value: optionValue, label } = normalizeOption(option, i);
+    return <button key={`${String(optionValue)}-${i}`} className={value.includes(optionValue) ? "chosen" : ""} onClick={() => toggleOption(optionValue)}><span>{label}</span></button>;
   })}</div>;
   if (question.type === "number") return <div className="form-card"><label>Câu trả lời<input type="number" min={question.min} max={question.max} value={value} onChange={(event) => setValue(event.target.valueAsNumber)} /></label></div>;
   const valid = meetsTextRequirement(question, value);
@@ -44,7 +51,10 @@ function QuestionInputV2(props) {
   if (question.type === "point_allocation") {
     const allocation = value && typeof value === "object" && !Array.isArray(value) ? value : {};
     const total = Object.values(allocation).reduce((sum, n) => sum + (Number(n) || 0), 0);
-    return <div className="allocation-list">{(question.options || []).map((option) => <label key={option}><span>{option}</span><input type="number" min="0" max="100" value={allocation[option] ?? ""} onChange={(e) => setValue({ ...allocation, [option]: Math.max(0, Number(e.target.value)) })} /></label>)}<div className={total === 100 ? "allocation-total valid" : "allocation-total"}><span>Tổng điểm</span><b>{total}/100</b></div></div>;
+    return <div className="allocation-list">{(question.options || []).map((option, index) => {
+      const { value: optionValue, label } = normalizeOption(option, index);
+      return <label key={`${String(optionValue)}-${index}`}><span>{label}</span><input type="number" min="0" max="100" value={allocation[optionValue] ?? ""} onChange={(e) => setValue({ ...allocation, [optionValue]: Math.max(0, Number(e.target.value)) })} /></label>;
+    })}<div className={total === 100 ? "allocation-total valid" : "allocation-total"}><span>Tổng điểm</span><b>{total}/100</b></div></div>;
   }
   if (question.type === "tradeoff_group") {
     const answers = value && typeof value === "object" && !Array.isArray(value) ? value : {};

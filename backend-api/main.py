@@ -5,11 +5,15 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from database import init_db
+from database import SessionLocal, init_db
 from modules.assessment.router import router as assessment_router
 from modules.auth.provisioning import router as provisioning_router
 from modules.auth.router import router as auth_router
 from modules.recommendation.router import router as career_router
+from modules.recommendation.matches_router import router as recommendation_router
+from modules.document.router import router as document_router
+from modules.candidate.router import router as candidate_router
+from modules.recommendation.bootstrap import ensure_career_catalog
 
 app = FastAPI(title="Career Compass API", version="0.1.0")
 app.add_middleware(
@@ -34,8 +38,11 @@ def on_startup():
 
 app.include_router(assessment_router, prefix="/api/assessment", tags=["assessment"])
 app.include_router(career_router, prefix="/api/careers", tags=["careers"])
+app.include_router(recommendation_router, prefix="/api/recommendations", tags=["recommendations"])
 app.include_router(auth_router)
 app.include_router(provisioning_router)
+app.include_router(document_router, prefix="/api/documents", tags=["documents"])
+app.include_router(candidate_router, prefix="/api/candidate", tags=["candidate"])
 
 
 @app.get("/health")

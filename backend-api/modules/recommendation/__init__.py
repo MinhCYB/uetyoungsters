@@ -1,1 +1,1 @@
-# TODO: implement recommendation module
+"""Career catalog and recommendation results."""

@@ -1,1 +1,1 @@
-# TODO: implement candidate module
+"""Candidate profiles, academic records, and AI snapshots."""

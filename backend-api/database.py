@@ -36,6 +36,9 @@ def init_db():
     from modules.assessment import models as assessment_models  # noqa: F401
     from modules.auth import models as auth_models  # noqa: F401
     from modules.candidate import models as candidate_models  # noqa: F401
+    from modules.document import models as document_models  # noqa: F401
     from modules.recommendation import models as recommendation_models  # noqa: F401
 
     Base.metadata.create_all(bind=engine)
+    from migrations import run_migrations
+    run_migrations(engine)

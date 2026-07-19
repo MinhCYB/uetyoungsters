@@ -329,7 +329,7 @@ def main():
             parser.error("--database-url or DATABASE_URL is required unless --validate-only is used")
         os.environ["DATABASE_URL"] = args.database_url
         sys.path.insert(0, str(BACKEND_API_DIR))
-        from modules.assessment.store import import_question_bank
+        from modules.assessment.repository import import_question_bank
         from database import SessionLocal, init_db
         init_db()
         with SessionLocal() as db:

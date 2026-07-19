@@ -1,6 +1,7 @@
 import os
 import secrets
 from datetime import datetime, timedelta, timezone
+from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import BaseModel, EmailStr, Field
@@ -9,8 +10,9 @@ from sqlalchemy.orm import Session
 
 from database import get_db
 from modules.auth.dependencies import current_user
-from modules.auth.models import AuditLog, Invitation, RefreshToken, Role, StudentProfile, User, UserStatus
+from modules.auth.models import AuditLog, Invitation, RefreshToken, Role, User, UserStatus
 from modules.auth.security import hash_password, hash_token, make_access_token, verify_password
+from modules.candidate.models import CandidateProfile
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -22,6 +24,7 @@ class Credentials(BaseModel):
 
 class Registration(Credentials):
     display_name: str = Field(min_length=2, max_length=160)
+    graduated: Literal[True]
 
 
 class AcceptInvitation(BaseModel):
@@ -46,7 +49,9 @@ def register(payload: Registration, response: Response, db: Session = Depends(ge
     if db.scalar(select(User).where(User.email == email)):
         raise HTTPException(409, "Email đã được sử dụng")
     user = User(email=email, password_hash=hash_password(payload.password), display_name=payload.display_name, role=Role.PROFESSIONAL, tenant_id=None, status=UserStatus.ACTIVE, email_verified_at=datetime.now(timezone.utc))
-    db.add(user); db.commit(); db.refresh(user)
+    db.add(user); db.flush()
+    db.add(CandidateProfile(user_id=user.id, tenant_id=None, class_id=None, profile_type="PROFESSIONAL"))
+    db.commit(); db.refresh(user)
     return issue_session(user, db, response)
 
 
@@ -99,7 +104,9 @@ def accept_invitation(token: str, payload: AcceptInvitation, response: Response,
     user = User(email=invitation.email, display_name=invitation.display_name, password_hash=hash_password(payload.password), role=invitation.role, tenant_id=invitation.tenant_id, status=UserStatus.ACTIVE, email_verified_at=now, created_by=invitation.invited_by)
     db.add(user); db.flush()
     if invitation.role == Role.STUDENT:
-        db.add(StudentProfile(tenant_id=invitation.tenant_id, user_id=user.id, class_id=invitation.class_id, student_code=user.id[:8]))
+        profile_type = invitation.profile_type or "HIGH_SCHOOL"
+        profile_data = dict(invitation.profile_data or {})
+        db.add(CandidateProfile(user_id=user.id, tenant_id=invitation.tenant_id, class_id=invitation.class_id, profile_type=profile_type, **profile_data))
     invitation.accepted_at = now
     db.add(AuditLog(actor_id=invitation.invited_by, tenant_id=invitation.tenant_id, action="INVITATION_ACCEPTED", resource_type="USER", resource_id=user.id))
     db.commit(); db.refresh(user)
