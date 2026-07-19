@@ -1,0 +1,35 @@
+[
+  {
+    "record_id": "ACADEMIC_TRIG_001",
+    "student_id": "STUDENT_MINH_ANH_001",
+    "subject_id": "SUBJECT_MATH",
+    "topic_id": "SKILL_TRIG_TRANSFORMATION",
+    "score": 4.5,
+    "max_score": 10.0,
+    "observed_at": "2026-06-20T08:00:00+07:00",
+    "source": "synthetic_school_record",
+    "schema_version": "1.0.0"
+  },
+  {
+    "record_id": "ACADEMIC_PROBABILITY_001",
+    "student_id": "STUDENT_MINH_ANH_001",
+    "subject_id": "SUBJECT_MATH",
+    "topic_id": "SKILL_PROBABILITY",
+    "score": 7.8,
+    "max_score": 10.0,
+    "observed_at": "2026-06-20T08:00:00+07:00",
+    "source": "synthetic_school_record",
+    "schema_version": "1.0.0"
+  },
+  {
+    "record_id": "ACADEMIC_DATA_REASONING_001",
+    "student_id": "STUDENT_MINH_ANH_001",
+    "subject_id": "SUBJECT_MATH",
+    "topic_id": "SKILL_DATA_REASONING",
+    "score": 7.5,
+    "max_score": 10.0,
+    "observed_at": "2026-06-20T08:00:00+07:00",
+    "source": "synthetic_school_record",
+    "schema_version": "1.0.0"
+  }
+]

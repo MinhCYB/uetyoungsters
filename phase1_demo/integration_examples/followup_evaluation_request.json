@@ -1,0 +1,240 @@
+{
+  "activity_results": [
+    {
+      "activity_id": "ACTIVITY_DATA_INSIGHTS",
+      "activity_result_id": "ACTIVITY_RESULT_DATA_001",
+      "activity_version": "1.0.0",
+      "career_group_id": "CAREER_GROUP_DATA_AI",
+      "completed": true,
+      "completed_at": "2026-07-15T09:00:00+07:00",
+      "interest_after": 4.0,
+      "interest_before": 3.0,
+      "interest_max_score": 5.0,
+      "max_score": 10.0,
+      "preferred_part": "Tìm các điểm bất thường và giải thích ba insight.",
+      "rubric_score": 8.0,
+      "schema_version": "1.0.0",
+      "student_id": "STUDENT_MINH_ANH_001"
+    }
+  ],
+  "assessment_attempts": [
+    {
+      "assessment_id": "ASSESSMENT_FOUNDATION_MATH",
+      "assessment_type": "pretest",
+      "assessment_version": "1.0.0",
+      "attempt_id": "ASSESSMENT_PRETEST_001",
+      "completed_at": "2026-07-01T10:00:00+07:00",
+      "schema_version": "1.0.0",
+      "skill_scores": [
+        {
+          "max_score": 10.0,
+          "score": 4.0,
+          "skill_id": "SKILL_TRIG_TRANSFORMATION"
+        },
+        {
+          "max_score": 10.0,
+          "score": 8.0,
+          "skill_id": "SKILL_PROBABILITY"
+        },
+        {
+          "max_score": 10.0,
+          "score": 7.5,
+          "skill_id": "SKILL_DATA_REASONING"
+        }
+      ],
+      "student_id": "STUDENT_MINH_ANH_001"
+    },
+    {
+      "assessment_id": "ASSESSMENT_FOUNDATION_MATH",
+      "assessment_type": "posttest",
+      "assessment_version": "1.0.0",
+      "attempt_id": "ASSESSMENT_POSTTEST_001",
+      "completed_at": "2026-07-15T10:00:00+07:00",
+      "schema_version": "1.0.0",
+      "skill_scores": [
+        {
+          "max_score": 10.0,
+          "score": 7.0,
+          "skill_id": "SKILL_TRIG_TRANSFORMATION"
+        }
+      ],
+      "student_id": "STUDENT_MINH_ANH_001"
+    }
+  ],
+  "metadata": {
+    "contract_version": "1.0.0",
+    "request_id": "DEMO_FOLLOWUP_EVALUATION_001",
+    "requested_at": "2026-07-15T10:00:00+07:00",
+    "source_system": "phase1_demo.synthetic_fixtures",
+    "taxonomy_version": "0.4.0"
+  },
+  "previous_snapshot": {
+    "ability_profile": [
+      {
+        "confidence": 1.0,
+        "estimate_version": "ability-1.0.0",
+        "estimated_level": 0.763178,
+        "evidence_ids": [
+          "EVIDENCE_41fbf95522dd52b2",
+          "EVIDENCE_86d8c3762a0226d9",
+          "EVIDENCE_fdd04d0cd8c48cba"
+        ],
+        "skill_id": "SKILL_DATA_REASONING",
+        "trend": "unknown"
+      },
+      {
+        "confidence": 0.95,
+        "estimate_version": "ability-1.0.0",
+        "estimated_level": 0.790526,
+        "evidence_ids": [
+          "EVIDENCE_5f63218e0617b2a0",
+          "EVIDENCE_d4a9d6af6fec6e9a"
+        ],
+        "skill_id": "SKILL_PROBABILITY",
+        "trend": "unknown"
+      },
+      {
+        "confidence": 1.0,
+        "estimate_version": "ability-1.0.0",
+        "estimated_level": 0.334733,
+        "evidence_ids": [
+          "EVIDENCE_31372ff28be949bc",
+          "EVIDENCE_713a843929c316bd",
+          "EVIDENCE_8d476896b05c1c2c"
+        ],
+        "skill_id": "SKILL_TRIG_TRANSFORMATION",
+        "trend": "unknown"
+      }
+    ],
+    "active_plan": {
+      "generated_at": "2026-07-01T10:00:00+07:00",
+      "plan_id": "PLAN_a441236a75fe56bc",
+      "rule_version": "phase1-rules-1.0.0",
+      "student_id": "STUDENT_MINH_ANH_001",
+      "tasks": [
+        {
+          "activity_version": "activity-catalog-1.0.0",
+          "career_group_id": null,
+          "estimated_minutes": 20,
+          "evidence_ids": [
+            "EVIDENCE_31372ff28be949bc",
+            "EVIDENCE_713a843929c316bd",
+            "EVIDENCE_8d476896b05c1c2c"
+          ],
+          "reason": "Mức hiện tại dưới ngưỡng; dựa trên evidence: EVIDENCE_31372ff28be949bc, EVIDENCE_713a843929c316bd, EVIDENCE_8d476896b05c1c2c.",
+          "skill_id": "SKILL_TRIG_TRANSFORMATION",
+          "task_id": "TASK_4c517b75088c528e",
+          "task_type": "academic_practice",
+          "title": "Luyện biến đổi lượng giác"
+        },
+        {
+          "activity_version": "activity-catalog-1.0.0",
+          "career_group_id": "CAREER_GROUP_DATA_AI",
+          "estimated_minutes": 25,
+          "evidence_ids": [
+            "EVIDENCE_70079940a9c43931"
+          ],
+          "reason": "Chưa có micro-experience đạt chuẩn; dựa trên evidence: EVIDENCE_70079940a9c43931.",
+          "skill_id": null,
+          "task_id": "TASK_08b696784bd29ad8",
+          "task_type": "career_micro_experience",
+          "title": "Phân tích bảng khảo sát và tìm ba insight"
+        }
+      ],
+      "total_planned_minutes": 45,
+      "weekly_budget_minutes": 45
+    },
+    "created_at": "2026-07-01T10:00:00+07:00",
+    "gaps": [
+      {
+        "career_group_ids": [],
+        "current_level": 0.334733,
+        "evidence_ids": [
+          "EVIDENCE_31372ff28be949bc",
+          "EVIDENCE_713a843929c316bd",
+          "EVIDENCE_8d476896b05c1c2c"
+        ],
+        "expected_level": 0.65,
+        "gap_id": "GAP_ef86540df15111f4",
+        "gap_size": 0.315267,
+        "gap_type": "academic",
+        "gap_version": "gap-1.0.0",
+        "priority": "high",
+        "reason": "Mức hiện tại dưới ngưỡng; dựa trên evidence: EVIDENCE_31372ff28be949bc, EVIDENCE_713a843929c316bd, EVIDENCE_8d476896b05c1c2c.",
+        "skill_id": "SKILL_TRIG_TRANSFORMATION"
+      },
+      {
+        "career_group_ids": [
+          "CAREER_GROUP_DATA_AI",
+          "CAREER_GROUP_ECONOMICS"
+        ],
+        "current_level": null,
+        "evidence_ids": [
+          "EVIDENCE_70079940a9c43931",
+          "EVIDENCE_7083a09db5b807f2"
+        ],
+        "expected_level": null,
+        "gap_id": "GAP_ebf35044015a57bd",
+        "gap_size": null,
+        "gap_type": "decision",
+        "gap_version": "gap-1.0.0",
+        "priority": "medium",
+        "reason": "Chưa đủ trải nghiệm để so sánh các hướng; dựa trên evidence: EVIDENCE_70079940a9c43931, EVIDENCE_7083a09db5b807f2.",
+        "skill_id": null
+      },
+      {
+        "career_group_ids": [
+          "CAREER_GROUP_DATA_AI"
+        ],
+        "current_level": null,
+        "evidence_ids": [
+          "EVIDENCE_70079940a9c43931"
+        ],
+        "expected_level": null,
+        "gap_id": "GAP_672d4d62c7fc1fc1",
+        "gap_size": null,
+        "gap_type": "exploration",
+        "gap_version": "gap-1.0.0",
+        "priority": "high",
+        "reason": "Chưa có micro-experience đạt chuẩn; dựa trên evidence: EVIDENCE_70079940a9c43931.",
+        "skill_id": null
+      },
+      {
+        "career_group_ids": [
+          "CAREER_GROUP_ECONOMICS"
+        ],
+        "current_level": null,
+        "evidence_ids": [
+          "EVIDENCE_7083a09db5b807f2"
+        ],
+        "expected_level": null,
+        "gap_id": "GAP_a3820fdca5cda989",
+        "gap_size": null,
+        "gap_type": "exploration",
+        "gap_version": "gap-1.0.0",
+        "priority": "high",
+        "reason": "Chưa có micro-experience đạt chuẩn; dựa trên evidence: EVIDENCE_7083a09db5b807f2.",
+        "skill_id": null
+      }
+    ],
+    "market_snapshot_version": "2026-07-18-multisource|market-groups-1.0.0",
+    "outcomes": [],
+    "pipeline_version": "phase1-pipeline-1.0.0",
+    "previous_snapshot_id": null,
+    "snapshot_id": "SNAPSHOT_6ea030317a682365",
+    "student_id": "STUDENT_MINH_ANH_001"
+  },
+  "student": {
+    "career_clarity": "exploring",
+    "career_interest_ids": [
+      "CAREER_GROUP_DATA_AI",
+      "CAREER_GROUP_ECONOMICS"
+    ],
+    "display_name": "Nguyễn Minh Anh",
+    "exam_week": false,
+    "grade_level": 11,
+    "schema_version": "1.0.0",
+    "student_id": "STUDENT_MINH_ANH_001",
+    "weekly_available_minutes": 45
+  }
+}
