@@ -1,0 +1,34 @@
+[
+  {
+    "career_group_id": "CAREER_GROUP_DATA_AI",
+    "display_name": "Data/AI",
+    "market_signal": "Fallback demo: kỹ năng suy luận dữ liệu và giao tiếp là nền tảng phù hợp để khám phá.",
+    "sample_size": 0,
+    "foundation_skill_ids": [
+      "SKILL_LOGICAL_THINKING",
+      "SKILL_QUANTITATIVE_REASONING",
+      "SKILL_DATA_REASONING",
+      "SKILL_COMMUNICATION"
+    ],
+    "snapshot_version": "fallback-market-v1",
+    "taxonomy_version": null,
+    "data_mode": "fallback_demo",
+    "source_output_files": ["phase1_demo/fixtures/market_fallback.json"]
+  },
+  {
+    "career_group_id": "CAREER_GROUP_ECONOMICS",
+    "display_name": "Kinh tế",
+    "market_signal": "Fallback demo: tư duy định lượng, giao tiếp và ra quyết định là nền tảng phù hợp để khám phá.",
+    "sample_size": 0,
+    "foundation_skill_ids": [
+      "SKILL_QUANTITATIVE_REASONING",
+      "SKILL_DATA_REASONING",
+      "SKILL_COMMUNICATION",
+      "SKILL_DECISION_MAKING"
+    ],
+    "snapshot_version": "fallback-market-v1",
+    "taxonomy_version": null,
+    "data_mode": "fallback_demo",
+    "source_output_files": ["phase1_demo/fixtures/market_fallback.json"]
+  }
+]
