@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 from database import get_db
 from modules.auth.dependencies import require_roles
 from modules.auth.models import AuditLog, ClassAssignment, Invitation, Role, SchoolClass, Tenant, User, UserStatus
-from modules.auth.security import hash_token
+from modules.auth.security import hash_password, hash_token
 from modules.candidate.models import AcademicRecord, CandidateProfile, TeacherEvaluation
 from modules.candidate.schemas import (AcademicRecordInput, AcademicRecordResponse,
                                        CandidateProfileUpdate,
@@ -31,6 +31,10 @@ class InviteInput(BaseModel):
     display_name: str = Field(min_length=2, max_length=160)
 
 
+class ManagedAccountCreate(InviteInput):
+    password: str = Field(min_length=8, max_length=128)
+
+
 class StudentInvite(InviteInput):
     profile_type: Literal["HIGH_SCHOOL", "UNIVERSITY"] = "HIGH_SCHOOL"
     student_code: str = Field(min_length=1, max_length=80)
@@ -42,6 +46,10 @@ class StudentInvite(InviteInput):
     major: str | None = Field(default=None, max_length=240)
     study_year: int | None = Field(default=None, ge=1, le=12)
     gpa: float | None = Field(default=None, ge=0, le=10)
+
+
+class StudentCreate(StudentInvite):
+    password: str = Field(min_length=8, max_length=128)
 
 
 class ClassInput(BaseModel):
@@ -71,6 +79,17 @@ def invite(db, actor, payload, role, tenant_id, class_id=None):
     return {"id": row.id, "email": row.email, "role": role.value, "profileType": profile_type, "expiresAt": row.expires_at, "acceptToken": raw}
 
 
+def create_managed_account(db, actor, payload: ManagedAccountCreate, role: Role, tenant_id: str):
+    email = payload.email.lower()
+    if db.scalar(select(User).where(User.email == email)):
+        raise HTTPException(409, "Email đã có tài khoản")
+    user = User(email=email, display_name=payload.display_name, password_hash=hash_password(payload.password), role=role, tenant_id=tenant_id, status=UserStatus.ACTIVE, email_verified_at=datetime.now(timezone.utc), created_by=actor.id)
+    db.add(user); db.flush()
+    audit(db, actor, "MANAGED_ACCOUNT_CREATED", "USER", user.id, tenant_id, {"role": role.value, "email": email})
+    db.commit(); db.refresh(user)
+    return {"id": user.id, "email": user.email, "display_name": user.display_name, "role": user.role.value, "status": user.status.value, "tenant_id": user.tenant_id}
+
+
 @router.post("/api/admin/tenants", status_code=201)
 def create_tenant(payload: TenantInput, db: Session = Depends(get_db), actor: User = Depends(require_roles(Role.SUPERADMIN))):
     if db.scalar(select(Tenant).where(Tenant.code == payload.code)):
@@ -91,6 +110,14 @@ def invite_admin(tenant_id: str, payload: InviteInput, db: Session = Depends(get
     return invite(db, actor, payload, Role.TENANT_ADMIN, tenant_id)
 
 
+@router.post("/api/admin/tenants/{tenant_id}/admins", status_code=201)
+def create_admin(tenant_id: str, payload: ManagedAccountCreate, db: Session = Depends(get_db), actor: User = Depends(require_roles(Role.SUPERADMIN))):
+    tenant = db.get(Tenant, tenant_id)
+    if not tenant or tenant.status != "ACTIVE":
+        raise HTTPException(404, "Không tìm thấy trường đang hoạt động")
+    return create_managed_account(db, actor, payload, Role.TENANT_ADMIN, tenant_id)
+
+
 @router.get("/api/admin/audit-logs")
 def audit_logs(db: Session = Depends(get_db), actor: User = Depends(require_roles(Role.SUPERADMIN))):
     return db.scalars(select(AuditLog).order_by(AuditLog.created_at.desc()).limit(200)).all()
@@ -99,6 +126,11 @@ def audit_logs(db: Session = Depends(get_db), actor: User = Depends(require_role
 @router.post("/api/school/teachers/invitations", status_code=201)
 def invite_teacher(payload: InviteInput, db: Session = Depends(get_db), actor: User = Depends(require_roles(Role.TENANT_ADMIN))):
     return invite(db, actor, payload, Role.HOMEROOM_TEACHER, actor.tenant_id)
+
+
+@router.post("/api/school/teachers", status_code=201)
+def create_teacher(payload: ManagedAccountCreate, db: Session = Depends(get_db), actor: User = Depends(require_roles(Role.TENANT_ADMIN))):
+    return create_managed_account(db, actor, payload, Role.HOMEROOM_TEACHER, actor.tenant_id)
 
 
 @router.get("/api/school/teachers")
@@ -114,7 +146,19 @@ def create_class(payload: ClassInput, db: Session = Depends(get_db), actor: User
 
 @router.get("/api/school/classes")
 def classes(db: Session = Depends(get_db), actor: User = Depends(require_roles(Role.TENANT_ADMIN))):
-    return db.scalars(select(SchoolClass).where(SchoolClass.tenant_id == actor.tenant_id)).all()
+    return db.scalars(select(SchoolClass).where(SchoolClass.tenant_id == actor.tenant_id, SchoolClass.status == "ACTIVE")).all()
+
+
+@router.delete("/api/school/classes/{class_id}", status_code=204)
+def disable_class(class_id: str, db: Session = Depends(get_db), actor: User = Depends(require_roles(Role.TENANT_ADMIN))):
+    classroom = db.get(SchoolClass, class_id)
+    if not classroom or classroom.tenant_id != actor.tenant_id or classroom.status != "ACTIVE":
+        raise HTTPException(404, "Không tìm thấy lớp đang hoạt động trong trường")
+    assignment_count = db.query(ClassAssignment).filter_by(class_id=class_id, tenant_id=actor.tenant_id).delete(synchronize_session=False)
+    classroom.status = "DISABLED"
+    audit(db, actor, "CLASS_DISABLED", "CLASS", classroom.id, details={"name": classroom.name, "assignments_removed": assignment_count})
+    db.commit()
+    return Response(status_code=204)
 
 
 @router.post("/api/school/classes/{class_id}/assignments", status_code=201)
@@ -148,6 +192,23 @@ def class_students(class_id: str, db: Session = Depends(get_db), actor: User = D
 def invite_student(class_id: str, payload: StudentInvite, db: Session = Depends(get_db), actor: User = Depends(require_roles(Role.HOMEROOM_TEACHER))):
     if not active_assignment(db, actor, class_id): raise HTTPException(403, "Bạn không được phân công lớp này")
     return invite(db, actor, payload, Role.STUDENT, actor.tenant_id, class_id)
+
+
+@router.post("/api/teacher/classes/{class_id}/students", status_code=201)
+def create_student(class_id: str, payload: StudentCreate, db: Session = Depends(get_db), actor: User = Depends(require_roles(Role.HOMEROOM_TEACHER))):
+    if not active_assignment(db, actor, class_id):
+        raise HTTPException(403, "Bạn không được phân công lớp này")
+    email = payload.email.lower()
+    if db.scalar(select(User).where(User.email == email)):
+        raise HTTPException(409, "Email đã có tài khoản")
+    profile_data = payload.model_dump(exclude={"email", "display_name", "profile_type", "password"}, exclude_none=True)
+    user = User(email=email, display_name=payload.display_name, password_hash=hash_password(payload.password), role=Role.STUDENT, tenant_id=actor.tenant_id, status=UserStatus.ACTIVE, email_verified_at=datetime.now(timezone.utc), created_by=actor.id)
+    db.add(user); db.flush()
+    profile = CandidateProfile(user_id=user.id, tenant_id=actor.tenant_id, class_id=class_id, profile_type=payload.profile_type, **profile_data)
+    db.add(profile); db.flush()
+    audit(db, actor, "STUDENT_ACCOUNT_CREATED", "USER", user.id, details={"class_id": class_id, "email": email, "profile_type": payload.profile_type})
+    db.commit(); db.refresh(user)
+    return {"id": user.id, "email": user.email, "display_name": user.display_name, "role": user.role.value, "status": user.status.value, "profile_type": profile.profile_type, "student_code": profile.student_code}
 
 
 def assigned_student_profile(db: Session, actor: User, class_id: str, student_id: str) -> CandidateProfile:

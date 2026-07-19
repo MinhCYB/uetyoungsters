@@ -6,11 +6,11 @@ Mật khẩu chung: `Demo@123456`
 
 | Role | Email |
 |---|---|
-| SUPERADMIN | `superadmin@demo.example.com` |
-| TENANT_ADMIN | `admin@demo.example.com` |
-| HOMEROOM_TEACHER | `teacher@demo.example.com` |
-| STUDENT | `student@demo.example.com` |
-| PROFESSIONAL | `professional@demo.example.com` |
+| SUPERADMIN | `superadmin.v2@demo.example.com` |
+| TENANT_ADMIN | `admin.v2@demo.example.com` |
+| HOMEROOM_TEACHER | `teacher.v2@demo.example.com` |
+| STUDENT | `student.v2@demo.example.com` |
+| PROFESSIONAL | `professional.v2@demo.example.com` |
 
 Tạo hoặc cập nhật các tài khoản:
 

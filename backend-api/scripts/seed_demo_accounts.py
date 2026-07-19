@@ -22,11 +22,11 @@ from modules.candidate.models import CandidateProfile
 PASSWORD = os.getenv("DEMO_PASSWORD", "Demo@123456")
 TENANT_CODE = "DEMO_SCHOOL"
 ACCOUNTS = (
-    ("superadmin@demo.example.com", "Demo Super Admin", Role.SUPERADMIN),
-    ("admin@demo.example.com", "Demo School Admin", Role.TENANT_ADMIN),
-    ("teacher@demo.example.com", "Demo Homeroom Teacher", Role.HOMEROOM_TEACHER),
-    ("student@demo.example.com", "Demo Student", Role.STUDENT),
-    ("professional@demo.example.com", "Demo Professional", Role.PROFESSIONAL),
+    ("superadmin.v2@demo.example.com", "Demo V2 Super Admin", Role.SUPERADMIN),
+    ("admin.v2@demo.example.com", "Demo V2 School Admin", Role.TENANT_ADMIN),
+    ("teacher.v2@demo.example.com", "Demo V2 Homeroom Teacher", Role.HOMEROOM_TEACHER),
+    ("student.v2@demo.example.com", "Demo V2 Student", Role.STUDENT),
+    ("professional.v2@demo.example.com", "Demo V2 Professional", Role.PROFESSIONAL),
 )
 
 
@@ -49,15 +49,6 @@ def upsert_user(db, email: str, name: str, role: Role, tenant_id: str | None) ->
 def seed() -> None:
     init_db()
     with SessionLocal() as db:
-        # Migrate the initially documented .local demo addresses, which strict
-        # EmailStr validation correctly rejects at the login boundary.
-        for email, _, _ in ACCOUNTS:
-            legacy_email = email.replace("@demo.example.com", "@demo.local")
-            legacy = db.scalar(select(User).where(User.email == legacy_email))
-            current = db.scalar(select(User).where(User.email == email))
-            if legacy and not current:
-                legacy.email = email
-        db.flush()
         superadmin = upsert_user(db, *ACCOUNTS[0], tenant_id=None)
 
         tenant = db.scalar(select(Tenant).where(Tenant.code == TENANT_CODE))

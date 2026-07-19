@@ -9,7 +9,17 @@ async function parse(response) {
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
     const detail = data.detail || data.message || 'Yêu cầu không thành công';
-    const error = new Error(typeof detail === 'string' ? detail : detail.message || 'Yêu cầu không thành công');
+    const validationMessage = Array.isArray(detail)
+      ? detail.map(item => {
+          const field = Array.isArray(item.loc) ? item.loc.filter(part => part !== 'body').join('.') : '';
+          return `${field ? `${field}: ` : ''}${item.msg || 'Dữ liệu không hợp lệ'}`;
+        }).join('; ')
+      : null;
+    const error = new Error(
+      typeof detail === 'string'
+        ? detail
+        : validationMessage || detail.message || 'Yêu cầu không thành công'
+    );
     error.status = response.status;
     error.detail = detail;
     throw error;
