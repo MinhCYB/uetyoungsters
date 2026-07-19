@@ -1,4 +1,13 @@
 sources:
+  - source_id: onet_30_3
+    source_name: O*NET 30.3 Database
+    platform: onet
+    enabled: true
+    collection_method: official_download
+    content_enabled: true
+    license: CC-BY-4.0
+    source_url: https://www.onetcenter.org/database.html
+
   - source_id: greenhouse_navervietnam
     source_name: NAVER Vietnam
     platform: greenhouse

@@ -77,6 +77,15 @@ Canonical outputs nằm trong `data/processed/` và được publish vào Postgr
 do `CRAWL_DATABASE_SCHEMA` cấu hình; reports nằm trong `reports/`. Có thể chạy
 `python -m crawl_service publish-db` để đồng bộ lại database từ các file Parquet
 hiện có mà không crawl lại.
+
+Career detail được publish thành ba bảng riêng:
+
+- `crawl.career_evidence`: nội dung nguồn cùng URL, hash và snapshot provenance.
+- `crawl.career_evidence_facts`: facts chuẩn hóa như kỹ năng và tần suất thị trường.
+- `crawl.career_profiles`: profile versioned dùng trực tiếp bởi backend/frontend.
+
+Profile chỉ tổng hợp những gì có evidence trong các nguồn đang theo dõi; nghề chưa
+có evidence được đánh dấu `insufficient_evidence` thay vì sinh mô tả suy đoán.
 Chi tiết field và consumer guidance xem [data-contracts.md](data-contracts.md).
 
 ## Vận hành
@@ -112,3 +121,11 @@ Taxonomy version:                0.4.0
 
 Đây là snapshot từ các nguồn đang theo dõi, không phải thống kê đại diện toàn
 bộ thị trường lao động Việt Nam.
+
+## Nguồn mô tả nghề O*NET
+
+Mô tả nghề và nhiệm vụ nền sử dụng O*NET 30.3 Database của USDOL/ETA theo
+giấy phép CC BY 4.0. Mapping đã review từ career ID nội bộ sang O*NET-SOC được
+lưu tại `config/onet_career_map.yaml`. Nhiệm vụ trích từ tin tuyển dụng được ưu
+tiên khi có mục trách nhiệm rõ ràng; O*NET bổ sung các khoảng trống còn lại.
+O*NET không phê duyệt hay bảo chứng các chỉnh sửa của dự án này.

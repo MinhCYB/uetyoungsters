@@ -25,6 +25,8 @@ services:
       DATABASE_URL: postgresql://cc_user:cc_pass@db:5432/career_compass
       CRAWL_DATABASE_SCHEMA: ${CRAWL_DATABASE_SCHEMA}
       CAREER_COMPASS_ROOT: /app
+      AI_WORKER_URL: http://ai-worker-service:8000
+      TRANSLATION_MODEL: ${TRANSLATION_MODEL:-gemini-3.1-flash-lite}
     volumes:
       - ./data:/app/data
       - ./reports:/app/reports
@@ -49,6 +51,7 @@ services:
       AI_WORKER_TIMEOUT_SECONDS: ${AI_WORKER_TIMEOUT_SECONDS:-30}
       COMPANION_LLM_MAX_TOKENS: ${COMPANION_LLM_MAX_TOKENS:-2048}
       COMPANION_LLM_FALLBACK_ENABLED: ${COMPANION_LLM_FALLBACK_ENABLED:-false}
+      CRAWL_DATABASE_SCHEMA: ${CRAWL_DATABASE_SCHEMA}
 
   ai-worker-service:
     build: ./ai-worker-service

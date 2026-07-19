@@ -19,6 +19,7 @@ from .quality import (
     create_viecoi_taxonomy_reports,
 )
 from .database import publish_processed_outputs
+from .career_profiles import write_career_detail_outputs
 
 
 GREENHOUSE_INTERIM_PATH = (
@@ -183,6 +184,15 @@ def run_pipeline() -> None:
         taxonomy=taxonomy,
         output_dir=REPORT_ROOT,
         collector_versions=collector_versions,
+    )
+
+    write_career_detail_outputs(
+        jobs_path=jobs_path,
+        skills_path=skills_path,
+        demand_path=PROCESSED_ROOT / "career_demand_summary.parquet",
+        skill_matrix_path=PROCESSED_ROOT / "career_skill_matrix.parquet",
+        taxonomy=taxonomy,
+        output_dir=PROCESSED_ROOT,
     )
 
     # 6. Chá»‰ publish database sau khi toÃ n bá»™ pipeline vÃ  quality checks
