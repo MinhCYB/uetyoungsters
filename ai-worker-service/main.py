@@ -141,12 +141,15 @@ async def infer(
             config=types.GenerateContentConfig(
                 system_instruction=system_prompt,
                 max_output_tokens=max_tokens,
+                response_mime_type=(
+                    "application/json" if request.response_format == "json" else None
+                ),
             ),
         )
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
     except Exception as exc:
-        raise HTTPException(status_code=502, detail=f"Gemini request failed: {exc}") from exc
+        raise HTTPException(status_code=502, detail="Gemini request failed") from exc
 
     text = response.text or ""
     content: Any = text

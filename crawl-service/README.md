@@ -18,6 +18,8 @@ pip install -e .\crawl-service
 python -m crawl_service status
 python -m crawl_service collect-greenhouse
 python -m crawl_service collect-viecoi
+python -m crawl_service collect-onet
+python -m crawl_service enrich-onet-vi
 python -m crawl_service collect-all
 python -m crawl_service pipeline
 python -m crawl_service publish-db

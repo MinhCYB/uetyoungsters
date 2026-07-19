@@ -1,5 +1,9 @@
-from fastapi import FastAPI
+import os
+
+from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from database import SessionLocal, init_db
 from modules.assessment.router import router as assessment_router
@@ -12,13 +16,24 @@ from modules.candidate.router import router as candidate_router
 from modules.recommendation.bootstrap import ensure_career_catalog
 
 app = FastAPI(title="Career Compass API", version="0.1.0")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_error(request: Request, exc: RequestValidationError):
+    return JSONResponse(status_code=422, content={"detail": exc.errors()})
 
 
 @app.on_event("startup")
 def on_startup():
-    init_db()
-    with SessionLocal() as db:
-        ensure_career_catalog(db)
+    if os.getenv("SKIP_DB_INIT") != "1":
+        init_db()
 
 
 app.include_router(assessment_router, prefix="/api/assessment", tags=["assessment"])

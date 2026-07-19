@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pandas as pd
+import numpy as np
 import pytest
 
 from crawl_service.database import PROCESSED_TABLE_FILES, _json_columns, database_schema, read_table
@@ -23,8 +24,9 @@ def test_json_columns_detect_nested_values():
         "job_id": ["job_1"],
         "raw_payload": [{"source": "fixture"}],
         "aliases": [["one", "two"]],
+        "arrow_list": [np.array(["three", "four"], dtype=object)],
     })
-    assert _json_columns(dataframe) == ["raw_payload", "aliases"]
+    assert _json_columns(dataframe) == ["raw_payload", "aliases", "arrow_list"]
 
 
 def test_read_table_rejects_unknown_table_before_connecting():
@@ -39,4 +41,7 @@ def test_processed_table_registry_contains_runtime_consumer_tables():
         "job_lifecycle",
         "career_demand_summary",
         "career_skill_matrix",
+        "career_evidence",
+        "career_evidence_facts",
+        "career_profiles",
     }
