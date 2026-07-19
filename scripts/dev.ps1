@@ -72,18 +72,18 @@ function Assert-Prerequisites {
 function Start-System([switch]$Build) {
     Write-Step $(if ($Build) { "Build and start the whole system" } else { "Start the whole system" })
     if ($Build) {
-        Invoke-Compose up -d --build
+        Invoke-Compose -ComposeArguments @("up", "-d", "--build")
     } else {
-        Invoke-Compose up -d
+        Invoke-Compose -ComposeArguments @("up", "-d")
     }
-    Invoke-Compose ps
+    Invoke-Compose -ComposeArguments @("ps")
     Write-Host "`nApplication: http://localhost" -ForegroundColor Green
     Write-Host "Backend API: http://localhost:8000"
 }
 
 function Run-Pipeline {
     Write-Step "Normalize data and publish it to PostgreSQL"
-    Invoke-Compose run --rm crawl-service pipeline
+    Invoke-Compose -ComposeArguments @("run", "--rm", "crawl-service", "pipeline")
 }
 
 function Show-Help {
@@ -134,34 +134,34 @@ switch ($Command) {
     }
     "restart" {
         Write-Step "Restart $Service"
-        if ($Service -eq "all") { Invoke-Compose restart } else { Invoke-Compose restart $Service }
+        if ($Service -eq "all") { Invoke-Compose -ComposeArguments @("restart") } else { Invoke-Compose -ComposeArguments @("restart", $Service) }
     }
     "stop" {
         Write-Step "Stop the system (database volume is retained)"
-        Invoke-Compose down
+        Invoke-Compose -ComposeArguments @("down")
     }
     "status" {
         Write-Step "Container status"
-        Invoke-Compose ps
+        Invoke-Compose -ComposeArguments @("ps")
         Write-Step "Crawl-service status"
-        Invoke-Compose run --rm crawl-service status
+        Invoke-Compose -ComposeArguments @("run", "--rm", "crawl-service", "status")
     }
     "logs" {
         Write-Step "Follow logs for $Service (Ctrl+C to exit)"
-        if ($Service -eq "all") { Invoke-Compose logs -f --tail 150 } else { Invoke-Compose logs -f --tail 150 $Service }
+        if ($Service -eq "all") { Invoke-Compose -ComposeArguments @("logs", "-f", "--tail", "150") } else { Invoke-Compose -ComposeArguments @("logs", "-f", "--tail", "150", $Service) }
     }
     "crawl" {
         Write-Step "Collect Greenhouse, ViecOi and O*NET"
-        Invoke-Compose run --rm crawl-service collect-all
+        Invoke-Compose -ComposeArguments @("run", "--rm", "crawl-service", "collect-all")
     }
     "pipeline" {
         Run-Pipeline
     }
     "translate" {
         Write-Step "Start AI worker"
-        Invoke-Compose up -d ai-worker-service
+        Invoke-Compose -ComposeArguments @("up", "-d", "ai-worker-service")
         Write-Step "Translate changed career content"
-        Invoke-Compose run --rm crawl-service enrich-onet-vi
+        Invoke-Compose -ComposeArguments @("run", "--rm", "crawl-service", "enrich-onet-vi")
     }
     "refresh-data" {
         $refreshLog = Join-Path $ProjectRoot "reports\refresh-data.log"
@@ -183,7 +183,7 @@ switch ($Command) {
     }
     "publish" {
         Write-Step "Republish processed data to PostgreSQL"
-        Invoke-Compose run --rm crawl-service publish-db
+        Invoke-Compose -ComposeArguments @("run", "--rm", "crawl-service", "publish-db")
     }
     "test" {
         Write-Step "Run tests"
