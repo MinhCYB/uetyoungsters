@@ -37,7 +37,7 @@ class AcademicRecord(ContractModel):
     score: float = Field(ge=0, le=10)
     score_scale: Literal[10] = 10
     recorded_at: datetime
-    source: Literal["school_system", "teacher_entry", "verified_import"]
+    source: Literal["school_system", "teacher_entry", "verified_import", "user_entry"]
 
 
 class TeacherObservation(ContractModel):

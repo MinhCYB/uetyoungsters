@@ -1,0 +1,9 @@
+Nguyen Van Test
+Email: cv.test@example.com
+Phone: 0901234567
+
+Experience
+- Two years building data dashboards and Python services.
+
+Skills
+- Python, SQL, data analysis, communication

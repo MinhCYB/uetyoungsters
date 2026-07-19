@@ -4,7 +4,7 @@ import { CandidateProfile } from './pages/Profile';
 import { AbilitiesSchema } from './pages/Abilities';
 import { CareersAISchema } from './pages/Careers';
 import { RoadmapAI } from './pages/Roadmap';
-import { Home, Locked } from './components/common';
+import { Locked } from './components/common';
 import { AcceptInvitation, ForgotPassword, Login, ProfessionalRegister } from './pages/Auth';
 import { Dashboard } from './pages/Dashboard';
 import { ResponseContractPreview } from './pages/ResponseContractPreview';
@@ -33,15 +33,17 @@ export default function App() {
     return () => removeEventListener('auth-session-change', sync);
   }, []);
 
-  if (path === '/login') return <Login onAuthenticated={setAuthUser}/>;
-  if (path === '/register/professional') return <ProfessionalRegister onAuthenticated={setAuthUser}/>;
-  if (path === '/accept-invitation') return <AcceptInvitation onAuthenticated={setAuthUser}/>;
-  if (path === '/forgot-password') return <ForgotPassword/>;
-  if (path === '/companion' || path === '/contract-preview') return <ResponseContractPreview/>;
-  if (path === '/dashboard') {
+  if (path === '/login') {
     if (!authReady) return <main className="page backend-state"><div className="loading-ring"/><h1>Đang xác thực phiên</h1></main>;
     return authUser ? <Dashboard user={authUser} onLogout={()=>setAuthUser(null)}/> : <Login onAuthenticated={setAuthUser}/>;
   }
+  if (path === '/register/professional') return <ProfessionalRegister onAuthenticated={setAuthUser}/>;
+  if (path === '/accept-invitation') return <AcceptInvitation onAuthenticated={setAuthUser}/>;
+  if (path === '/forgot-password') return <ForgotPassword/>;
+  if (!authReady) return <main className="page backend-state"><div className="loading-ring"/><h1>Đang xác thực phiên</h1></main>;
+  if (!authUser) return <Login onAuthenticated={setAuthUser}/>;
+  if (path === '/contract-preview') return <ResponseContractPreview/>;
+  if (path === '/' || path === '/dashboard') return <Dashboard user={authUser} onLogout={()=>setAuthUser(null)}/>;
 
   const session = readSession();
   if (path.startsWith('/assessment')) return <AssessmentPersistent />;
@@ -52,5 +54,5 @@ export default function App() {
     const id = path.split('/')[2];
     return session.selectedCareerId ? <RoadmapAI id={id} /> : <Locked type="roadmap" />;
   }
-  return <Home />;
+  return <Dashboard user={authUser} onLogout={()=>setAuthUser(null)}/>;
 }

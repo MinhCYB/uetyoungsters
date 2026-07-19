@@ -78,9 +78,87 @@ def save_assessment(db: Session, *, assessment_id: str, **values) -> None:
     db.add(Assessment(id=assessment_id, **values)); db.commit()
 
 
+def get_owned_assessment(db: Session, assessment_id: str, user_id: str) -> Assessment | None:
+    """Fetch an assessment only when it belongs to the authenticated user."""
+    return db.query(Assessment).filter(
+        Assessment.id == assessment_id,
+        Assessment.user_id == user_id,
+    ).one_or_none()
+
+
+def delete_owned_assessment(db: Session, assessment: Assessment) -> None:
+    """Delete an attempt and dependent matching data in one transaction."""
+    from modules.recommendation.models import MatchedResult, MatchedResultItem
+
+    result_ids = [row.id for row in db.query(MatchedResult.id).filter_by(assessment_id=assessment.id).all()]
+    if result_ids:
+        db.query(MatchedResultItem).filter(MatchedResultItem.matched_result_id.in_(result_ids)).delete(synchronize_session=False)
+        db.query(MatchedResult).filter(MatchedResult.id.in_(result_ids)).delete(synchronize_session=False)
+    db.delete(assessment)
+    db.commit()
+
+
+def load_draft_answers(db: Session, assessment_id: str) -> dict:
+    """Return the latest persisted draft without changing assessment state."""
+    rows = db.query(AssessmentAnswer).filter_by(assessment_id=assessment_id).all()
+    return {row.question_id: row.answer for row in rows}
+
+
+def upsert_draft_answers(
+    db: Session,
+    assessment: Assessment,
+    questions: dict,
+    responses: dict,
+    *,
+    expected_version: int,
+    current_question_id: str | None,
+    saved_at: datetime,
+) -> bool:
+    """Persist a partial draft and atomically advance its optimistic-lock version."""
+    existing = {
+        row.question_id: row
+        for row in db.query(AssessmentAnswer).filter(
+            AssessmentAnswer.assessment_id == assessment.id,
+            AssessmentAnswer.question_id.in_(responses),
+        )
+    } if responses else {}
+    for question_id, answer in responses.items():
+        row = existing.get(question_id)
+        if answer is None or answer == "" or answer == [] or answer == {}:
+            if row:
+                db.delete(row)
+            continue
+        if row:
+            row.answer = answer
+            row.question_type = questions[question_id]["type"]
+        else:
+            db.add(AssessmentAnswer(
+                assessment_id=assessment.id,
+                question_id=question_id,
+                question_type=questions[question_id]["type"],
+                answer=answer,
+            ))
+    updated = db.query(Assessment).filter(
+        Assessment.id == assessment.id,
+        Assessment.version == expected_version,
+    ).update({
+        Assessment.version: expected_version + 1,
+        Assessment.current_question_id: current_question_id,
+        Assessment.last_saved_at: saved_at,
+    }, synchronize_session=False)
+    if updated != 1:
+        db.rollback()
+        return False
+    db.commit()
+    return True
+
+
 def save_answers(db: Session, assessment: Assessment, questions: dict, responses: dict) -> None:
     db.query(AssessmentAnswer).filter_by(assessment_id=assessment.id).delete()
     for question_id, answer in responses.items():
         db.add(AssessmentAnswer(assessment_id=assessment.id, question_id=question_id, question_type=questions[question_id]["type"], answer=answer))
-    assessment.status, assessment.submitted_at = "submitted", datetime.now(timezone.utc)
+    now = datetime.now(timezone.utc)
+    assessment.status, assessment.submitted_at = "submitted", now
+    assessment.last_saved_at = now
+    assessment.version += 1
     db.commit()

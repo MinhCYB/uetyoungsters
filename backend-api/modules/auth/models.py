@@ -81,27 +81,6 @@ class ClassAssignment(Base):
     created_by: Mapped[str] = mapped_column(String(36))
 
 
-class StudentProfile(Base):
-    __tablename__ = "student_profiles"
-    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uuid4)
-    tenant_id: Mapped[str] = mapped_column(ForeignKey("tenants.id"), index=True)
-    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), unique=True)
-    class_id: Mapped[str] = mapped_column(ForeignKey("classes.id"), index=True)
-    student_code: Mapped[str] = mapped_column(String(80))
-    profile_type: Mapped[str] = mapped_column(String(30), default="HIGH_SCHOOL")
-    basic_information: Mapped[dict] = mapped_column(JSON, default=dict)
-
-
-class ProfessionalProfile(Base):
-    __tablename__ = "professional_profiles"
-    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uuid4)
-    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), unique=True)
-    current_career_id: Mapped[str | None] = mapped_column(String(120), nullable=True)
-    parsed_data: Mapped[dict] = mapped_column(JSON, default=dict)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
-    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now, onupdate=now)
-
-
 class Invitation(Base):
     __tablename__ = "invitations"
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uuid4)
@@ -110,6 +89,8 @@ class Invitation(Base):
     role: Mapped[Role] = mapped_column(Enum(Role))
     tenant_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
     class_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
+    profile_type: Mapped[str | None] = mapped_column(String(30), nullable=True)
+    profile_data: Mapped[dict] = mapped_column(JSON, default=dict)
     token_hash: Mapped[str] = mapped_column(String(64), unique=True)
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     accepted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
