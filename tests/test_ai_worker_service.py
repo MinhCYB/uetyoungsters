@@ -113,4 +113,5 @@ def test_upstream_failure_returns_502(monkeypatch):
     with client_for(monkeypatch, messages) as client:
         response = client.post("/infer", json={"messages": [{"role": "user", "content": "hi"}]})
     assert response.status_code == 502
-    assert "timed out" in response.json()["detail"]
+    assert response.json()["detail"] == "Gemini request failed"
+    assert "timed out" not in response.text

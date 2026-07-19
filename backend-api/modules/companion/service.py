@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 
 from modules.candidate.analysis_contracts import (
@@ -44,13 +45,34 @@ from phase1_demo.student_companion.llm.prompts import (
     PLAN_EXPANSION_PROMPT_VERSION,
     REASSESSMENT_PROMPT_VERSION,
 )
-from phase1_demo.student_companion.llm.providers import TemplateProvider
+from phase1_demo.student_companion.llm.providers import (
+    AIWorkerConfigurationError,
+    AIWorkerConnectionError,
+    AIWorkerEmptyResponseError,
+    AIWorkerHTTPError,
+    AIWorkerInvalidResponseError,
+    AIWorkerProvider,
+    AIWorkerTimeoutError,
+    AIWorkerUnparsedResponseError,
+    TemplateProvider,
+)
+from phase1_demo.student_companion.llm.validators import (
+    LLMInvariantViolation,
+    LLMOutputParseError,
+    LLMOutputValidationError,
+    LLMProviderError,
+)
 
 from .presentation import present_analysis, present_followup, present_plan
 from .store import AnalysisRecord, CompanionStore, PlanRecord, companion_store
 
 
-REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
+MODULE_PATH = Path(__file__).resolve()
+REPOSITORY_ROOT = next(
+    candidate
+    for candidate in (MODULE_PATH.parents[3], MODULE_PATH.parents[2])
+    if (candidate / "phase1_demo").is_dir()
+)
 PROFILE_FIXTURES = {
     "initial": REPOSITORY_ROOT / "tests" / "fixtures" / "student_profile_initial.json",
     "week3": REPOSITORY_ROOT / "tests" / "fixtures" / "student_profile_week3.json",
@@ -73,6 +95,45 @@ class CompanionError(RuntimeError):
         self.code = code
         self.message = message
         self.status_code = status_code
+
+
+def _positive_env_number(name: str, default: float) -> float:
+    try:
+        return float(os.getenv(name, str(default)))
+    except ValueError:
+        return -1
+
+
+def _positive_env_int(name: str, default: int) -> int:
+    try:
+        return int(os.getenv(name, str(default)))
+    except ValueError:
+        return -1
+
+
+def _enabled(name: str, default: bool = False) -> bool:
+    value = os.getenv(name)
+    if value is None:
+        return default
+    return value.strip().casefold() in {"1", "true", "yes", "on"}
+
+
+def build_content_orchestrator() -> StudentCompanionContentOrchestrator:
+    mode = os.getenv("COMPANION_LLM_MODE", "live").strip().casefold()
+    if mode == "template":
+        return StudentCompanionContentOrchestrator(TemplateProvider())
+    if mode != "live":
+        raise RuntimeError("COMPANION_LLM_MODE must be 'live' or 'template'")
+    provider = AIWorkerProvider(
+        base_url=os.getenv("AI_WORKER_URL", ""),
+        timeout_seconds=_positive_env_number("AI_WORKER_TIMEOUT_SECONDS", 30),
+        max_tokens=_positive_env_int("COMPANION_LLM_MAX_TOKENS", 2048),
+    )
+    return StudentCompanionContentOrchestrator(
+        provider,
+        TemplateProvider(),
+        allow_fallback=_enabled("COMPANION_LLM_FALLBACK_ENABLED"),
+    )
 
 
 def _token(prefix: str, *parts: object) -> str:
@@ -230,10 +291,14 @@ def map_followup_profile(request: ProfileFollowupRequest, previous_snapshot) -> 
 
 
 class CompanionService:
-    def __init__(self, store: CompanionStore = companion_store) -> None:
+    def __init__(
+        self,
+        store: CompanionStore = companion_store,
+        content: StudentCompanionContentOrchestrator | None = None,
+    ) -> None:
         self.store = store
         self.facade = StudentCompanionFacade(ReadOnlyMarketContextProvider())
-        self.content = StudentCompanionContentOrchestrator(TemplateProvider())
+        self.content = content or build_content_orchestrator()
 
     def analyze(self, *, student_id: str, profile_version: int, fixture_selector: str) -> dict:
         payload = _read_fixture(fixture_selector)
@@ -284,21 +349,48 @@ class CompanionService:
         if task is None:
             raise CompanionError("invalid_transition", "The selected task does not belong to this plan.")
         metadata = self._content_metadata(_token("CONTENT_REQUEST", plan_id, task_id), task.skill_id or task.career_group_id or "task", PLAN_EXPANSION_PROMPT_VERSION, plan_record)
-        result = self.content.expand_plan(PlanExpansionRequest(metadata=metadata, task=task, relevant_ability=None, relevant_gap=None, student_preferences=[], prohibited_topics=[], max_steps=max_steps, difficulty="foundation"))
+        result = self._generate_content(lambda: self.content.expand_plan(PlanExpansionRequest(metadata=metadata, task=task, relevant_ability=None, relevant_gap=None, student_preferences=[], prohibited_topics=[], max_steps=max_steps, difficulty="foundation")))
         return result.model_dump(mode="json")
 
     def reassessment(self, plan_id: str, target_skill_id: str, question_count: int, max_score: float) -> dict:
         plan_record = self._require_plan(plan_id)
         metadata = self._content_metadata(_token("REASSESS_REQUEST", plan_id, target_skill_id), target_skill_id, REASSESSMENT_PROMPT_VERSION, plan_record)
         request = ReassessmentGenerationRequest(metadata=metadata, assessment_id=_token("REASSESSMENT", plan_id, target_skill_id), target_skill_id=target_skill_id, question_count=question_count, difficulty="foundation", max_score=max_score, estimated_minutes=question_count * 2, allowed_question_types=["multiple_choice"], prior_question_fingerprints=[], learning_objective="Kiểm tra lại kỹ năng mục tiêu sau hoạt động.")
-        return self.content.generate_reassessment(request).model_dump(mode="json")
+        return self._generate_content(lambda: self.content.generate_reassessment(request)).model_dump(mode="json")
 
     def feedback(self, payload) -> dict:
         metadata = ContentGenerationMetadata(content_contract_version=CONTENT_CONTRACT_VERSION, request_id=_token("FEEDBACK_REQUEST", payload.question_id, payload.student_id), prompt_version=FEEDBACK_PROMPT_VERSION, student_id=payload.student_id, language="vi", grade_level=12)
         request = FeedbackGenerationRequest(metadata=metadata, question_id=payload.question_id, skill_id=payload.skill_id, question_prompt=payload.question_prompt, student_answer=payload.student_answer, expected_answer=payload.expected_answer, is_correct=payload.is_correct, detected_error_type=payload.detected_error_type, feedback_depth="explanation", max_followup_questions=1)
-        result = self.content.generate_feedback(request).model_dump(mode="json")
+        result = self._generate_content(lambda: self.content.generate_feedback(request)).model_dump(mode="json")
         result["graded_answer"] = {"is_correct": payload.is_correct}
         return result
+
+    @staticmethod
+    def _generate_content(operation):
+        try:
+            return operation()
+        except AIWorkerConfigurationError as exc:
+            raise CompanionError("llm_configuration_missing", "Live content generation is not configured.", 503) from exc
+        except AIWorkerConnectionError as exc:
+            raise CompanionError("ai_worker_unreachable", "The content generation service is unavailable.", 503) from exc
+        except AIWorkerTimeoutError as exc:
+            raise CompanionError("ai_worker_timeout", "The content generation request timed out.", 504) from exc
+        except AIWorkerHTTPError as exc:
+            raise CompanionError("ai_worker_http_error", "The content generation service returned an error.", 502) from exc
+        except AIWorkerUnparsedResponseError as exc:
+            raise CompanionError("ai_worker_unparsed_response", "The content generation service returned invalid JSON.", 502) from exc
+        except AIWorkerEmptyResponseError as exc:
+            raise CompanionError("ai_worker_empty_response", "The content generation service returned no content.", 502) from exc
+        except AIWorkerInvalidResponseError as exc:
+            raise CompanionError("ai_worker_invalid_response", "The content generation service returned an invalid response.", 502) from exc
+        except LLMOutputParseError as exc:
+            raise CompanionError("llm_output_invalid_json", "Generated content was not valid JSON.", 502) from exc
+        except LLMOutputValidationError as exc:
+            raise CompanionError("llm_output_schema_invalid", "Generated content did not satisfy the required schema.", 502) from exc
+        except LLMInvariantViolation as exc:
+            raise CompanionError("llm_output_rejected", "Generated content did not satisfy safety constraints.", 502) from exc
+        except LLMProviderError as exc:
+            raise CompanionError("llm_provider_failed", "Content generation failed.", 502) from exc
 
     def _require_plan(self, plan_id: str) -> PlanRecord:
         record = self.store.get_plan(plan_id)

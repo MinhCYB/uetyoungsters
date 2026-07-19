@@ -34,13 +34,21 @@ services:
       context: .
       dockerfile: backend-api/Dockerfile
     depends_on:
-      - db
+      db:
+        condition: service_started
+      ai-worker-service:
+        condition: service_healthy
     ports:
       - "8000:8000"
     environment:
       DATABASE_URL: postgresql://cc_user:cc_pass@db:5432/career_compass
       AUTH_SECRET: ${AUTH_SECRET:-replace-this-secret-before-production}
       COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      COMPANION_LLM_MODE: ${COMPANION_LLM_MODE:-live}
+      AI_WORKER_URL: ${AI_WORKER_URL:-http://ai-worker-service:8000}
+      AI_WORKER_TIMEOUT_SECONDS: ${AI_WORKER_TIMEOUT_SECONDS:-30}
+      COMPANION_LLM_MAX_TOKENS: ${COMPANION_LLM_MAX_TOKENS:-2048}
+      COMPANION_LLM_FALLBACK_ENABLED: ${COMPANION_LLM_FALLBACK_ENABLED:-false}
 
   ai-worker-service:
     build: ./ai-worker-service
